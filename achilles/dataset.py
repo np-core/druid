@@ -165,7 +165,7 @@ class AchillesDataset:
         with h5py.File(data_file, "r") as infile:
             return infile["data/reads"], infile["data/labels"]
 
-    def write(self, tags: [[str]], global_tags=None, data_file="data.h5"):
+    def write(self, tag_labels: [[str]], global_tags=None, data_file="data.h5"):
 
         """ """
 
@@ -192,7 +192,7 @@ class AchillesDataset:
         # Get list of Fast5 file names to exclude from sampling in PoreMongo
         exclude = self.get_reads_to_exclude(exclude_datasets)
 
-        classes = len(tags)
+        classes = len(tag_labels)
         with h5py.File(data_file, "w") as f:
 
             # Create data paths for storing all extracted data:
@@ -203,9 +203,7 @@ class AchillesDataset:
             self.print_write_summary()
 
             # Each input tag corresponds to label (0, 1, 2, ...)
-            for label, _tags in enumerate(tags):
-
-                label_tags = [t.strip() for t in _tags]
+            for label, tags in enumerate(tag_labels):
 
                 if self.exclude_datasets is not None:
                     eds = len(self.exclude_datasets)
@@ -217,7 +215,7 @@ class AchillesDataset:
                 {Y}Process label: {C}{label}{Y} 
                 ----------------------------------
                 {Y}Global tags: {C}{global_tags}{Y}
-                {Y}Sample tags: {C}{label_tags}{Y}
+                {Y}Sample tags: {C}{tags}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
                 """)
@@ -225,7 +223,7 @@ class AchillesDataset:
 
                 reads = self.poremongo.sample(
                     Read.objects,
-                    tags=label_tags,
+                    tags=tags,
                     limit=self.sample_reads_per_tag,
                     proportion=self.sample_proportions,
                     unique=self.sample_unique,

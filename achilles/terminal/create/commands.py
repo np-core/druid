@@ -156,9 +156,14 @@ def create(
         validation=validation,
         chunk_size=10000
     )
+    tag_labels = []
+    for label in tags.split(":"):
+        tag_labels.append(
+            [t.strip() for t in label.split(',')]
+        )
 
     ds.write(
-        tags=[tag.strip() for label in tags.split(":") for tag in label.split(",")],
+        tag_labels=tag_labels,
         global_tags=[s.strip() for s in global_tags.split()] if global_tags else None,
         data_file=dataset,
     )
