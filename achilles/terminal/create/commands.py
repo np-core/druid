@@ -134,7 +134,6 @@ def create(
 ):
     """Sample and compile datasets with PoreMongo"""
 
-    tags = [tag.split(",") for tag in tags]
 
     if uri == 'local':
         uri = f'mongodb://localhost:27017/{db}'
@@ -159,7 +158,7 @@ def create(
     )
 
     ds.write(
-        tags=tags,
+        tags=[tag.strip() for label in tags.split(":") for tag in label.split(",")],
         global_tags=[s.strip() for s in global_tags.split()] if global_tags else None,
         data_file=dataset,
     )
