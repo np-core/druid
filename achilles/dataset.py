@@ -215,7 +215,7 @@ class AchillesDataset:
                 {Y}Process label: {C}{label}{Y} 
                 ----------------------------------
                 {Y}Global tags: {C}{global_tags}{Y}
-                {Y}Sample tags: {C}{tags}{Y}
+                {Y}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
                 """)
@@ -531,8 +531,8 @@ class AchillesDataset:
         print(
             dedent(
                 f"""
-        {Y}Dataset (HD5)          {C}{data_file}{RE}
-
+        Dataset:                 {C}{data_file}{RE}
+        --------------------------------------------
         {Y}Encoded label vector  :  {M}/data/labels{RE}
         {Y}Decoded label vector  :  {M}/data/decoded{RE}
         {Y}Sampled reads         :  {M}/data/reads{RE}
@@ -547,7 +547,7 @@ class AchillesDataset:
                     f"""
                     {Y}Data file: {C}{data_file}{RE}
 
-                    {C}Dimensions:{RE}
+                    Dimensions:
 
                     {G}Data:       {Y}{f["data/data"].shape}{RE}
                     {G}Labels:     {Y}{f["data/labels"].shape}{RE}
@@ -560,12 +560,12 @@ class AchillesDataset:
                     f"""
                     {Y}Data file: {C}{data_file}{RE}
 
-                    {C}Training Dimensions:{RE}
+                    Training Dimensions:
 
                     {G}Data:       {Y}{f["training/data"].shape}{RE}
                     {G}Labels:     {Y}{f["training/labels"].shape}{RE}
 
-                    {C}Validation Dimensions:{RE}
+                    Validation Dimensions:
 
                     {G}Data:       {Y}{f["validation/data"].shape}{RE}
                     {G}Labels:     {Y}{f["validation/labels"].shape}{RE}
