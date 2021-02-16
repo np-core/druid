@@ -205,7 +205,7 @@ class AchillesDataset:
             # Each input tag corresponds to label (0, 1, 2, ...)
             for label, _tags in enumerate(tags):
 
-                label_tags = [t.strip() for t in _]
+                label_tags = [t.strip() for t in _tags]
 
                 if self.exclude_datasets is not None:
                     eds = len(self.exclude_datasets)
@@ -653,7 +653,7 @@ class AchillesDataset:
         Generating data set for input to AchillesModel.
         =========================================================
 
-        Sampling from PoreMongo:
+        Sampling from PoreMongo (shuffled after sampling):
 
             - {G}sample_reads_per_tag{RE}     {Y}{self.sample_reads_per_tag}{RE} 
             - {G}sample_proportions{RE}       {Y}{self.sample_proportions}{RE} 
@@ -661,14 +661,12 @@ class AchillesDataset:
 
         Generating tensors of shape {Y}({self.max_windows_per_read}, 1, {self.window_size}, 1){RE} per read.
         
-        For each class, sample signal windows with the following parameters:
+        For each label, sampling consecutive signal slices with the following parameters:
 
             - {G}max_windows{RE}              {Y}{self.max_windows}{RE}
             - {G}window_size{RE}              {Y}{self.window_size}{RE}
             - {G}window_step{RE}              {Y}{self.window_step}{RE}
-            - {G}window_random{RE}            {Y}{self.window_random}{RE}             
-
-        Sampled documents are shuffled by default after sampling.
+            - {G}window_random{RE}            {Y}{self.window_random}{RE}           
 
         =========================================================
         """
