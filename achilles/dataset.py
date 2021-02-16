@@ -165,7 +165,7 @@ class AchillesDataset:
         with h5py.File(data_file, "r") as infile:
             return infile["data/reads"], infile["data/labels"]
 
-    def write(self, tags, global_tags=None, data_file="data.h5"):
+    def write(self, tags: [[str]], global_tags=None, data_file="data.h5"):
 
         """ """
 
@@ -215,8 +215,10 @@ class AchillesDataset:
                 print(
                     dedent(f"""
                 {Y}Process label: {C}{label}{Y} 
+                ----------------------------------
                 {Y}Global tags: {C}{global_tags}{Y}
                 {Y}Sample tags: {C}{label_tags}{Y}
+                ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
                 """)
                 )
@@ -227,7 +229,7 @@ class AchillesDataset:
                     limit=self.sample_reads_per_tag,
                     proportion=self.sample_proportions,
                     unique=self.sample_unique,
-                    exclude_reads=exclude,
+                    exclude_uuid=exclude,
                     include_tags=global_tags,
                     return_documents=True
                 )
