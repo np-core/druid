@@ -7,3 +7,5 @@ if gpus:
       tf.config.experimental.set_memory_growth(gpu, True)
   except RuntimeError as e:
     print(e)
+
+tf.logging.set_verbosity(tf.logging.ERROR)
