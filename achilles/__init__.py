@@ -1,3 +1,6 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 import tensorflow as tf
 
 gpus = tf.config.experimental.list_physical_devices('GPU')
@@ -8,4 +11,3 @@ if gpus:
   except RuntimeError as e:
     print(e)
 
-tf.get_logger().setLevel(2)
