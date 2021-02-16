@@ -26,10 +26,10 @@ from achilles.dataset import AchillesDataset
 @click.option(
     "--tags",
     "-t",
-    cls=OptionEatAll,
+    type=str,
     default=None,
     metavar="",
-    help="Tags (labels) to sample from, comma separated args",
+    help="Tags (labels) to sample from, labels separated by ':' for example, two label dataset: tag1,tag2:tag3,tag4",
 )
 @click.option(
     '--config',
@@ -158,9 +158,9 @@ def create(
     )
 
     tag_labels = []
-    for tag_group in tags:
+    for tag_group in tags.split(":"):
         tag_labels.append(
-            [t.strip() for t in tag_group]
+            [t.strip() for t in tag_group.split(",")]
         )
 
     ds.write(
