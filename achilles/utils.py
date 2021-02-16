@@ -5,13 +5,17 @@ import pandas
 import datetime
 import itertools
 import numpy as np
+import matplotlib
+
+from matplotlib import pyplot as plt
+from matplotlib import style
 
 from collections import deque
 from itertools import tee, islice
 from pandas.errors import EmptyDataError
 
 from ont_fast5_api.fast5_file import Fast5File
-
+from skimage.util import view_as_windows
 
 from colorama import Fore
 
@@ -25,15 +29,8 @@ LC = Fore.LIGHTCYAN_EX
 LY = Fore.LIGHTYELLOW_EX
 RE = Fore.RESET
 
-import matplotlib
 
 matplotlib.use("agg")
-
-
-from matplotlib import pyplot as plt
-from matplotlib import style
-from skimage.util import view_as_windows
-
 style.use("ggplot")
 
 # Data IO and Transformation
@@ -552,12 +549,12 @@ def retain_after_include(file_paths, include):
 class TableFormatter:
 
     def __init__(
-            self,
-            header: list = None,
-            row_template: str = None,
-            header_template: str = None,
-            header_color: str = None,
-            header_gap: bool = True
+        self,
+        header: list = None,
+        row_template: str = None,
+        header_template: str = None,
+        header_color: str = None,
+        header_gap: bool = True
     ):
 
         self.header = header

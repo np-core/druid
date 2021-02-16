@@ -99,7 +99,7 @@ from achilles.dataset import AchillesDataset
     default=None,
     metavar="",
     show_default=True,
-    help="Comma separated list of HDF5 datasets to exclude from sampling",
+    help="Comma separated list of HDF5 datasets to exclude from sampling or glob-path to dataset directory",
 )
 @click.option(
     "--global_tags",
@@ -139,7 +139,7 @@ def create(
     if uri == 'local':
         uri = f'mongodb://localhost:27017/{db}'
 
-    pongo = PoreMongo(uri=uri, config=config if config else dict())
+    pongo = PoreMongo(uri=uri, config=config if config else None)
     pongo.connect()
 
     ds = AchillesDataset(poremongo=pongo)
@@ -152,12 +152,12 @@ def create(
         window_size=window_size,
         window_step=window_step,
         window_random=True,  # sample a sequence of signal windows from random start point
-        window_recover=False,  # do not recover incomplete sample of contiguous windows (mimick real seq end)
+        window_recover=False,  # allow incomplete windows at sequence end (slightly variable total slice samples)
         sample_reads_per_tag=sample_reads_per_tag,
         sample_proportions=proportion,
         sample_unique=False,  # can be used as safe guard
         exclude_datasets=exclude,
-        global_tags=global_tags.split() if global_tags else None,
+        global_tags=[s.strip() for s in global_tags.split()] if global_tags else None,
         validation=validation,
         chunk_size=10000
     )

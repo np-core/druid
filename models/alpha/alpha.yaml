@@ -27,7 +27,6 @@ config:
     optimizer: adam
     loss: binary_crossentropy
     dropout: 0.2
-    recurrent_dropout: 0.2
     workers: 2
 
 models:

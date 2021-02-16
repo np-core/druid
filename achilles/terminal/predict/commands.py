@@ -3,7 +3,6 @@ import os
 import random
 
 from colorama import Fore
-from numpy import prod
 
 import numpy as np
 
@@ -135,7 +134,7 @@ def predict(
     print(f"  {Y}- Loading model: {G}{model}{RE}")
     achilles.load_model(model_file=model_path, summary=model_summary)
 
-    print(f"  {Y}- {G}Null pass {Y}for memory allocation in Keras.{RE}\n")
+    print(f"  {Y}- {G}Null pass{Y} for memory allocation in Keras{RE}\n")
     _ = achilles.predict(null_pass=(window_slices, 1, window_size, 1))
 
     if directory:

@@ -189,7 +189,6 @@ def train(
     units,
     bidirectional,
     dropout,
-    recurrent_dropout,
     optimizer,
     loss_function,
     epochs,
@@ -216,7 +215,6 @@ def train(
             nb_rnn=lstm,
             rnn_units=units,
             dropout=dropout,
-            rc_dropout=recurrent_dropout,
             bidirectional=bidirectional,
         )
 

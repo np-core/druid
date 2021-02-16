@@ -31,7 +31,6 @@ class AchillesModel:
         nb_residual_block=1,
         nb_rnn=1,
         dropout=0.0,
-        rc_dropout=0.0,
         gru=False,
         gpus=1,
         summary=True,
@@ -39,7 +38,7 @@ class AchillesModel:
 
         # Kernel size and strides are only used for single convolutional layers (1D, or 2D)
 
-        # Default for resisdual block or Conv2D:
+        # Default for residual block or Conv2D:
         shape = (1, window_size, 1)
 
         # Input data shape for residual block (Conv2D)

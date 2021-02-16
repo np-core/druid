@@ -4,9 +4,11 @@ from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from colorama import Fore
 from pathlib import Path
+
 Y = Fore.YELLOW
 G = Fore.GREEN
 RE = Fore.RESET
+
 
 @click.command()
 @click.option(

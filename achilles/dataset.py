@@ -5,6 +5,7 @@ import random
 import logging
 import numpy as np
 import matplotlib
+import yaml
 
 matplotlib.use("agg")
 
@@ -12,8 +13,15 @@ import matplotlib.pyplot as plt
 import matplotlib.style as style
 import seaborn as sns
 
-
-from colorama import Fore, Style
+from tqdm import tqdm
+from scipy.stats import sem
+from sklearn.model_selection import train_test_split
+from textwrap import dedent
+from pathlib import Path
+from keras.utils import Sequence
+from keras.utils.np_utils import to_categorical
+from poremongo.poremodels import Read
+from colorama import Fore
 
 Y = Fore.YELLOW
 C = Fore.CYAN
@@ -21,28 +29,56 @@ RE = Fore.RESET
 G = Fore.GREEN
 M = Fore.MAGENTA
 
-from tqdm import tqdm
-from scipy.stats import sem
-from sklearn.model_selection import train_test_split
-from textwrap import dedent
-
-from keras.utils import Sequence
-from keras.utils.np_utils import to_categorical
-
-from poremongo.poremodels import Read
 
 style.use("ggplot")
 
 
 class AchillesDataset:
-    def __init__(self, dataset=None, poremongo=None):
+
+    def __init__(
+        self, dataset=None, poremongo=None,
+        max_windows: int = 20000,
+        max_windows_per_read: int = 50,
+        window_size: int = 400,
+        window_step: float or int = 0.1,
+        window_random: bool = True,
+        window_recover: bool = True,
+        sample_reads_per_tag: int = 25000,
+        sample_proportions: list or str = None,
+        sample_unique: bool = False,
+        exclude_datasets: str = None,
+        validation: float = 0.3,
+        chunk_size: int = 10000,
+        max_reads: int = None
+    ):
 
         self.dataset = dataset
 
         if dataset:
-            self.dataset_handle = self.dataset.open()
+            self.dataset_handle = self.dataset.open()  # HDF5 handle
 
         self.poremongo = poremongo
+
+        self.max_windows = max_windows
+        self.max_windows_per_read = max_windows_per_read
+        self.window_size = window_size
+        self.window_step = window_step
+        self.window_random = window_random
+        self.window_recover = window_recover
+        self.sample_reads_per_tag = sample_reads_per_tag
+        self.sample_proportions = sample_proportions
+        self.sample_unique = sample_unique
+        self.exclude_datasets = exclude_datasets
+        self.validation = validation
+        self.chunk_size = chunk_size
+        self.max_reads = max_reads
+
+    def read_dataset_config(self, file: Path):
+
+        """ Read a dataset config file"""
+
+        with file.open() as conf:
+            config = yaml.load(conf)
 
     def get_signal_generator(
         self,
@@ -72,45 +108,6 @@ class AchillesDataset:
             no_labels=no_labels,
         )
 
-    def clean_data(self):
-
-        """ Used on directory containing reads to be used for data set construction.
-
-        Basecalled FASTQ is extracted from reads and mapped against a given reference genome sequence
-        with Minimap2. Generates a mapping plot showing coverage of mapped regions along the reference.
-        Mapped FASTQ reads are linked to Fast5 files. Fast5 files are then filtered for only reference mapped
-        reads.
-
-        Test in experiments whether complete genome coverage / increase in coverage corresponds to increase in
-        training of specific pathogen detection? Not possible with host, but possible with pathogens (especially
-        viruses like Zika but check for B. pseudomallei and E. coli)
-
-        :return:
-
-        """
-
-        pass
-
-    def write_from_json(self, config: str or dict):
-
-        """
-        Sample multiple Datasets from a JSON file, where keys are the path of the output file,
-        and values are dictionaries of parameters for the write function of Dataset.
-
-        :param config:    JSON file with filename (key), write parameters dict with required parameter "tags" (values)
-
-        :return:
-        """
-
-        if isinstance(config, str):
-            with open(config, "r") as infile:
-                config_dict = json.load(infile)
-        else:
-            config_dict = config
-
-        if self.check_json_dict(config_dict):
-            for file, params in config_dict.items():
-                self.write(**params)
 
     @staticmethod
     def check_json_dict(config):
@@ -146,7 +143,7 @@ class AchillesDataset:
         return True
 
     @staticmethod
-    def get_reads_to_exclude(exclude_datasets):
+    def get_reads_to_exclude(exclude_datasets: list):
 
         if exclude_datasets is not None:
             exclude = []
@@ -168,84 +165,50 @@ class AchillesDataset:
         with h5py.File(data_file, "r") as infile:
             return infile["data/reads"], infile["data/labels"]
 
-    def write(
-        self,
-        tags,
-        data_file="data.h5",
-        max_windows=20000,
-        max_windows_per_read=50,
-        window_size=400,
-        window_step=0.1,
-        window_random=True,
-        window_recover=True,
-        sample_reads_per_tag=25000,
-        sample_proportions=None,
-        sample_unique=False,
-        exclude_datasets=None,
-        validation=0.3,
-        chunk_size=10000,
-        max_reads=None,
-        global_tags=None,
-    ):
+    def write(self, tags, global_tags=None, data_file="data.h5"):
 
-        """
+        """ """
 
-        :param tags:
-        :param data_file:
-        :param sample_reads_per_tag:
-        :param sample_proportions:
-        :param sample_unique:
-        :param scale:
-        :param max_windows:
-        :param max_windows_per_read:
-        :param window_size:
-        :param window_step:
-        :param window_random:
-        :param window_recover:
-        :param validation:
-        :param chunk_size:
-        :param ssh: explicit
-        :return:
+        if self.max_reads:
+            # Optional: if specified, compute windows based on read number
+            max_windows = self.max_reads * self.max_windows_per_read
+        else:
+            max_windows = self.max_windows
 
-        """
+        if isinstance(self.window_step, float):
+            # If provided a float, compute window step as proportion of window size
+            window_step = int(self.window_size * self.window_step)
+        else:
+            window_step = self.window_step
 
-        if max_reads:
-            max_windows = max_reads * max_windows_per_read
-
-        if isinstance(window_step, float):
-            window_step = int(window_size * window_step)
-
-        if isinstance(exclude_datasets, str):
-            exclude_datasets = [d for d in exclude_datasets.split(",")]
-
-        classes = len(tags)
+        if self.exclude_datasets:
+            if "*" in self.exclude_datasets:
+                exclude_datasets = list(Path().glob(self.exclude_datasets))
+            else:
+                exclude_datasets = [d.strip() for d in self.exclude_datasets.split(",")]
+        else:
+            exclude_datasets = None
 
         # Get list of Fast5 file names to exclude from sampling in PoreMongo
         exclude = self.get_reads_to_exclude(exclude_datasets)
 
+        classes = len(tags)
         with h5py.File(data_file, "w") as f:
 
             # Create data paths for storing all extracted data:
             data, labels, decoded, sampled_reads = self.create_data_paths(
-                file=f, window_size=window_size, classes=classes
+                file=f, window_size=self.window_size, classes=classes
             )
 
-            self.print_write_summary(
-                sample_reads_per_tag=sample_reads_per_tag,
-                sample_proportions=sample_proportions,
-                sample_unique=sample_unique,
-                max_windows_per_read=max_windows_per_read,
-                window_size=window_size,
-                max_windows=max_windows,
-                window_step=window_step,
-                window_random=window_random,
-            )
+            self.print_write_summary()
 
             # Each input tag corresponds to label (0, 1, 2, ...)
-            for label, tag in enumerate(tags):
+            for label, _tags in enumerate(tags):
 
-                if exclude_datasets is not None:
-                    eds = len(exclude_datasets)
+                label_tags = [t.strip() for t in _]
+
+                if self.exclude_datasets is not None:
+                    eds = len(self.exclude_datasets)
                 else:
                     eds = 0
 
@@ -253,23 +216,23 @@ class AchillesDataset:
                     dedent(f"""
                 {Y}Process label: {C}{label}{Y} 
                 {Y}Global tags: {C}{global_tags}{Y}
-                {Y}Sample tags: {C}{tag}{Y}
+                {Y}Sample tags: {C}{label_tags}{Y}
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
                 """)
                 )
 
                 reads = self.poremongo.sample(
                     Read.objects,
-                    tags=tag,
-                    limit=sample_reads_per_tag,
-                    proportion=sample_proportions,
-                    unique=sample_unique,
+                    tags=label_tags,
+                    limit=self.sample_reads_per_tag,
+                    proportion=self.sample_proportions,
+                    unique=self.sample_unique,
                     exclude_reads=exclude,
                     include_tags=global_tags,
                     return_documents=True
                 )
 
-                # Randomize, not necessary but precaution:
+                # Randomize sampled reads, not necessary but precaution:
                 random.shuffle(reads)
 
                 total = 0
@@ -278,16 +241,15 @@ class AchillesDataset:
                 with tqdm(total=max_windows) as pbar:
                     pbar.set_description(f"Extracting tensors for label {label}")
                     for read in reads:
-
                         # e.g. 100000 max_windows, 50 per read set
 
-                        signal_windows = read.get_signal_windows(
-                            window_size=window_size, window_step=window_step
+                        signal_windows = read.get_signal(
+                            window_size=self.window_size, window_step=window_step
                         )  # full window slices
 
                         sampled_windows = self.sample_from_array(
-                            signal_windows, sample_size=max_windows_per_read,
-                            random_sample=window_random, recover=window_recover
+                            signal_windows, sample_size=self.max_windows_per_read,
+                            random_sample=self.window_random, recover=self.window_recover
                         )  # sampled contiguous window slices
 
                         # Proceed if the maximum number of windows per class has not been reached,
@@ -303,8 +265,7 @@ class AchillesDataset:
                             # 4D input tensor (nb_samples, 1, signal_length, 1) for input to Residual Blocks
                             input_tensor = self.sample_to_input(sampled_windows)
 
-                            # Write this tensor to file instead of storing in memory
-                            # otherwise might raise OOM:
+                            # Write this tensor to file instead of storing in memory otherwise might raise OOM
                             self.write_chunk(data, input_tensor)
 
                             # Operations for update to total number of windows processed for this label,
@@ -341,14 +302,14 @@ class AchillesDataset:
 
         self.print_data_summary(data_file=data_file)
 
-        if validation > 0:
+        if self.validation > 0:
             # Split dataset into training / validation data:
             self._training_validation_split(
                 data_file=data_file,
-                validation=validation,
-                window_size=window_size,
+                validation=self.validation,
+                window_size=self.window_size,
                 classes=classes,
-                chunk_size=chunk_size
+                chunk_size=self.chunk_size
             )
 
     def _training_validation_split(
@@ -389,17 +350,11 @@ class AchillesDataset:
 
             # Sanity checks for random and non-duplicated selection of indices:
             print("Sample of randomized training   indices:", training_indices[:5])
-            print(
-                "Sample of randomized validation indices:", validation_indices[:5], "\n"
-            )
+            print("Sample of randomized validation indices:", validation_indices[:5], "\n")
 
             if set(training_indices).intersection(validation_indices):
-                logging.debug(
-                    "Training and validation data are overlapping after splitting"
-                )
-                raise ValueError(
-                    "Training and validation data are overlapping after splitting"
-                )
+                logging.debug("Training and validation data are overlapping after splitting")
+                raise ValueError("Training and validation data are overlapping after splitting")
 
             with h5py.File(outfile, "w") as out:
                 train_x, train_y, val_x, val_y = self.create_training_validation_paths(

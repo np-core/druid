@@ -47,11 +47,8 @@ setup(
     entry_points="""
         [console_scripts]
         achilles=achilles.terminal.client:terminal_client
-        poremongo=poremongo.terminal.client:terminal_client
-        pm=poremongo.terminal.client:terminal_client
     """,
-    version="0.3",
+    version="0.4",
     license="MIT",
-    description="Achilles is a platform to train and evaluate neural networks"
-    " for nanopore signal classification.",
+    description="Achilles is a platform to train and evaluate neural networks for nanopore signal classification",
 )
