@@ -227,7 +227,7 @@ class AchillesDataset:
                     limit=self.sample_reads_per_tag,
                     proportion=self.sample_proportions,
                     unique=self.sample_unique,
-                    exclude_uuid=exclude,
+                    exclude_reads=exclude,
                     include_tags=global_tags,
                     return_documents=True
                 )
@@ -297,7 +297,12 @@ class AchillesDataset:
                 read_id_array = np.array(
                     [read_id.encode("utf8") for read_id in read_ids]
                 )
-
+                # This is using internal READ ID (i.e. from Fast5) NOT UUID OR DOCUMENT ID
+                # This means that if the same read was inserted multiple time (with different
+                # tags, UUID or DOC ID), will not be sampled (in poremongo.sample) at all -
+                # this is a strict implementation avoiding accidental sampling of the same read
+                # under a different UUID or DOC ID
+                print(read_id_array[:10])
                 self.write_chunk(sampled_reads, read_id_array)
 
         self.print_data_summary(data_file=data_file)
