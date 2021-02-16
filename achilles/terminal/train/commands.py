@@ -65,14 +65,6 @@ from achilles.utils import get_dataset_dim
     help="Compile model with optimizer for training",
 )
 @click.option(
-    "--recurrent_dropout",
-    metavar="",
-    default=0.2,
-    required=False,
-    show_default=True,
-    help="Internal dropout applied to LSTM layers",
-)
-@click.option(
     "--dropout",
     metavar="",
     default=0.2,
