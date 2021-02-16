@@ -134,7 +134,6 @@ def create(
 ):
     """Sample and compile datasets with PoreMongo"""
 
-
     if uri == 'local':
         uri = f'mongodb://localhost:27017/{db}'
 

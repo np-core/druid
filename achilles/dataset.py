@@ -302,7 +302,6 @@ class AchillesDataset:
                 # tags, UUID or DOC ID), will not be sampled (in poremongo.sample) at all -
                 # this is a strict implementation avoiding accidental sampling of the same read
                 # under a different UUID or DOC ID
-                print(read_id_array[:10])
                 self.write_chunk(sampled_reads, read_id_array)
 
         self.print_data_summary(data_file=data_file)
@@ -536,8 +535,7 @@ class AchillesDataset:
         print(
             dedent(
                 f"""
-        Dataset:                 {C}{data_file}{RE}
-        --------------------------------------------
+        {Y}Dataset:              :  {C}{data_file}{RE}
         {Y}Encoded label vector  :  {M}/data/labels{RE}
         {Y}Decoded label vector  :  {M}/data/decoded{RE}
         {Y}Sampled reads         :  {M}/data/reads{RE}
@@ -551,8 +549,6 @@ class AchillesDataset:
                 msg = dedent(
                     f"""
                     {Y}Data file: {C}{data_file}{RE}
-
-                    Dimensions:
 
                     {G}Data:       {Y}{f["data/data"].shape}{RE}
                     {G}Labels:     {Y}{f["data/labels"].shape}{RE}
