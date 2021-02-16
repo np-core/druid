@@ -42,7 +42,7 @@ from achilles.dataset import AchillesDataset
     default="dataset.hd5",
     metavar="",
     show_default=True,
-    help="Dataset HDF5 file containing sampled tensors and labels",
+    help="Output HDF5 file containing sampled tensors and labels",
 )
 @click.option(
     "--max_windows",
@@ -142,11 +142,8 @@ def create(
     pongo = PoreMongo(uri=uri, config=config if config else None)
     pongo.connect()
 
-    ds = AchillesDataset(poremongo=pongo)
-
-    ds.write(
-        tags=tags,
-        data_file=dataset,
+    ds = AchillesDataset(
+        poremongo=pongo,
         max_windows=max_windows,
         max_windows_per_read=max_windows_per_read,
         window_size=window_size,
@@ -157,9 +154,14 @@ def create(
         sample_proportions=proportion,
         sample_unique=False,  # can be used as safe guard
         exclude_datasets=exclude,
-        global_tags=[s.strip() for s in global_tags.split()] if global_tags else None,
         validation=validation,
         chunk_size=10000
+    )
+
+    ds.write(
+        tags=tags,
+        global_tags=[s.strip() for s in global_tags.split()] if global_tags else None,
+        data_file=dataset,
     )
 
     pongo.disconnect()
