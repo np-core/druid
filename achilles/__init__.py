@@ -8,4 +8,4 @@ if gpus:
   except RuntimeError as e:
     print(e)
 
-tf.logging.set_verbosity(tf.logging.ERROR)
+tf.get_logger().setLevel(2)
