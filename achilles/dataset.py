@@ -645,7 +645,7 @@ class AchillesDataset:
 
         return np.reshape(array, (array.shape[0], 1, array.shape[1], 1))
 
-    def print_write_summary(self, **kwargs):
+    def print_write_summary(self):
 
         print(
             dedent(
@@ -655,20 +655,20 @@ class AchillesDataset:
 
         Sampling from PoreMongo:
 
-            - {G}sample_reads_per_tag{RE}     {Y}{kwargs["sample_reads_per_tag"]}{RE} 
-            - {G}sample_proportions{RE}       {Y}{kwargs["sample_proportions"]}{RE} 
-            - {G}sample_unique{RE}            {Y}{kwargs["sample_unique"]}{RE} 
+            - {G}sample_reads_per_tag{RE}     {Y}{self.sample_reads_per_tag}{RE} 
+            - {G}sample_proportions{RE}       {Y}{self.sample_proportions}{RE} 
+            - {G}sample_unique{RE}            {Y}{self.sample_unique}{RE} 
 
-        Generating tensors of shape {Y}({kwargs["max_windows_per_read"]}, 1, {kwargs["window_size"]}, 1){RE} per read.
+        Generating tensors of shape {Y}({self.max_windows_per_read}, 1, {self.window_size}, 1){RE} per read.
         
         For each class, sample signal windows with the following parameters:
 
-            - {G}max_windows{RE}              {Y}{kwargs["max_windows"]}{RE}
-            - {G}window_size{RE}              {Y}{kwargs["window_size"]}{RE}
-            - {G}window_step{RE}              {Y}{kwargs["window_step"]}{RE}
-            - {G}window_random{RE}            {Y}{kwargs["window_random"]}{RE}             
+            - {G}max_windows{RE}              {Y}{self.max_windows}{RE}
+            - {G}window_size{RE}              {Y}{self.window_size}{RE}
+            - {G}window_step{RE}              {Y}{self.window_step}{RE}
+            - {G}window_random{RE}            {Y}{self.window_random}{RE}             
 
-        Fast5 models are shuffled by default after sampling.
+        Sampled documents are shuffled by default after sampling.
 
         =========================================================
         """
