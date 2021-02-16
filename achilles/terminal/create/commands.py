@@ -156,10 +156,11 @@ def create(
         validation=validation,
         chunk_size=10000
     )
+
     tag_labels = []
-    for label in tags.split(":"):
+    for tag_group in tags:
         tag_labels.append(
-            [t.strip() for t in label.split(',')]
+            [t.strip() for t in tag_group]
         )
 
     ds.write(
