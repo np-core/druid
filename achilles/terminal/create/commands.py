@@ -1,9 +1,9 @@
 import click
+import yaml
 
 from pathlib import Path
 from poremongo import PoreMongo
 from achilles.dataset import AchillesDataset
-
 
 @click.command()
 @click.option(
@@ -200,10 +200,9 @@ def create(
     pongo.disconnect()
 
 
-
 def read_yaml(yaml_file: Path):
 
     with yaml_file.open('r') as fstream:
-        yml = yaml.load(fstream, Loader=yaml.FullLoader)
+        yml = yaml.safe_load(fstream)
 
     return yml
