@@ -10,7 +10,7 @@ description: >
 params:
   global_tags:
     - R9.4
-    - DNA
+    - dna
   sample_reads_per_tag: 20000  # initial poremongo sampling
   sample_proportions: equal
   sample_unique: true
