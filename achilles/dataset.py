@@ -105,6 +105,7 @@ class AchillesDataset:
         if exclude_datasets is not None:
             exclude = []
             for dataset in exclude_datasets:
+                print(dataset)
                 with h5py.File(str(dataset), "r") as infile:
                     try:
                         exclude += infile["data/reads"]
