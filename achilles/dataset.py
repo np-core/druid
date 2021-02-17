@@ -158,8 +158,6 @@ class AchillesDataset:
         # Get list of Fast5 file names to exclude from sampling in PoreMongo
         exclude = self.get_reads_to_exclude(exclude_datasets)
 
-        print(exclude)
-
         classes = len(tag_labels)
         with h5py.File(data_file, "w") as f:
 
