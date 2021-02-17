@@ -30,7 +30,7 @@ datasets:
 
   # Staphylococcus aureus + human generalization models
 
-  saureus1_human1:
+  bp_human:
     tags:
       - [bp]
       - [chr15]
