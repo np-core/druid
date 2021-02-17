@@ -130,7 +130,7 @@ def create(
     db,
     tags,
     dataset,
-    poremongo_config,
+    pm_config,
     achilles_config,
     max_windows,
     max_windows_per_read,
@@ -147,7 +147,7 @@ def create(
     if uri == 'local':
         uri = f'mongodb://localhost:27017/{db}'
 
-    pongo = PoreMongo(uri=uri, config=poremongo_config)
+    pongo = PoreMongo(uri=uri, config=pm_config)
     pongo.connect()
 
     global_tags = [s.strip() for s in global_tags.split()] if global_tags else None
