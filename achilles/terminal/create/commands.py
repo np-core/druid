@@ -76,7 +76,7 @@ from achilles.dataset import AchillesDataset
     default=10000,
     metavar="",
     show_default=True,
-    help="Number of random Fast5 models to sample from database per tag / label",
+    help="Number of random Fast5 models to initially sample from database per tag / label",
 )
 @click.option(
     "--proportion",
@@ -136,7 +136,7 @@ def create(
     max_windows_per_read,
     window_size,
     window_step,
-    sample_reads_per_tag,
+    sample,
     proportion,
     exclude,
     global_tags,
@@ -164,7 +164,7 @@ def create(
             window_step=window_step,
             window_random=True,  # sample a sequence of signal windows from random start point
             window_recover=False,  # allow incomplete windows at sequence end (slightly variable total slice samples)
-            sample_reads_per_tag=sample_reads_per_tag,
+            sample_reads_per_tag=sample,
             sample_proportions=proportion,
             sample_unique=False,  # can be used as safe guard
             exclude_datasets=exclude,
