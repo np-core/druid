@@ -31,6 +31,7 @@ class AchillesModel:
         nb_residual_block=1,
         nb_rnn=1,
         dropout=0.0,
+        recurrent_dropout=0.0,
         gru=False,
         gpus=1,
         summary=True,
@@ -68,8 +69,13 @@ class AchillesModel:
         else:
             rnn_layer = layers.LSTM
 
-        # "recurrent_dropout": rc_dropout  <-- this hits performance massively even if set to 0
-        dropout_params = {"dropout": dropout}
+        # recurrent dropout  <-- this hits performance massively even if set to 0
+        dropout_params = {}
+
+        if dropout > 0:
+            dropout_params['dropout'] = dropout
+        if recurrent_dropout > 0:
+            dropout_params["recurrent_dropout"] = recurrent_dropout
 
         # Add two Bidirectional RNN layers where sequences returned,
         # then into last layer with standard RNN output into Dense

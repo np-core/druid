@@ -1,11 +1,9 @@
 import os
 import h5py
-import json
 import random
 import logging
 import numpy as np
 import matplotlib
-import yaml
 
 matplotlib.use("agg")
 
@@ -36,7 +34,10 @@ style.use("ggplot")
 class AchillesDataset:
 
     def __init__(
-        self, dataset=None, poremongo=None,
+        self,
+        dataset=None,
+        poremongo=None,
+        global_tags=None,
         max_windows: int = 20000,
         max_windows_per_read: int = 50,
         window_size: int = 400,
@@ -53,12 +54,9 @@ class AchillesDataset:
     ):
 
         self.dataset = dataset
-
-        if dataset:
-            self.dataset_handle = self.dataset.open()  # HDF5 handle
-
         self.poremongo = poremongo
 
+        self.global_tags = global_tags
         self.max_windows = max_windows
         self.max_windows_per_read = max_windows_per_read
         self.window_size = window_size
@@ -73,15 +71,8 @@ class AchillesDataset:
         self.chunk_size = chunk_size
         self.max_reads = max_reads
 
-    def read_dataset_config(self, file: Path):
-
-        """ Read a dataset config file"""
-
-        with file.open() as conf:
-            config = yaml.load(conf)
-
+    @staticmethod
     def get_signal_generator(
-        self,
         data_file,
         data_type="training",
         batch_size=15,
@@ -108,40 +99,6 @@ class AchillesDataset:
             no_labels=no_labels,
         )
 
-
-    @staticmethod
-    def check_json_dict(config):
-
-        allowed = (
-            "data_file",
-            "max_windows",
-            "max_windows_per_read",
-            "window_size",
-            "window_step",
-            "window_random",
-            "window_recover",
-            "sample_reads_per_tag",
-            "sample_proportions",
-            "sample_unique",
-            "scale",
-            "validation",
-            "chunk_size",
-            "tags",
-        )
-
-        for fname, params in config.items():
-            if "tags" not in params:
-                raise ValueError(
-                    f"Dataset entry must contains tags for sampling ({fname})."
-                )
-            for param, value in params.items():
-                if param not in allowed:
-                    raise ValueError(
-                        f"Parameter '{param}' is not an allowed parameter ({fname})."
-                    )
-
-        return True
-
     @staticmethod
     def get_reads_to_exclude(exclude_datasets: list):
 
@@ -165,7 +122,7 @@ class AchillesDataset:
         with h5py.File(data_file, "r") as infile:
             return infile["data/reads"], infile["data/labels"]
 
-    def write(self, tag_labels: [[str]], global_tags=None, data_file="data.h5"):
+    def write(self, tag_labels: [[str]], data_file="data.h5"):
 
         """ """
 
@@ -214,7 +171,7 @@ class AchillesDataset:
                     dedent(f"""
                 {Y}Process label: {C}{label}{Y} 
                 ----------------------------------
-                {Y}Global tags: {C}{global_tags}{Y}
+                {Y}Global tags: {C}{self.global_tags}{Y}
                 {Y}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
@@ -228,7 +185,7 @@ class AchillesDataset:
                     proportion=self.sample_proportions,
                     unique=self.sample_unique,
                     exclude_reads=exclude,
-                    include_tags=global_tags,
+                    include_tags=self.global_tags,
                     return_documents=True
                 )
 
@@ -471,10 +428,6 @@ class AchillesDataset:
 
             plt.legend(unique_labels, title="Label")
 
-    def plot_signal(self, nb_signals=4, data_path="training"):
-
-        pass
-
     @staticmethod
     def chunk(seq, size):
 
@@ -548,7 +501,6 @@ class AchillesDataset:
             if "data/data" in f.keys():
                 msg = dedent(
                     f"""
-                    {Y}Data file: {C}{data_file}{RE}
 
                     {G}Data:       {Y}{f["data/data"].shape}{RE}
                     {G}Labels:     {Y}{f["data/labels"].shape}{RE}

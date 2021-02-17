@@ -73,6 +73,14 @@ from achilles.utils import get_dataset_dim
     help="Dropout applied to LSTM layers",
 )
 @click.option(
+    "--recurrent_dropout",
+    metavar="",
+    default=0.0,
+    required=False,
+    show_default=True,
+    help="Recurrent dropout applied to LSTM layers",
+)
+@click.option(
     "--bidirectional",
     metavar="",
     is_flag=True,
@@ -188,6 +196,7 @@ def train(
     threads,
     gpus,
     gpu,
+    recurrent_dropout
 ):
     """Train neural network classifiers in Achilles"""
 
@@ -207,6 +216,7 @@ def train(
             nb_rnn=lstm,
             rnn_units=units,
             dropout=dropout,
+            recurrent_dropout=recurrent_dropout,
             bidirectional=bidirectional,
         )
 

@@ -1,0 +1,41 @@
+name: exp_pathogen_models_300
+date: 15/2/2021
+author: esteinig
+purpose: training
+description: >
+  Training experiment for pathogen specific detection models in host-microbe systems
+  All training and evaluation sets sample unique reads (param: exclude) not present
+  in any other dataset
+
+params:
+  global_tags:
+    - R9.4
+    - DNA
+  sample_reads_per_tag: 20000  # initial poremongo sampling
+  sample_proportions: equal
+  max_windows: 100000  # 2000 reads
+  max_windows_per_read: 50  # consecutive window samples
+  window_size: 300
+  window_step: 0.1
+  window_random: true
+  window_recover: true
+  exclude_datsets: /data/dev/*
+  validation: 0.4
+
+descriptions:
+  bp: Burkholderia pseudomallei (PNG-01)
+
+datasets:
+
+  # Staphylococcus aureus + human generalization models
+
+  saureus1_human1:
+    tags:
+      - [bp]
+      - [chr15]
+    labels:
+      - Burkholderia pseudomallei
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of B. pseudomallei (4 x RBK-004) + odd human chromosomes

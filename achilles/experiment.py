@@ -258,7 +258,6 @@ class TestTube:
             gpus=gpus,
             _nb_classes=nb_classes,
             dropout=dropout,
-            rc_dropout=recurrent_dropout,
             bidirectional=bidirectional,
         )
 

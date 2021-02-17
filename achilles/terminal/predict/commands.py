@@ -9,7 +9,6 @@ import numpy as np
 from ont_fast5_api.fast5_file import Fast5File, Fast5Info
 from achilles.utils import view_as_windows
 from achilles.model import AchillesModel
-from achilles.achilles import Achilles
 from pathlib import Path
 
 RE = Fore.RESET
@@ -192,12 +191,12 @@ def predict_read(
     )
 
 def get_reads(
-        fast5,
-        window_size: int = None,
-        window_step: int = None,
-        scale: bool = False,
-        template: bool = True,
-        return_all=True
+    fast5,
+    window_size: int = None,
+    window_step: int = None,
+    scale: bool = False,
+    template: bool = True,
+    return_all=True
 ) -> np.array:
 
         """ Scaled pA values (float32) or raw DAQ values (int16),
@@ -275,10 +274,10 @@ def get_score_str(scores: np.array):
 
 
 def sample_from_array(
-        array: np.array,
-        sample_size: int,
-        random_sample: bool = True,
-        recover: bool = True,
+    array: np.array,
+    sample_size: int,
+    random_sample: bool = True,
+    recover: bool = True,
 ) -> np.array:
 
         """Return a contiguous sample from an array of signal windows

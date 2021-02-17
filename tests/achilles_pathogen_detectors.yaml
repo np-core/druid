@@ -1,0 +1,245 @@
+name: exp_pathogen_models_300
+date: 15/2/2021
+author: esteinig
+purpose: training
+description: >
+  Training experiment for pathogen specific detection models in host-microbe systems
+  All training and evaluation sets sample unique reads (param: exclude) not present
+  in any other dataset
+
+params:
+  global_tags:
+    - R9.4
+    - DNA
+  sample_reads_per_tag: 20000  # initial poremongo sampling
+  sample_proportions: equal
+  max_windows: 100000  # 2000 reads
+  max_windows_per_read: 50  # consecutive window samples
+  window_size: 300
+  window_step: 0.1
+  window_random: true
+  window_recover: true
+  exclude_datsets: /data/dev/*
+  validation: 0.4
+
+descriptions:
+  saureus1: Staphylococcus aureus isolate (PNG)
+  saureus2: Staphylococcus aureus isolate (FNQ)
+  saureus3: Staphylococcus aureus isolate (PAK)
+  bp1: Burkholderia pseudomallei (PNG-01)
+  bp2: Burkholderia pseudomallei (TSV-02)
+  bp3: Burkholderia pseudomallei (TSV-01)
+  ecoli1: Escherichia coli (Coin group)
+  ecoli2: Escherichia coli (Loman group)
+  kleb1: Klebsiella pneumoniae (Pitt Greece1)
+  kleb2: Escherichia coli (Pitt Greece2)
+  kleb3: Escherichia coli (Pitt Greece3)
+  kleb4: Escherichia coli (Pitt Greece4)
+  tb1: Mycobacterium tuberculosis (Coin PNG)
+  human1: mix of odd chromosomes 3, 5 and 9 (NA12878)
+  human2: mix of even chromosomes 2, 4, 8 (NA12878)
+  human3: single chromosome 2 (NA12878)
+  human4: single chromsome 3 (NA12878)
+  human5: mix of chromosomes 2, 3, 4, 5, 8, 9 (NA12878)
+
+datasets:
+
+  # Staphylococcus aureus + human generalization models
+
+  saureus1_human1:
+    tags:
+      - [saureus1]
+      - [chr3, chr5, chr9]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + odd human chromosomes
+
+  saureus1_human2:
+    tags:
+      - [saureus1]
+      - [chr2, chr4, chr8]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + even human chromosomes
+
+  saureus1_human3:
+    tags:
+      - [saureus1]
+      - [chr2]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + single even human chromosome
+
+  saureus1_human4:
+    tags:
+      - [saureus1]
+      - [chr3]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + single odd human chromosome
+
+  # Staphylococcus aureus detectors
+
+  saureus1_human5:
+    tags:
+      - [saureus1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + mix of human chromosomes
+
+  saureus2_human5:
+    tags:
+      - [saureus2]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + mix of human chromosomes
+
+  saureus3_human5:
+    tags:
+      - [saureus3]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Staphylococcus aureus
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (12 x RBK-004) + mix of human chromosomes
+
+  # Burkholderia pseudomallei detectors
+
+  bp1_human5:
+    tags:
+      - [bp1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Burkholderia pseudomallei
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (RAP-004) + mix of human chromosomes
+
+  bp2_human5:
+    tags:
+      - [bp1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Burkholderia pseudomallei
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of S. aureus (4 x RBK-004) + mix of human chromosomes
+
+  bp3_human5:
+    tags:
+      - [bp1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Burkholderia pseudomallei
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of B. pseudomallei (4 x RBK-004) + mix of human chromosomes
+
+
+  #  E. coli detectors
+
+  ecoli1_human5:
+    tags:
+      - [ecoli1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Escherichia coli
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of E. coli (RAP-004) + mix of human chromosomes
+
+  ecoli2_human5:
+    tags:
+      - [ecoli2]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Escherichia coli
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of E. coli (RAP-002) + mix of human chromosomes
+
+    #  K. pneumoniae detectors
+
+  kleb1_human5:
+    tags:
+      - [kleb1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Klebsiella pneumoniae
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of K. pneumoniae (RAP-004) + mix of human chromosomes
+
+  kleb2_human5:
+    tags:
+      - [kleb2]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Klebsiella pneumoniae
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of K. pneumoniae (RAP-004) + mix of human chromosomes
+
+  kleb3_human5:
+    tags:
+      - [kleb3]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Klebsiella pneumoniae
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of K. pneumoniae (RAP-004) + mix of human chromosomes
+
+  kleb4_human5:
+    tags:
+      - [kleb4]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Klebsiella pneumoniae
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of K. pneumoniae (RAP-004) + mix of human chromosomes
+
+    #  M. tuberculosis detectors
+
+  tb1_human5:
+    tags:
+      - [ecoli1]
+      - [chr2, chr3, chr4, chr5, chr8, chr9]
+    labels:
+      - Mycobacterium tuberculosis
+      - Homo sapiens
+    description: >
+      Specialist detector dataset, trained on a single isolate
+      of M. tuberculosis (RAP-004) + mix of human chromosomes
