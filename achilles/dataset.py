@@ -107,6 +107,7 @@ class AchillesDataset:
             for dataset in exclude_datasets:
                 print(dataset)
                 with h5py.File(str(dataset), "r") as infile:
+                    print(infile['data/reads'])
                     try:
                         exclude += infile["data/reads"]
                     except KeyError:
