@@ -20,7 +20,7 @@ params:
   window_step: 0.1
   window_random: true
   window_recover: true
-  exclude_datasets: /data/dev/*.hd5
+  exclude_datasets: null
   validation: 0.4
 
 descriptions:
