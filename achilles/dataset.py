@@ -175,12 +175,14 @@ class AchillesDataset:
                     dedent(f"""
                 {Y}Process label: {C}{label}{Y} 
                 ----------------------------------
-                {Y}Global tags: {C}{self.global_tags}{Y}
+                {Y}Global tags: {C}{', '.join(self.global_tags)}{Y}
                 {Y}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
                 """)
                 )
+
+                print(tags, self.sample_reads_per_tag, self.sample_proportions, self.sample_unique, exclude, self.global_tags)
 
                 reads = self.poremongo.sample(
                     Read.objects,
