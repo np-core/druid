@@ -182,8 +182,6 @@ class AchillesDataset:
                 """)
                 )
 
-                print(tags, self.sample_reads_per_tag, self.sample_proportions, self.sample_unique, exclude, self.global_tags)
-
                 reads = self.poremongo.sample(
                     Read.objects,
                     tags=tags,
