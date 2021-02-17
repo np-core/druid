@@ -100,12 +100,12 @@ class AchillesDataset:
         )
 
     @staticmethod
-    def get_reads_to_exclude(exclude_datasets: list):
+    def get_reads_to_exclude(exclude_datasets: [Path]):
 
         if exclude_datasets is not None:
             exclude = []
             for dataset in exclude_datasets:
-                with h5py.File(dataset, "r") as infile:
+                with h5py.File(str(dataset), "r") as infile:
                     try:
                         exclude += infile["data/reads"]
                     except KeyError:
@@ -139,19 +139,14 @@ class AchillesDataset:
             window_step = self.window_step
 
         if self.exclude_datasets:
-            print(self.exclude_datasets)
             if "*" in self.exclude_datasets:
                 # Assume path: /to/dir/*
                 _exclude_path = Path(self.exclude_datasets).parent
                 _exclude_glob = Path(self.exclude_datasets).name
-
-                print(_exclude_glob, _exclude_path)
                 exclude_datasets = list(_exclude_path.glob(_exclude_glob))
-                print(exclude_datasets)
             else:
                 # Assume string of paths: /to/file1, /to/file2
-                exclude_datasets = [d.strip() for d in self.exclude_datasets.split(",")]
-                print(exclude_datasets)
+                exclude_datasets = [Path(d.strip()) for d in self.exclude_datasets.split(",")]
             ndatasets = len(exclude_datasets)
         else:
             exclude_datasets = None
@@ -172,7 +167,6 @@ class AchillesDataset:
 
             # Each input tag corresponds to label (0, 1, 2, ...)
             for label, tags in enumerate(tag_labels):
-
 
                 print(
                     dedent(f"""
