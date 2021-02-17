@@ -100,7 +100,7 @@ class AchillesDataset:
         )
 
     @staticmethod
-    def get_reads_to_exclude(exclude_datasets: [Path]):
+    def get_reads_to_exclude(exclude_datasets: [Path] or None):
 
         if exclude_datasets is not None:
             exclude = []
@@ -138,6 +138,7 @@ class AchillesDataset:
         else:
             window_step = self.window_step
 
+        # Exclude reads from datasets in sampling strategy
         if self.exclude_datasets:
             if "*" in self.exclude_datasets:
                 # Assume path: /to/dir/*
@@ -154,6 +155,8 @@ class AchillesDataset:
 
         # Get list of Fast5 file names to exclude from sampling in PoreMongo
         exclude = self.get_reads_to_exclude(exclude_datasets)
+
+        print(exclude)
 
         classes = len(tag_labels)
         with h5py.File(data_file, "w") as f:
