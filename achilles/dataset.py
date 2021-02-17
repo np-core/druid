@@ -144,11 +144,15 @@ class AchillesDataset:
                 _exclude_path = Path(self.exclude_datasets).parent
                 _exclude_glob = Path(self.exclude_datasets).name
                 exclude_datasets = list(_exclude_path.glob(_exclude_glob))
+                print(exclude_datasets)
             else:
                 # Assume string of paths: /to/file1, /to/file2
                 exclude_datasets = [d.strip() for d in self.exclude_datasets.split(",")]
+                print(exclude_datasets)
+            ndatasets = len(exclude_datasets)
         else:
             exclude_datasets = None
+            ndatasets = 0
 
         # Get list of Fast5 file names to exclude from sampling in PoreMongo
         exclude = self.get_reads_to_exclude(exclude_datasets)
@@ -166,10 +170,6 @@ class AchillesDataset:
             # Each input tag corresponds to label (0, 1, 2, ...)
             for label, tags in enumerate(tag_labels):
 
-                if self.exclude_datasets is not None:
-                    eds = len(self.exclude_datasets)
-                else:
-                    eds = 0
 
                 print(
                     dedent(f"""
@@ -178,7 +178,7 @@ class AchillesDataset:
                 {Y}Global tags: {C}{', '.join(self.global_tags)}{Y}
                 {Y}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
-                {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{eds}{Y} datasets{RE}
+                {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
                 """)
                 )
 
