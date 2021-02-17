@@ -139,6 +139,7 @@ class AchillesDataset:
             window_step = self.window_step
 
         if self.exclude_datasets:
+            print(self.exclude_datasets)
             if "*" in self.exclude_datasets:
                 # Assume path: /to/dir/*
                 _exclude_path = Path(self.exclude_datasets).parent
