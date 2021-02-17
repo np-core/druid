@@ -19,7 +19,7 @@ params:
   window_step: 0.1
   window_random: true
   window_recover: true
-  exclude_datsets: /data/dev/*
+  exclude_datasets: /data/dev/*
   validation: 0.4
 
 descriptions:
