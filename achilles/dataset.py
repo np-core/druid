@@ -175,8 +175,8 @@ class AchillesDataset:
                     dedent(f"""
                 {Y}Process label: {C}{label}{Y} 
                 ----------------------------------
-                {Y}Global tags: {C}{', '.join(self.global_tags)}{Y}
-                {Y}Sample tags: {C}{', '.join(tags)}{Y}
+                {Y}Global tags:  {C}{', '.join(self.global_tags)}{Y}
+                {Y}Sample tags:  {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
                 """)
@@ -493,9 +493,9 @@ class AchillesDataset:
             dedent(
                 f"""
         {Y}Dataset:              :  {C}{data_file}{RE}
-        {Y}Encoded label vector  :  {M}/data/labels{RE}
-        {Y}Decoded label vector  :  {M}/data/decoded{RE}
-        {Y}Sampled reads         :  {M}/data/reads{RE}
+        {Y}Encoded label vector  :  {C}/data/labels{RE}
+        {Y}Decoded label vector  :  {C}/data/decoded{RE}
+        {Y}Sampled reads         :  {C}/data/reads{RE}
         """
             )
         )
@@ -515,7 +515,6 @@ class AchillesDataset:
             elif "training/data" in f.keys() and "validation/data" in f.keys():
                 msg = dedent(
                     f"""
-                    {Y}Data file: {C}{data_file}{RE}
 
                     Training Dimensions:
 
