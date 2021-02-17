@@ -140,8 +140,12 @@ class AchillesDataset:
 
         if self.exclude_datasets:
             if "*" in self.exclude_datasets:
-                exclude_datasets = list(Path().glob(self.exclude_datasets))
+                # Assume path: /to/dir/*
+                _exclude_path = Path(self.exclude_datasets).parent
+                _exclude_glob = Path(self.exclude_datasets).name
+                exclude_datasets = list(_exclude_path.glob(_exclude_glob))
             else:
+                # Assume string of paths: /to/file1, /to/file2
                 exclude_datasets = [d.strip() for d in self.exclude_datasets.split(",")]
         else:
             exclude_datasets = None

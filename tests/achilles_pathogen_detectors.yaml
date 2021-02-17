@@ -13,6 +13,7 @@ params:
     - DNA
   sample_reads_per_tag: 20000  # initial poremongo sampling
   sample_proportions: equal
+  sample_unique: true
   max_windows: 100000  # 2000 reads
   max_windows_per_read: 50  # consecutive window samples
   window_size: 300

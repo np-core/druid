@@ -195,7 +195,7 @@ def create(
             tag_labels = dataset_config['tags']
             ds = AchillesDataset(poremongo=pongo, **params)
             ds.print_write_summary()
-            #ds.write(tag_labels=tag_labels, data_file=ds_file)
+            ds.write(tag_labels=tag_labels, data_file=ds_file)
 
     pongo.disconnect()
 
