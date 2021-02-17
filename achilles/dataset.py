@@ -126,8 +126,6 @@ class AchillesDataset:
 
     def write(self, tag_labels: [[str]], data_file="data.h5"):
 
-        """ """
-
         if self.max_reads:
             # Optional: if specified, compute windows based on read number
             max_windows = self.max_reads * self.max_windows_per_read
@@ -173,10 +171,10 @@ class AchillesDataset:
 
                 print(
                     dedent(f"""
-                {Y}Process label: {C}{label}{Y} 
+                {Y}Class label: {C}{label}{Y} 
                 ----------------------------------
-                {Y}Global tags:  {C}{', '.join(self.global_tags)}{Y}
-                {Y}Sample tags:  {C}{', '.join(tags)}{Y}
+                {Y}Global tags: {C}{', '.join(self.global_tags)}{Y}
+                {Y}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
                 """)
