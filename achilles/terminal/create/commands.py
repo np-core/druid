@@ -31,13 +31,6 @@ from achilles.dataset import AchillesDataset
     help="Tags (labels) to sample from, labels separated by ':' for example, two label dataset: tag1,tag2:tag3,tag4",
 )
 @click.option(
-    '--poremongo_config',
-    '-p',
-    type=Path,
-    default=None,
-    help='Path to config file for database connection'
-)
-@click.option(
     "--dataset",
     "-d",
     default="dataset.hd5",
@@ -78,7 +71,6 @@ from achilles.dataset import AchillesDataset
     help="Step of sliding window to sample from signal read",
 )
 @click.option(
-    "--sample_reads_per_tag",
     "--sample",
     "-s",
     default=10000,
@@ -116,6 +108,14 @@ from achilles.dataset import AchillesDataset
     default=0.3,
     metavar="",
     help="Proportion of data to be split into validation",
+)
+@click.option(
+    '--pm_config',
+    '-p',
+    type=Path,
+    metavar="",
+    default=None,
+    help='Path to config file for database connection'
 )
 @click.option(
     "--achilles_config",
