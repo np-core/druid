@@ -143,6 +143,8 @@ class AchillesDataset:
                 # Assume path: /to/dir/*
                 _exclude_path = Path(self.exclude_datasets).parent
                 _exclude_glob = Path(self.exclude_datasets).name
+
+                print(_exclude_glob, _exclude_path)
                 exclude_datasets = list(_exclude_path.glob(_exclude_glob))
                 print(exclude_datasets)
             else:
