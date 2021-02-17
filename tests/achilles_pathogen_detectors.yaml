@@ -161,8 +161,7 @@ datasets:
       Specialist detector dataset, trained on a single isolate
       of B. pseudomallei (4 x RBK-004) + mix of human chromosomes
 
-
-  #  E. coli detectors
+  #  Escherichia coli detectors
 
   ecoli1_human5:
     tags:
@@ -186,7 +185,7 @@ datasets:
       Specialist detector dataset, trained on a single isolate
       of E. coli (RAP-002) + mix of human chromosomes
 
-    #  K. pneumoniae detectors
+  #  K. pneumoniae detectors
 
   kleb1_human5:
     tags:
@@ -232,7 +231,7 @@ datasets:
       Specialist detector dataset, trained on a single isolate
       of K. pneumoniae (RAP-004) + mix of human chromosomes
 
-    #  M. tuberculosis detectors
+  #  M. tuberculosis detectors
 
   tb1_human5:
     tags:

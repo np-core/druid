@@ -173,7 +173,7 @@ class AchillesDataset:
                     dedent(f"""
                 {Y}Class label: {C}{label}{Y} 
                 ----------------------------------
-                {G}Global tags: {C}{', '.join(self.global_tags)}{Y}
+                {G}Global tags: {C}{', '.join(self.global_tags if self.global_tags else [])}{Y}
                 {G}Sample tags: {C}{', '.join(tags)}{Y}
                 ----------------------------------
                 {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
