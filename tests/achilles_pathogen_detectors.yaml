@@ -1,7 +1,7 @@
 name: exp_pathogen_models_300
 date: 15/2/2021
 author: esteinig
-purpose: training
+prefix: training
 description: >
   Training experiment for pathogen specific detection models in host-microbe systems
   All training and evaluation sets sample unique reads (param: exclude) not present
@@ -28,15 +28,15 @@ descriptions:
   saureus2: Staphylococcus aureus isolate (FNQ)
   saureus3: Staphylococcus aureus isolate (PAK)
   bp1: Burkholderia pseudomallei (PNG-01)
-  bp2: Burkholderia pseudomallei (TSV-02)
-  bp3: Burkholderia pseudomallei (TSV-01)
-  ecoli1: Escherichia coli (Coin group)
-  ecoli2: Escherichia coli (Loman group)
-  kleb1: Klebsiella pneumoniae (Pitt Greece1)
-  kleb2: Escherichia coli (Pitt Greece2)
-  kleb3: Escherichia coli (Pitt Greece3)
-  kleb4: Escherichia coli (Pitt Greece4)
-  tb1: Mycobacterium tuberculosis (Coin PNG)
+  bp2: Burkholderia pseudomallei (TSV-12)
+  bp3: Burkholderia pseudomallei (TSV-24)
+  ecoli1: Escherichia coli (Coin)
+  ecoli2: Escherichia coli (Loman)
+  kleb1: Klebsiella pneumoniae (Greece1)
+  kleb2: Klebsiella pneumoniae (Greece2)
+  kleb3: Klebsiella pneumoniae (Greece3)
+  kleb4: Klebsiella pneumoniae (Greece4)
+  tb1: Mycobacterium tuberculosis (Coin)
   human1: mix of odd chromosomes 3, 5 and 9 (NA12878)
   human2: mix of even chromosomes 2, 4, 8 (NA12878)
   human3: single chromosome 2 (NA12878)
