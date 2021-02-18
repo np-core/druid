@@ -191,7 +191,7 @@ def create(
         datasets = config['datasets']
 
         for name, dataset_config in datasets.items():
-            ds_file = f"{name}.hd5"
+            ds_file = f"{name}.hdf5"
             tag_labels = dataset_config['tags']
             ds = AchillesDataset(poremongo=pongo, **params)
             ds.print_write_summary()
