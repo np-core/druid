@@ -153,7 +153,7 @@ datasets:
   bp3_human5:
     tags:
       - [bp1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Burkholderia pseudomallei
       - Homo sapiens

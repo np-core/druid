@@ -194,7 +194,6 @@ def create(
             ds_file = f"{name}.hdf5"
             tag_labels = dataset_config['tags']
             ds = AchillesDataset(poremongo=pongo, **params)
-            ds.print_write_summary()
             ds.write(tag_labels=tag_labels, data_file=ds_file)
 
     pongo.disconnect()

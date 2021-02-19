@@ -542,7 +542,7 @@ class AchillesDataset:
     def write_chunk(dataset, data):
 
         dataset.resize(dataset.shape[0] + data.shape[0], axis=0)
-        dataset[-data.shape[0] :] = data
+        dataset[-data.shape[0]:] = data
 
         return dataset
 
