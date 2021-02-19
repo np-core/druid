@@ -141,7 +141,7 @@ datasets:
 
   bp2_human5:
     tags:
-      - [bp1]
+      - [bp2]
       - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Burkholderia pseudomallei
@@ -152,7 +152,7 @@ datasets:
 
   bp3_human5:
     tags:
-      - [bp1]
+      - [bp3]
       - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Burkholderia pseudomallei
@@ -235,7 +235,7 @@ datasets:
 
   tb1_human5:
     tags:
-      - [ecoli1]
+      - [tb]
       - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Mycobacterium tuberculosis
