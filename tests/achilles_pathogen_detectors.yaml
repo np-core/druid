@@ -50,7 +50,7 @@ datasets:
   saureus1_human1:
     tags:
       - [saureus1]
-      - [chr3, chr5, chr9]
+      - [chr03, chr05, chr09]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -61,7 +61,7 @@ datasets:
   saureus1_human2:
     tags:
       - [saureus1]
-      - [chr2, chr4, chr8]
+      - [chr02, chr04, chr08]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -72,7 +72,7 @@ datasets:
   saureus1_human3:
     tags:
       - [saureus1]
-      - [chr2]
+      - [chr02]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -83,7 +83,7 @@ datasets:
   saureus1_human4:
     tags:
       - [saureus1]
-      - [chr3]
+      - [chr03]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -96,7 +96,7 @@ datasets:
   saureus1_human5:
     tags:
       - [saureus1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -107,7 +107,7 @@ datasets:
   saureus2_human5:
     tags:
       - [saureus2]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -118,7 +118,7 @@ datasets:
   saureus3_human5:
     tags:
       - [saureus3]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Staphylococcus aureus
       - Homo sapiens
@@ -131,7 +131,7 @@ datasets:
   bp1_human5:
     tags:
       - [bp1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Burkholderia pseudomallei
       - Homo sapiens
@@ -142,7 +142,7 @@ datasets:
   bp2_human5:
     tags:
       - [bp1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Burkholderia pseudomallei
       - Homo sapiens
@@ -166,7 +166,7 @@ datasets:
   ecoli1_human5:
     tags:
       - [ecoli1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Escherichia coli
       - Homo sapiens
@@ -177,7 +177,7 @@ datasets:
   ecoli2_human5:
     tags:
       - [ecoli2]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Escherichia coli
       - Homo sapiens
@@ -190,7 +190,7 @@ datasets:
   kleb1_human5:
     tags:
       - [kleb1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Klebsiella pneumoniae
       - Homo sapiens
@@ -201,7 +201,7 @@ datasets:
   kleb2_human5:
     tags:
       - [kleb2]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Klebsiella pneumoniae
       - Homo sapiens
@@ -212,7 +212,7 @@ datasets:
   kleb3_human5:
     tags:
       - [kleb3]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Klebsiella pneumoniae
       - Homo sapiens
@@ -223,7 +223,7 @@ datasets:
   kleb4_human5:
     tags:
       - [kleb4]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Klebsiella pneumoniae
       - Homo sapiens
@@ -236,7 +236,7 @@ datasets:
   tb1_human5:
     tags:
       - [ecoli1]
-      - [chr2, chr3, chr4, chr5, chr8, chr9]
+      - [chr02, chr03, chr04, chr05, chr08, chr09]
     labels:
       - Mycobacterium tuberculosis
       - Homo sapiens
