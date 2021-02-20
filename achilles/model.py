@@ -229,6 +229,7 @@ class AchillesModel:
             return self.model.predict(x=signal_tensor, batch_size=batch_size)
         else:
             dataset = AchillesDataset()
+            # shuffle false important to compare to ordered truth later
             prediction_generator = dataset.get_signal_generator(
                 self.data_file, data_type=data_type, batch_size=batch_size, shuffle=False, no_labels=True
             )

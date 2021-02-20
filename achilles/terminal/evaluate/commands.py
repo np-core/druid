@@ -68,14 +68,12 @@ def evaluate(model, evaluation, batch_size, model_summary):
 
     predicted = argmax(predicted, -1)
 
-    labels = get_dataset_labels(evaluation)
+    true_labels = get_dataset_labels(evaluation)
 
-    correct_labels = 0
-    false_labels = 0
-    for i, label in enumerate(predicted):
-        if int(label) == int(argmax(labels[i])):
-            correct_labels += 1
-        else:
-            false_labels += 1
+    get_binary_outcomes(predicted=predicted, truth=true_labels)
 
-    achilles.logger.info(f'False predictions in evaluation data: {correct_labels/false_labels:.2f}%')
+
+def get_binary_outcomes(predicted, truth):
+
+    print(predicted)
+    print(truth)
