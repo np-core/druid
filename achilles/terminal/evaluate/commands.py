@@ -66,11 +66,11 @@ def evaluate(model, evaluation, batch_size, model_summary):
         f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
-    predicted = argmax(predicted, -1)
+    predicted = argmax(predicted, -1)  # one hot encoded, rounded
+    predicted_labels = argmax(predicted, 1)  # one dim, predicted labels
+    true_labels = get_dataset_labels(evaluation)  # one dim, true labels
 
-    true_labels = get_dataset_labels(evaluation)
-
-    get_binary_outcomes(predicted=predicted, truth=true_labels)
+    get_binary_outcomes(predicted=predicted_labels, truth=true_labels)
 
 
 def get_binary_outcomes(predicted, truth):
