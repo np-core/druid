@@ -47,8 +47,10 @@ def evaluate(model, evaluation, batch_size):
 
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size, null_pass=(1, 1, 300, 1))
 
-        
+    seconds = microseconds/1000
     print(predicted)
+
+    print(f'Prediction speed: {seconds:.2f} seconds = {len(predicted)/seconds:.2f} reads/second')
 
     predicted = argmax(predicted, -1)
 
@@ -62,5 +64,4 @@ def evaluate(model, evaluation, batch_size):
         else:
             false_labels += 1
 
-    print(f'False predictions in evaluation data: '
-          f'{correct_labels/false_labels:.2f}%')
+    print(f'False predictions in evaluation data: {correct_labels/false_labels:.2f}%')
