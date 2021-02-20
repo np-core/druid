@@ -62,10 +62,16 @@ def plot_training(log_path, plot_file, color):
         f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
         params = {
-            'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False
+            'legend.fontsize': 6
         }
 
         plt.rcParams.update(params)
+
+        for ax in axes:
+            ax.spines['right'].set_visible(False)
+            ax.spines['top'].set_visible(False)
+            ax.yaxis.set_ticks_position('left')
+            ax.xaxis.set_ticks_position('bottom')
 
         cm = plt.get_cmap(color)
         cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
