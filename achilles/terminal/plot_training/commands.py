@@ -59,6 +59,11 @@ def plot_training(log_path, plot_file, color):
 
     df_group = df.groupby("name")
 
+    params = {'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False}
+
+    plt.style.use('seaborn.paper')
+    plt.rcParams.update(params)
+
     f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
     cm = plt.get_cmap(color)
@@ -66,10 +71,6 @@ def plot_training(log_path, plot_file, color):
 
     axes[0].set_prop_cycle(color=cmp)
     axes[1].set_prop_cycle(color=cmp)
-
-    params = {'legend.fontsize': 6}
-
-    plt.rcParams.update(params)
 
     df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Training accuracy")
     df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
