@@ -77,5 +77,5 @@ def evaluate(model, evaluation, batch_size, model_summary):
     recall = recall_score(true_labels, predicted_labels)
     f1 = f1_score(true_labels, predicted_labels)
 
-    achilles.logger.info(f"Accuracy: {accuracy} Precision: {precision} Recall: {recall} F1: {f1}")
+    achilles.logger.info(f"Accuracy: {accuracy:.3f} Precision: {precision:.3f} Recall: {recall:.3f} F1: {f1:.3f}")
 
