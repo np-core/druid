@@ -62,7 +62,7 @@ def plot_training(log_path, plot_file, color):
         f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
         params = {
-            'legend.fontsize': 6
+            'legend.fontsize': 6, 'axes.labelsize': 10
         }
 
         plt.rcParams.update(params)
@@ -79,8 +79,8 @@ def plot_training(log_path, plot_file, color):
         axes[0].set_prop_cycle(color=cmp)
         axes[1].set_prop_cycle(color=cmp)
 
-        axes[0].set_ylabel('Accuracy')
-        axes[1].set_ylabel('Loss')
+        axes[0].set_ylabel('Accuracy\n')
+        axes[1].set_ylabel('\nLoss')
 
         df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0])
         df_group["loss"].plot(x="epochs", legend=False, ax=axes[1])
