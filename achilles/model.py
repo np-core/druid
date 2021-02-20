@@ -236,7 +236,7 @@ class AchillesModel:
             # Warmup pass to allocate memory
             signal_tensor = np.zeros(shape=null_pass)
 
-        if signal_tensor:
+        if signal_tensor is not None:
             # Select random or beginning consecutive windows
             return self.model.predict(x=signal_tensor, batch_size=batch_size)
         else:
