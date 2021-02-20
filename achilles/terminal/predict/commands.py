@@ -39,8 +39,8 @@ M = Fore.MAGENTA
 @click.option(
     "--model",
     "-m",
-    default=None,
-    help="HD5 model file or <collection>/<model> from local model cache.",
+    default=Path,
+    help="HD5 model file",
     show_default=True,
     metavar="",
 )
@@ -102,7 +102,6 @@ M = Fore.MAGENTA
 )
 def predict(
         directory,
-        watch,
         model,
         window_slices,
         window_size,
@@ -118,16 +117,11 @@ def predict(
 
     # TODO: live watching of Fast5
 
-    base = Achilles()
     achilles = AchillesModel()
 
     # Find model - if in local collection, the
     # collections should be specified like this: collection/model
     model_path = Path(model)
-    if not model_path.exists():
-        # Try and see if the name matches a model in
-        # the collections, and if so, return the file path:
-        model_path = str(base.get_model(model))
 
     print(f"{Y}Preparing predictions with Achilles:{RE}\n")
     print(f"  {Y}- Loading model: {G}{model}{RE}")
@@ -150,13 +144,14 @@ def predict(
                 batch_size
             )
 
+
 def predict_read(
-        f5,
-        achilles,
-        window_size,
-        window_step,
-        window_slices,
-        batch_size
+    f5,
+    achilles,
+    window_size,
+    window_step,
+    window_slices,
+    batch_size
 ):
     read_windows = get_reads(
         fast5=f5, window_size=window_size,

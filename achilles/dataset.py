@@ -191,6 +191,10 @@ class AchillesDataset:
                     return_documents=True
                 )
 
+                if not reads:
+                    print(f"Could not sample reads from database. Does the database have these tags: {', '.join(tags)}")
+                    exit(1)
+
                 # Randomize sampled reads, not necessary but precaution:
                 random.shuffle(reads)
 
@@ -237,7 +241,7 @@ class AchillesDataset:
                             # If the maximum number of signals for this class (label) has
                             # been reached, break the Read loop and proceed to writing
                             # label stored in memory (all at once)
-                            if total >= max_windows - 1:
+                            if total >= max_windows:
                                 break
 
                 self.poremongo.logger.info(f"Extracted {total} / {max_windows} windows for label {label}")

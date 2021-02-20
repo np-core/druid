@@ -231,16 +231,14 @@ class AchillesModel:
         """ Evaluate model against presented dataset """
 
         loss, acc = self.model.evaluate_generator(
-            eval_generator, workers=workers, verbose=True,
-            use_multiprocessing=False
+            eval_generator, workers=workers, verbose=True, use_multiprocessing=False
         )
 
         return loss, acc
 
     @timeit(micro=True)
     def predict(
-        self, signal_tensor: np.array = None, batch_size=10,
-        null_pass: np.shape = None
+        self, signal_tensor: np.array = None, batch_size=10, null_pass: np.shape = None
     ):
 
         """ Predict signal arrays using model test function,
