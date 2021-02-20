@@ -54,19 +54,19 @@ def evaluate(model, evaluation, batch_size, model_summary):
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    print(f'{Y}Evaluating model: {G}{Path(model).name}{RE}')
-    print(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
+    achilles.logger.info(f'{Y}Evaluating model: {G}{Path(model).name}{RE}')
+    achilles.logger.info(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
 
-    print(f'{Y}Conducting null pass to allocate resources on {G}GPU ...{RE}')
+    achilles.logger.info(f'{Y}Conducting null pass to allocate resources on {G}GPU ...{RE}')
     achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
 
-    print(f'{Y}Starting predictions ...{RE}')
+    achilles.logger.info(f'{Y}Starting predictions with batch size: {G}{batch_size}{RE}')
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
 
     seconds = microseconds/1e06
     print(predicted)
 
-    print(f'Prediction speed: {seconds:.2f} seconds = {len(predicted)/seconds:.2f} reads/second')
+    achilles.logger.info(f'Prediction speed: {seconds:.2f} seconds = {len(predicted)/seconds:.2f} reads/second')
 
     predicted = argmax(predicted, -1)
 
@@ -80,4 +80,4 @@ def evaluate(model, evaluation, batch_size, model_summary):
         else:
             false_labels += 1
 
-    print(f'False predictions in evaluation data: {correct_labels/false_labels:.2f}%')
+    achilles.logger.info(f'False predictions in evaluation data: {correct_labels/false_labels:.2f}%')

@@ -1,5 +1,6 @@
 import os
 import pickle
+import logging
 import numpy as np
 
 from keras import backend as K
@@ -19,6 +20,8 @@ class AchillesModel:
         self.data_file = data_file
         self.log_dir = log_dir
         self.model = None
+
+        self.logger = logging.getLogger(__name__)
 
     def build(
         self,
@@ -114,10 +117,10 @@ class AchillesModel:
             self.model.summary()
 
         if gpus <= 1:
-            print("Built model for training on 1 GPU.")
+            self.logger.info("Built model for training on 1 GPU.")
             return self.model
         else:
-            print(f"Building model for distributed training on {gpus} GPUs.")
+            self.logger.info(f"Building model for distributed training on {gpus} GPUs.")
             raise ValueError(
                 'Current version of Keras does not support multi GPU models.'
             )
@@ -144,7 +147,7 @@ class AchillesModel:
     ):
 
         if gpu:
-            print(f"CUDA_VISIBLE_DEVICES environment variable set to {gpu}")
+            self.logger.info(f"CUDA_VISIBLE_DEVICES environment variable set to {gpu}")
             os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
         # Estimated memory for dimensions and
@@ -182,9 +185,9 @@ class AchillesModel:
             save_freq=1,
         )
 
-        print(
+        self.logger.info(
             f"Running on batch size {batch_size} for {epochs} epochs "
-            f"with {workers} worker processes --> run ID: {run_id}"
+            f"with {workers} worker processes and run identifier: {run_id}"
         )
 
         # TODO: Enable NCPU
@@ -204,18 +207,6 @@ class AchillesModel:
         ) as history_out:
             pickle.dump(history.history, history_out)
 
-    def adjust_batch_size(self, batch_size):
-
-        """ Function for adjusting batch size to live GPU memory; this is not an accurate estimation
-        but rather aims at conservatively estimating available GPU memory and adjusting the batch size
-        so that training does not raise out-of-memory errors, particularly when using training as part
-        of Nextflow workflows where the underlying data dimensions (and therefore memory occupancy) may
-        differ between runs or across a grid search.
-        """
-
-        # TODO
-        mem = self.estimate_memory_usage(batch_size)
-
     def load_model(self, model_file, summary=False):
 
         """ Load model from HDF5 output file with model layers and weights """
@@ -225,16 +216,6 @@ class AchillesModel:
         self.model = load_model(model_file)
         if summary:
             self.model.summary()
-
-    def evaluate(self, eval_generator, workers=2):
-
-        """ Evaluate model against presented dataset """
-
-        loss, acc = self.model.evaluate_generator(
-            eval_generator, workers=workers, verbose=True, use_multiprocessing=False
-        )
-
-        return loss, acc
 
     @timeit(micro=True)
     def predict(
