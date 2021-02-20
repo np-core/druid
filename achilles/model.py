@@ -252,7 +252,7 @@ class AchillesModel:
                 no_labels=True,
             )
             print(f"Predicting on dataset generator:")
-            return self.model.predict(prediction_generator)
+            return self.model.predict_generator(prediction_generator)
 
     @staticmethod
     def residual_block(

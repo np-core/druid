@@ -674,10 +674,10 @@ class DataGenerator(Sequence):
         data, labels = self.__data_generation(indices)
 
         # Testing print statements:
-
-        print("Training data batch:", data.shape)
-        print("Training label batch:", labels.shape)
-        print("Generated data for indices:", indices)
+        #
+        # print("Training data batch:", data.shape)
+        # print("Training label batch:", labels.shape)
+        # print("Generated data for indices:", indices)
 
         if self.no_labels:
             return data
