@@ -54,20 +54,19 @@ def evaluate(model, evaluation, batch_size, model_summary):
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    achilles.logger.info(f'{Y}Evaluating model: {G}{Path(model).name}{RE}')
-    achilles.logger.info(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
+    achilles.logger.info(f'Evaluating model: {Path(model).name}')
+    achilles.logger.info(f'Using evaluation data from: {G}{Path(evaluation).name}')
 
-    achilles.logger.info(f'{Y}Conducting null pass to allocate resources{RE}')
+    achilles.logger.info(f'Conducting null pass to allocate resources')
     achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
 
-    achilles.logger.info(f'{Y}Starting predictions with batch size: {G}{batch_size}{RE}')
+    achilles.logger.info(f'Starting predictions with batch size: {batch_size}')
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
 
     seconds = microseconds/1e06
-    print(predicted)
 
     achilles.logger.info(
-        f'Prediction speed: {seconds:.2f} seconds / {len(predicted)} reads = '
+        f'{seconds:.2f} seconds / {len(predicted)} reads = '
         f'{len(predicted)/seconds:.2f} reads/second'
     )
 
