@@ -668,16 +668,16 @@ class DataGenerator(Sequence):
         """ Generate one batch of data """
 
         # Generate indexes of the batch
-        indices = self.indices[index * self.batch_size : (index + 1) * self.batch_size]
+        indices = self.indices[index*self.batch_size: (index + 1)*self.batch_size]
 
         # Generate data
         data, labels = self.__data_generation(indices)
 
         # Testing print statements:
 
-        # print("Training data batch:", data.shape)
-        # print("Training label batch:", labels.shape)
-        # print("Generated data for indices:", indices)
+        print("Training data batch:", data.shape)
+        print("Training label batch:", labels.shape)
+        print("Generated data for indices:", indices)
 
         if self.no_labels:
             return data
