@@ -62,7 +62,7 @@ def plot_training(log_path, plot_file, color):
         f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
         params = {
-            'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False
+            'legend.fontsize': 6, 'ax.spines.right': False, 'ax.spines.top': False
         }
         plt.rcParams.update(params)
 
