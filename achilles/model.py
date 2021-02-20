@@ -239,7 +239,7 @@ class AchillesModel:
 
     @timeit(micro=True)
     def predict(
-        self, signal_tensor: np.array = None, batch_size=10, null_pass: np.shape = None
+        self, signal_tensor: np.array = None, data_type: str = "data", batch_size=1000, null_pass: np.shape = None
     ):
 
         """ Predict signal arrays using model test function,
@@ -248,27 +248,28 @@ class AchillesModel:
         # Read Fast5 and extract windows from signal array:
 
         if null_pass:
-            # Warmup pass to allocate memory
-            signal_tensor = np.zeros(shape=null_pass)
+            print("Null pass to allocate resources on GPU")
+            null_tensor = np.zeros(shape=null_pass)
+            self.model.predict(x=null_tensor, batch_size=batch_size)
 
         # Select random or beginning consecutive windows
-        return self.model.predict(x=signal_tensor, batch_size=batch_size)
+        print("Starting predictions...")
+        if signal_tensor is not None:
+            return self.model.predict(x=signal_tensor, batch_size=batch_size)
+        else:
+            # Reads data from HDF5 data file:
+            dataset = AchillesDataset()
 
-    def predict_generator(self, data_type="data", batch_size=1000):
+            # Get training and validation data generators
+            prediction_generator = dataset.get_signal_generator(
+                self.data_file,
+                data_type=data_type,
+                batch_size=batch_size,
+                shuffle=False,
+                no_labels=True,
+            )
 
-        # Reads data from HDF5 data file:
-        dataset = AchillesDataset()
-
-        # Get training and validation data generators
-        prediction_generator = dataset.get_signal_generator(
-            self.data_file,
-            data_type=data_type,
-            batch_size=batch_size,
-            shuffle=False,
-            no_labels=True,
-        )
-
-        return self.model.predict_generator(prediction_generator)
+            return self.model.predict_generator(prediction_generator)
 
     @staticmethod
     def residual_block(
