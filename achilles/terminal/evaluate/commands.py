@@ -67,7 +67,8 @@ def evaluate(model, evaluation, batch_size, model_summary):
     )
 
     predicted = argmax(predicted, -1)  # one hot encoded, rounded
-    predicted_labels = argmax(predicted, 1)  # one dim, predicted labels
+    print(predicted)
+    predicted_labels = argmax(predicted)  # one dim, predicted labels
     true_labels = get_dataset_labels(evaluation)  # one dim, true labels
 
     get_binary_outcomes(predicted=predicted_labels, truth=true_labels)
