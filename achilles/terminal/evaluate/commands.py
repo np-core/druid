@@ -46,7 +46,7 @@ def evaluate(model, evaluation, batch_size):
     print(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
 
     print(f'{Y}Conducting null pass to allocate resources on {G}GPU ...{RE}')
-    achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
+    achilles.predict(null_pass=(1, 1, 1, 1), batch_size=batch_size)
 
     print(f'{Y}Starting predictions ...{RE}')
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
