@@ -6,7 +6,7 @@ from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
-from sklearn.metrics import confusion_matrix, precision_score, accuracy_score, recall_score
+from sklearn.metrics import confusion_matrix, precision_score, accuracy_score, recall_score, f1_score
 
 warnings.filterwarnings('ignore')
 
@@ -75,6 +75,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
     accuracy = accuracy_score(true_labels, predicted_labels)
     precision = precision_score(true_labels, predicted_labels)
     recall = recall_score(true_labels, predicted_labels)
+    f1 = f1_score(true_labels, predicted_labels)
 
-    print(accuracy, precision, recall)
+    achilles.logger.info(f"Accuracy: {accuracy} Precision: {precision} Recall: {recall} F1: {f1}")
 
