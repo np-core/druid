@@ -5,7 +5,7 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 
 plt.style.use('fast')
-
+print(plt.style.available())
 
 @click.command()
 @click.option(
@@ -61,11 +61,10 @@ def plot_training(log_path, plot_file, color):
 
     df_group = df.groupby("name")
 
-    params = {'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False}
-
-    plt.rcParams.update(params)
-
     f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+
+    params = {'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False}
+    plt.rcParams.update(params)
 
     cm = plt.get_cmap(color)
     cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
