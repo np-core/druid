@@ -73,5 +73,5 @@ def evaluate(model, evaluation, batch_size, model_summary):
 
     cm = confusion_matrix(true_labels, predicted_labels)
 
-    print(cm)
+    print(cm/reads)
 
