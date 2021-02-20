@@ -4,12 +4,8 @@ import warnings
 from numpy import argmax
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
-from colorama import Fore
 from pathlib import Path
 
-Y = Fore.YELLOW
-G = Fore.GREEN
-RE = Fore.RESET
 
 warnings.filterwarnings('ignore')
 
@@ -54,7 +50,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    achilles.logger.info(f'{RE}Evaluating model: {Path(model).name}')
+    achilles.logger.info(f'Evaluating model: {Path(model).name}')
     achilles.logger.info(f'Using evaluation data from: {Path(evaluation).name}')
 
     achilles.logger.info(f'Conducting null pass to allocate resources')
