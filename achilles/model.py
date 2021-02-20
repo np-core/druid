@@ -216,7 +216,7 @@ class AchillesModel:
         # TODO
         mem = self.estimate_memory_usage(batch_size)
 
-    def load_model(self, model_file, summary=True):
+    def load_model(self, model_file, summary=False):
 
         """ Load model from HDF5 output file with model layers and weights """
 

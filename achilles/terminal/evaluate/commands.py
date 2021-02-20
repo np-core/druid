@@ -1,4 +1,6 @@
 import click
+import warnings
+
 from numpy import argmax
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -9,13 +11,15 @@ Y = Fore.YELLOW
 G = Fore.GREEN
 RE = Fore.RESET
 
+warnings.filterwarnings('ignore')
+
 
 @click.command()
 @click.option(
     "--model",
     "-m",
     default=None,
-    help="Model file HD5.",
+    help="Model file (HDF5) for prediction",
     show_default=True,
     metavar="",
 )
@@ -23,24 +27,32 @@ RE = Fore.RESET
     "--evaluation",
     "-e",
     default=None,
-    help="Evaluation file HD5 sampled from AchillesModel.",
+    help="Evaluation file (HDF5) for prediction generator",
     show_default=True,
     metavar="",
 )
 @click.option(
     "--batch_size",
     "-b",
-    default=500,
-    help="Evaluation batch size.",
+    default=1000,
+    help="Prediction batch size",
     show_default=True,
     metavar="",
 )
-def evaluate(model, evaluation, batch_size):
+@click.option(
+    "--model_summary",
+    "-s",
+    is_flag=True,
+    help="Print the model summary before prediction",
+    show_default=True,
+    metavar="",
+)
+def evaluate(model, evaluation, batch_size, model_summary):
 
     """ Evaluate a model against a data set from PoreMongo """
 
     achilles = AchillesModel(evaluation)
-    achilles.load_model(model_file=model)
+    achilles.load_model(model_file=model, summary=model_summary)
 
     print(f'{Y}Evaluating model: {G}{Path(model).name}{RE}')
     print(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
