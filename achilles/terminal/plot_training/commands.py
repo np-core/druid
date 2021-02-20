@@ -71,7 +71,7 @@ def plot_training(log_path, plot_file, color):
             ax.spines['right'].set_visible(False)
             ax.spines['top'].set_visible(False)
             ax.tick_params(axis='both', labelsize=8, length=2, width=2)
-            ax.set_xlabel('Epochs')
+            ax.set_xlabel('\nEpochs')
 
         cm = plt.get_cmap(color)
         cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
@@ -80,7 +80,7 @@ def plot_training(log_path, plot_file, color):
         axes[1].set_prop_cycle(color=cmp)
 
         axes[0].set_ylabel('Accuracy\n')
-        axes[1].set_ylabel('\nLoss')
+        axes[1].set_ylabel('Loss\n')
 
         df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0])
         df_group["loss"].plot(x="epochs", legend=False, ax=axes[1])
