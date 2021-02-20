@@ -61,7 +61,7 @@ def plot_training(log_path, plot_file, color):
 
     params = {'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False}
 
-    plt.style.use('seaborn.paper')
+    plt.style.use('seaborn-paper')
     plt.rcParams.update(params)
 
     f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
