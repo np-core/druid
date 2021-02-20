@@ -60,10 +60,10 @@ def evaluate(model, evaluation, batch_size, model_summary):
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
 
     seconds = microseconds/1e06
+    reads = len(predicted)
 
     achilles.logger.info(
-        f'{seconds:.2f} seconds / {len(predicted)} reads = '
-        f'{int(len(predicted)/seconds)} reads/second'
+        f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
     predicted = argmax(predicted, -1)

@@ -1,5 +1,6 @@
 import click
 
+from .plot_training import plot_training
 from .create import create
 from .train import train
 from .lab import lab
@@ -14,6 +15,7 @@ def terminal_client():
     pass
 
 
+terminal_client.add_command(plot_training)
 terminal_client.add_command(create)
 terminal_client.add_command(train)
 terminal_client.add_command(lab)
