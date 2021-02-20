@@ -63,7 +63,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
 
     achilles.logger.info(
         f'{seconds:.2f} seconds / {len(predicted)} reads = '
-        f'{len(predicted)/seconds:.2f} reads/second'
+        f'{int(len(predicted)/seconds)} reads/second'
     )
 
     predicted = argmax(predicted, -1)
