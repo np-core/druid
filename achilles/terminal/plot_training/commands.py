@@ -5,7 +5,7 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 
 plt.style.use('fast')
-print(plt.style.available())
+print(plt.style.available)
 
 @click.command()
 @click.option(
