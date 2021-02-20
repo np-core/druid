@@ -24,7 +24,16 @@ from matplotlib import pyplot as plt
     show_default=True,
     metavar="",
 )
-def plot_training(log_path, plot_file):
+@click.option(
+    "--color",
+    "-c",
+    default="tab20",
+    type=Path,
+    help="Matplotlib color map for unique color per log file",
+    show_default=True,
+    metavar="",
+)
+def plot_training(log_path, plot_file, color):
 
     """Plot training accuracy and loss """
 
@@ -51,6 +60,9 @@ def plot_training(log_path, plot_file):
     df_group = df.groupby("name")
 
     f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+
+    cm = plt.get_cmap(color)
+    axes.set_prop_cycle([cm(1. * i / len(log_data)) for i in range(len(log_data))])
 
     df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Training accuracy")
     df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
