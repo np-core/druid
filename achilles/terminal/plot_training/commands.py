@@ -28,7 +28,7 @@ from matplotlib import pyplot as plt
     "--color",
     "-c",
     default="tab20",
-    type=Path,
+    type=str,
     help="Matplotlib color map for unique color per log file",
     show_default=True,
     metavar="",
