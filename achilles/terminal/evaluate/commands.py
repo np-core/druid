@@ -1,7 +1,7 @@
 import click
 import warnings
 
-import numpy as np
+from numpy import argmax, where
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -67,14 +67,19 @@ def evaluate(model, evaluation, batch_size, model_summary):
         f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
-    predicted = np.argmax(predicted, 1)  # one hot decoded
-    predicted_labels = tf.argmax(predicted, 1)  # one hot decoded
-    true_labels = get_dataset_labels(evaluation)  # one dim, true labels
+    print(predicted)
+    predicted1 = argmax(predicted, -1)  # one hot decoded
+    predicted2 = argmax(predicted, 1)  # one hot decoded
+    print(predicted1)
+    print(predicted2)
 
-    get_binary_outcomes(predicted=predicted_labels, truth=true_labels)
+    true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
+
+    print(true_labels)
+    get_binary_outcomes(predicted=predicted2, truth=true_labels)
 
 
 def get_binary_outcomes(predicted, truth):
-
-    print(predicted)
-    print(truth)
+    pass
+    #print(predicted)
+    #print(truth)
