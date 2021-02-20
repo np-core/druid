@@ -430,18 +430,12 @@ def get_dataset_file_names(datasets):
 
 def get_dataset_labels(dataset):
 
-    """ If we sample from the same (random) subset of reads as the training data, this function
-    makes sure that we are not using the same files used in training for evaluation / prediction. """
-
     with h5py.File(dataset, "r") as data:
         labels = data["data/labels"]
         return np.array(labels)
 
 
 def get_dataset_dim(dataset):
-
-    """ If we sample from the same (random) subset of reads as the training data, this function
-    makes sure that we are not using the same files used in training for evaluation / prediction. """
 
     with h5py.File(dataset, "r") as data:
         return np.array(data["training/data"]).shape

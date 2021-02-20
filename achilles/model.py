@@ -204,18 +204,6 @@ class AchillesModel:
         ) as history_out:
             pickle.dump(history.history, history_out)
 
-    def adjust_batch_size(self, batch_size):
-
-        """ Function for adjusting batch size to live GPU memory; this is not an accurate estimation
-        but rather aims at conservatively estimating available GPU memory and adjusting the batch size
-        so that training does not raise out-of-memory errors, particularly when using training as part
-        of Nextflow workflows where the underlying data dimensions (and therefore memory occupancy) may
-        differ between runs or across a grid search.
-        """
-
-        # TODO
-        mem = self.estimate_memory_usage(batch_size)
-
     def load_model(self, model_file, summary=True):
 
         """ Load model from HDF5 output file with model layers and weights """
@@ -223,6 +211,7 @@ class AchillesModel:
         # Read model stats
 
         self.model = load_model(model_file)
+
         if summary:
             self.model.summary()
 
@@ -238,11 +227,8 @@ class AchillesModel:
 
     @timeit(micro=True)
     def predict(
-        self, signal_tensor: np.array = None, batch_size=10, null_pass: np.shape = None
+        self, data_type="data", signal_tensor: np.array = None, batch_size=10, null_pass: np.shape = None
     ):
-
-        """ Predict signal arrays using model test function,
-         might implement in class later"""
 
         # Read Fast5 and extract windows from signal array:
 
@@ -250,24 +236,23 @@ class AchillesModel:
             # Warmup pass to allocate memory
             signal_tensor = np.zeros(shape=null_pass)
 
-        # Select random or beginning consecutive windows
-        return self.model.predict(x=signal_tensor, batch_size=batch_size)
+        if signal_tensor:
+            # Select random or beginning consecutive windows
+            return self.model.predict(x=signal_tensor, batch_size=batch_size)
+        else:
+            # Reads data from HDF5 data file:
+            dataset = AchillesDataset()
 
-    def predict_generator(self, data_type="data", batch_size=1000):
+            # Get training and validation data generators
+            prediction_generator = dataset.get_signal_generator(
+                self.data_file,
+                data_type=data_type,
+                batch_size=batch_size,
+                shuffle=False,
+                no_labels=True,
+            )
 
-        # Reads data from HDF5 data file:
-        dataset = AchillesDataset()
-
-        # Get training and validation data generators
-        prediction_generator = dataset.get_signal_generator(
-            self.data_file,
-            data_type=data_type,
-            batch_size=batch_size,
-            shuffle=False,
-            no_labels=True,
-        )
-
-        return self.model.predict_generator(prediction_generator)
+            return self.model.predict_generator(prediction_generator)
 
     @staticmethod
     def residual_block(
