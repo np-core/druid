@@ -50,13 +50,10 @@ def plot_training(log_path, plot_file):
 
     df_group = df.groupby("name")
 
-    f, axes = plt.subplots(2, 2)
-    f.suptitle("Training Summary")
+    f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
-    df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0][0], title="Training accuracy")
-    df_group["loss"].plot(x="epochs", legend=False, ax=axes[0][1], title="Training loss")
-    df_group["val_accuracy"].plot(x="epochs", legend=False, ax=axes[1][0], title="Validation accuracy")
-    df_group["val_loss"].plot(x="epochs", legend=False, ax=axes[1][1], title="Validation loss")
+    df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Training accuracy")
+    df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
 
     plt.tight_layout()
-    plt.savefig(plot_file, figsize=(8, 6), bbox_inches="tight")
+    plt.savefig(plot_file)
