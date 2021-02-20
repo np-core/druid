@@ -70,8 +70,7 @@ def plot_training(log_path, plot_file, color):
         for ax in axes:
             ax.spines['right'].set_visible(False)
             ax.spines['top'].set_visible(False)
-
-        plt.tick_params(axis='both', labelsize=1, length=1)
+            ax.tick_params(axis='both', labelsize=12, length=3, width=4)
 
         cm = plt.get_cmap(color)
         cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
