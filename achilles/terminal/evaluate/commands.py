@@ -1,7 +1,7 @@
 import click
 import warnings
 
-from numpy import argmax
+from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
@@ -67,8 +67,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
     )
 
     predicted = argmax(predicted, -1)  # one hot encoded, rounded
-    print(predicted)
-    predicted_labels = argmax(predicted)  # one dim, predicted labels
+    predicted_labels = [where(p == 1)[0][0] for p in predicted]  # one dim, predicted labels
     true_labels = get_dataset_labels(evaluation)  # one dim, true labels
 
     get_binary_outcomes(predicted=predicted_labels, truth=true_labels)
