@@ -225,7 +225,6 @@ class AchillesModel:
 
         return loss, acc
 
-    @timeit(micro=True)
     def predict(
         self, data_type="data", signal_tensor: np.array = None, batch_size=10, null_pass: np.shape = None
     ):
@@ -252,7 +251,7 @@ class AchillesModel:
                 no_labels=True,
             )
 
-            return self.model.predict_generator(prediction_generator)
+            return self.model.predict(prediction_generator)
 
     @staticmethod
     def residual_block(
