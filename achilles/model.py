@@ -233,6 +233,7 @@ class AchillesModel:
 
         if null_pass:
             # Warmup pass to allocate memory
+            print(f"Null pass to allocate resources on GPU")
             signal_tensor = np.zeros(shape=null_pass)
 
         if signal_tensor is not None:
@@ -250,7 +251,7 @@ class AchillesModel:
                 shuffle=False,
                 no_labels=True,
             )
-
+            print(f"Predicting on dataset generator:")
             return self.model.predict(prediction_generator)
 
     @staticmethod
