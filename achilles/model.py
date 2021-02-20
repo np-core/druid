@@ -231,8 +231,7 @@ class AchillesModel:
         """ Evaluate model against presented dataset """
 
         loss, acc = self.model.evaluate_generator(
-            eval_generator, workers=workers, verbose=True,
-            use_multiprocessing=False
+            eval_generator, workers=workers, verbose=True, use_multiprocessing=False
         )
 
         return loss, acc
