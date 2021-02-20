@@ -64,8 +64,8 @@ def plot_training(log_path, plot_file, color):
     cm = plt.get_cmap(color)
     cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
 
-    axes[0].set_prop_cycle(cmp)
-    axes[1].set_prop_cycle(cmp)
+    axes[0].set_prop_cycle(color=cmp)
+    axes[1].set_prop_cycle(color=cmp)
 
     df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Training accuracy")
     df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
