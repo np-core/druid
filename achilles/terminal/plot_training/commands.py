@@ -4,8 +4,8 @@ import pandas
 from pathlib import Path
 from matplotlib import pyplot as plt
 
-plt.style.use('fast')
-print(plt.style.available)
+plt.style.use('seaborn-white')
+
 
 @click.command()
 @click.option(
