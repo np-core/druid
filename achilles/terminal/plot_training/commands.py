@@ -55,7 +55,7 @@ def plot_training(log_path, plot_file):
 
     df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0][0], title="Training accuracy")
     df_group["loss"].plot(x="epochs", legend=False, ax=axes[0][1], title="Training loss")
-    df_group["validation_accuracy"].plot(x="epochs", legend=False, ax=axes[1][0], title="Validation accuracy")
+    df_group["val_accuracy"].plot(x="epochs", legend=False, ax=axes[1][0], title="Validation accuracy")
     df_group["val_loss"].plot(x="epochs", legend=False, ax=axes[1][1], title="Validation loss")
 
     plt.tight_layout()
