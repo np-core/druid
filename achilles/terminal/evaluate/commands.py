@@ -57,7 +57,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
     achilles.logger.info(f'{Y}Evaluating model: {G}{Path(model).name}{RE}')
     achilles.logger.info(f'{Y}Using evaluation data from: {G}{Path(evaluation).name}{RE}')
 
-    achilles.logger.info(f'{Y}Conducting null pass to allocate resources on {G}GPU ...{RE}')
+    achilles.logger.info(f'{Y}Conducting null pass to allocate resources{RE}')
     achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
 
     achilles.logger.info(f'{Y}Starting predictions with batch size: {G}{batch_size}{RE}')
