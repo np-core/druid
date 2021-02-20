@@ -6,7 +6,7 @@ from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
-
+from sklearn.metrics import confusion_matrix
 
 warnings.filterwarnings('ignore')
 
@@ -67,19 +67,11 @@ def evaluate(model, evaluation, batch_size, model_summary):
         f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
-    print(predicted)
-    predicted1 = argmax(predicted, -1)  # one hot decoded
-    predicted2 = argmax(predicted, 1)  # one hot decoded
-    print(predicted1)
-    print(predicted2)
-
+    predicted_labels = argmax(predicted, 1)  # one hot decoded
     true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
 
-    print(true_labels)
-    get_binary_outcomes(predicted=predicted2, truth=true_labels)
 
+    cm = confusion_matrix(true_labels, predicted_labels)
 
-def get_binary_outcomes(predicted, truth):
-    pass
-    #print(predicted)
-    #print(truth)
+    print(cm)
+
