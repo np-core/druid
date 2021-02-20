@@ -4,7 +4,7 @@ import pandas
 from pathlib import Path
 from matplotlib import pyplot as plt
 
-plt.style.use('seaborn-paper')
+plt.style.use('fast')
 
 
 @click.command()
