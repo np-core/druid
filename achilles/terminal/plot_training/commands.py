@@ -4,9 +4,6 @@ import pandas
 from pathlib import Path
 from matplotlib import pyplot as plt
 
-plt.style.use('seaborn-white')
-
-
 @click.command()
 @click.option(
     "--log_path",
@@ -61,22 +58,22 @@ def plot_training(log_path, plot_file, color):
 
     df_group = df.groupby("name")
 
-    f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+    with plt.style.context('seaborn-white'):
+        f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
 
-    params = {
-        'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False,
-        'figure.facecolor': 'white', 'savefig.facecolor': 'white'
-    }
-    plt.rcParams.update(params)
+        params = {
+            'legend.fontsize': 6, 'axes.spines.right': False, 'axes.spines.top': False
+        }
+        plt.rcParams.update(params)
     
-    cm = plt.get_cmap(color)
-    cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
+        cm = plt.get_cmap(color)
+        cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
 
-    axes[0].set_prop_cycle(color=cmp)
-    axes[1].set_prop_cycle(color=cmp)
+        axes[0].set_prop_cycle(color=cmp)
+        axes[1].set_prop_cycle(color=cmp)
 
-    df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Test accuracy")
-    df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
+        df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Test accuracy")
+        df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
 
-    plt.tight_layout()
-    plt.savefig(plot_file)
+        plt.tight_layout()
+        plt.savefig(plot_file)
