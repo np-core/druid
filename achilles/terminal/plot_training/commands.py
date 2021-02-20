@@ -73,7 +73,7 @@ def plot_training(log_path, plot_file, color):
     axes[0].set_prop_cycle(color=cmp)
     axes[1].set_prop_cycle(color=cmp)
 
-    df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Training accuracy")
+    df_group["accuracy"].plot(x="epochs", legend=True, ax=axes[0], title="Test accuracy")
     df_group["loss"].plot(x="epochs", legend=False, ax=axes[1], title="Training loss")
 
     plt.tight_layout()
