@@ -6,7 +6,7 @@ from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
-from sklearn.metrics import confusion_matrix, precision_score, accuracy_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, precision_score, accuracy_score, recall_score, f1_score, roc_auc_score
 
 warnings.filterwarnings('ignore')
 
@@ -76,8 +76,8 @@ def evaluate(model, evaluation, batch_size, model_summary):
     precision = precision_score(true_labels, predicted_labels)*100
     recall = recall_score(true_labels, predicted_labels)*100
     f1 = f1_score(true_labels, predicted_labels)*100
-
+    roc_auc = roc_auc_score(true_labels, predicted_labels)*100
     achilles.logger.info(
-        f"Accuracy: {accuracy:.1f}%  Precision: {precision:.1f}%  Recall: {recall:.2f}%  F1: {f1:.1f}%"
+        f"Accuracy: {accuracy:.1f}%  Precision: {precision:.1f}%  Recall: {recall:.2f}%  F1: {f1:.1f}%  ROC-AUC {roc_auc:1.f}%"
     )
 
