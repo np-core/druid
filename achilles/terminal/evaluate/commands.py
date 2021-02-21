@@ -6,7 +6,17 @@ from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
-from sklearn.metrics import confusion_matrix, precision_score, accuracy_score, recall_score, f1_score, roc_auc_score
+
+from sklearn.metrics import \
+    confusion_matrix, \
+    precision_score, \
+    accuracy_score, \
+    recall_score, \
+    f1_score, \
+    roc_auc_score, \
+    roc_curve
+
+from matplotlib import pyplot as plt
 
 warnings.filterwarnings('ignore')
 
@@ -77,6 +87,37 @@ def evaluate(model, evaluation, batch_size, model_summary):
     recall = recall_score(true_labels, predicted_labels)
     f1 = f1_score(true_labels, predicted_labels)
     roc_auc = roc_auc_score(true_labels, predicted_labels)
+
+    fpr, tpr = roc_curve(true_labels, predicted_labels)
+
+    color = ""
+    with plt.style.context('seaborn-white'):
+        f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+
+        params = {
+            'legend.fontsize': 6, 'axes.labelsize': 10
+        }
+
+        plt.rcParams.update(params)
+
+        for ax in axes:
+            ax.spines['right'].set_visible(False)
+            ax.spines['top'].set_visible(False)
+            ax.tick_params(axis='both', labelsize=8, length=2, width=2)
+            ax.set_xlabel('\nEpochs')
+
+        axes[0].plot(fpr[2], tpr[2], color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc})')
+        axes[0].plot([0, 1], [0, 1], color='black', lw=2, linestyle='--', )
+        axes[0].set_xlim([0.0, 1.0])
+        axes[0].set_ylim([0.0, 1.05])
+        axes[0].set_xlabel('False Positive Rate')
+        axes[0].set_ylabel('True Positive Rate')
+        axes[0].set_title('Receiver operating characteristic example')
+        axes[0].legend(loc="lower right")
+
+        plt.tight_layout()
+        plt.savefig("roc.png")
+
 
     achilles.logger.info(
         f"Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}"

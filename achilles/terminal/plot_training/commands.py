@@ -4,6 +4,7 @@ import pandas
 from pathlib import Path
 from matplotlib import pyplot as plt
 
+
 @click.command()
 @click.option(
     "--log_path",
