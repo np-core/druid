@@ -106,13 +106,13 @@ def evaluate(model, evaluation, batch_size, model_summary):
             ax.tick_params(axis='both', labelsize=8, length=2, width=2)
             ax.set_xlabel('\nEpochs')
 
-        axes[0].plot(fpr[2], tpr[2], color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc})')
+        axes[0].plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc})')
         axes[0].plot([0, 1], [0, 1], color='black', lw=2, linestyle='--', )
         axes[0].set_xlim([0.0, 1.0])
         axes[0].set_ylim([0.0, 1.05])
-        axes[0].set_xlabel('False Positive Rate')
-        axes[0].set_ylabel('True Positive Rate')
-        axes[0].set_title('Receiver operating characteristic example')
+        axes[0].set_xlabel('\nFalse Positive Rate')
+        axes[0].set_ylabel('True Positive Rate\n')
+        axes[0].set_title('ROC')
         axes[0].legend(loc="lower right")
 
         plt.tight_layout()
