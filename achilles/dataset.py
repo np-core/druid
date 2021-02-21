@@ -193,7 +193,8 @@ class AchillesDataset:
                     print(f"Could not sample reads from database. Does the database have these tags: {', '.join(tags)}")
                     exit(1)
 
-                # Randomize sampled reads, not necessary but precaution:
+                # Randomize sampled reads, not necessary but precaution to avoid bias
+                # to any pattern in the order of sampling:
                 random.shuffle(reads)
 
                 total = 0

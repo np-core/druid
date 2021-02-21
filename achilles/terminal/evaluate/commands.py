@@ -72,12 +72,13 @@ def evaluate(model, evaluation, batch_size, model_summary):
 
     cm = confusion_matrix(true_labels, predicted_labels)
 
-    accuracy = accuracy_score(true_labels, predicted_labels)*100
-    precision = precision_score(true_labels, predicted_labels)*100
-    recall = recall_score(true_labels, predicted_labels)*100
-    f1 = f1_score(true_labels, predicted_labels)*100
-    roc_auc = roc_auc_score(true_labels, predicted_labels)*100
+    accuracy = accuracy_score(true_labels, predicted_labels)
+    precision = precision_score(true_labels, predicted_labels)
+    recall = recall_score(true_labels, predicted_labels)
+    f1 = f1_score(true_labels, predicted_labels)
+    roc_auc = roc_auc_score(true_labels, predicted_labels)
+
     achilles.logger.info(
-        f"Accuracy: {accuracy:.1f}%  Precision: {precision:.1f}%  Recall: {recall:.2f}%  F1: {f1:.1f}%  ROC-AUC {roc_auc:.1f}%"
+        f"Accuracy: {accuracy:.2f}  Precision: {precision:.2f}%  Recall: {recall:.2f}%  F1: {f1:.1f}%  ROC-AUC {roc_auc:.2f}%"
     )
 
