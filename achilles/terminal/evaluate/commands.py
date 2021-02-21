@@ -79,6 +79,6 @@ def evaluate(model, evaluation, batch_size, model_summary):
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
     achilles.logger.info(
-        f"Accuracy: {accuracy:.2f}  Precision: {precision:.2f}%  Recall: {recall:.2f}%  F1: {f1:.1f}%  ROC-AUC {roc_auc:.2f}%"
+        f"Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}"
     )
 
