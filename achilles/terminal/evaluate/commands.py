@@ -88,7 +88,7 @@ def evaluate(model, evaluation, batch_size, model_summary):
     f1 = f1_score(true_labels, predicted_labels)
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
-    fpr, tpr = roc_curve(true_labels, predicted_labels)
+    fpr, tpr, _ = roc_curve(true_labels, predicted_labels)
 
     color = ""
     with plt.style.context('seaborn-white'):
