@@ -130,7 +130,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     reads = len(predicted)
 
     achilles.logger.info(
-        f'{seconds:.2f} seconds / {reads} reads = {G}{int(reads/seconds)} reads/second{RE}'
+        f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
     predicted_labels = argmax(predicted, 1)  # one hot decoded
