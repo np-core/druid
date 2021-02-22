@@ -127,7 +127,7 @@ import multiprocessing as mp
 )
 @click.option(
     "--ncpu",
-    default=24,
+    default=0,
     type=int,
     metavar="",
     help="Achilles dataset configuration file parallel sampler",
@@ -212,7 +212,8 @@ def create(
             pool = mp.Pool(processes=ncpu)
             for (i, (name, dataset_config)) in enumerate(datasets.items()):
                 pool.apply_async(
-                    write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i, ), callback=cbk
+                    write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i, ),
+                    callback=lambda x: print(f"Thread {x[0]}: completed file {x[1]} with tags: {', '.join(x[3])}")
                 )  # Only static methods work, out-sourced functions to utils
             pool.close()
             pool.join()
@@ -234,11 +235,10 @@ def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
     ds_file = outdir / f"{name}.hdf5"
     tag_labels = dataset_config['tags']
     ds = AchillesDataset(poremongo=pongo, **params)
-    ds.write(tag_labels=tag_labels, data_file=str(ds_file))
+    # ds.write(tag_labels=tag_labels, data_file=str(ds_file))
 
-    return i, ds_file
+    pongo.disconnect()
+
+    return i, ds_file, tag_labels
 
 
-def cbk(x):
-
-    print(f"Thread {x[0]}: completed file {x[0]}")
