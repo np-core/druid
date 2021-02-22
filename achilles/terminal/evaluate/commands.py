@@ -156,7 +156,9 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
     else:
         predicted_labels = argmax(predicted, 1)  # one hot decoded
 
-    true_labels = argmax(get_dataset_labels(evaluation, slice=slice), 1)  # one dim, true labels
+    truth = get_dataset_labels(evaluation, slice=slice)
+    print(truth)
+    true_labels = argmax(truth, 1)  # one dim, true labels
 
     # Binary case!
     tn, fp, fn, tp = confusion_matrix(true_labels, predicted_labels).ravel()
