@@ -1,9 +1,9 @@
 import click
 import warnings
 import pandas
+from sty import fg
 
 from numpy import argmax, split, product
-from numpy import asarray
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -181,9 +181,18 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
     f1 = f1_score(true_labels, predicted_labels)
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
+    c = []
+    for score in (accuracy, precision, recall, f1, roc_auc):
+        if score >= 0.9:
+            c.append(fg.green)
+        elif score >= 0.8:
+            c.append(fg.orange)
+        else:
+            c.append(fg.red)
+
     achilles.logger.info(
-        f"{Y}Accuracy: {G}{accuracy:.3f}  {Y}Precision: {G}{precision:.3f}  "
-        f"{Y}Recall: {G}{recall:.3f}  {Y}F1: {G}{f1:.3f}  {Y}ROC-AUC {G}{roc_auc:.3f}{RE}"
+        f"{Y}Accuracy: {c[0]}{accuracy:.3f}  {Y}Precision: {c[1]}{precision:.3f}  "
+        f"{Y}Recall: {c[2]}{recall:.3f}  {Y}F1: {c[3]}{f1:.3f}  {Y}ROC-AUC {c[4]}{roc_auc:.3f}{fg.re}"
     )
     achilles.logger.info(
         f"True positives: {tn}  True negatives: {tn}  False positives: {fp}  False negatives: {fn}"
