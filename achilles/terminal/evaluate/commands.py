@@ -192,7 +192,7 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
 
     achilles.logger.info(
         f"{Y}Accuracy: {c[0]}{accuracy:.3f}  {Y}Precision: {c[1]}{precision:.3f}  "
-        f"{Y}Recall: {c[2]}{recall:.3f}  {Y}F1: {c[3]}{f1:.3f}  {Y}ROC-AUC {c[4]}{roc_auc:.3f}{fg.re}"
+        f"{Y}Recall: {c[2]}{recall:.3f}  {Y}F1: {c[3]}{f1:.3f}  {Y}ROC-AUC {c[4]}{roc_auc:.3f}{fg.rs}"
     )
     achilles.logger.info(
         f"True positives: {tn}  True negatives: {tn}  False positives: {fp}  False negatives: {fn}"
