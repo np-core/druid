@@ -7,6 +7,7 @@ from numpy import argmax, where
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
 from pathlib import Path
+from colorama import Fore
 
 from sklearn.metrics import \
     confusion_matrix, \
@@ -17,6 +18,9 @@ from sklearn.metrics import \
     roc_auc_score
 
 warnings.filterwarnings('ignore')
+
+Y = Fore.YELLOW
+RE = Fore.RESET
 
 
 @click.command()
@@ -112,20 +116,20 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    achilles.logger.info(f'Evaluating model: {model.parent.name}')
-    achilles.logger.info(f'Using evaluation data from: {evaluation.name}')
+    achilles.logger.info(f'Evaluating model: {Y}{model.parent.name}{RE}')
+    achilles.logger.info(f'Using evaluation data from: {Y}{evaluation.name}{RE}')
 
     achilles.logger.info(f'Conducting null pass to allocate resources')
     achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
 
-    achilles.logger.info(f'Starting predictions with batch size: {batch_size}')
+    achilles.logger.info(f'Starting predictions with batch size: {Y}{batch_size}{RE}')
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
 
     seconds = microseconds/1e06
     reads = len(predicted)
 
     achilles.logger.info(
-        f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
+        f'{seconds:.2f} seconds / {reads} reads = {Y}{int(reads/seconds)} reads/second{RE}'
     )
 
     predicted_labels = argmax(predicted, 1)  # one hot decoded
