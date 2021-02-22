@@ -148,7 +148,7 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
 
     if slice is not None:
         predicted_slices = split(
-            predicted, [i for i in range(len(predicted)) if i % slice == 0], axis=0
+            predicted, [i for i in range(len(predicted)-1) if i % slice == 0], axis=0
         )
         predicted_probability = [product(ps, axis=0)for ps in predicted_slices]
         predicted_labels = argmax(predicted_probability, 1)
