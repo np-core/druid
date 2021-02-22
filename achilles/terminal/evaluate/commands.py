@@ -146,7 +146,8 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
     achilles.logger.info(
-        f"{G}Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}{RE}"
+        f"{Y}Accuracy: {G}{accuracy:.3f}  {Y}Precision: {G}{precision:.3f}  "
+        f"{Y}Recall: {G}{recall:.3f}  {Y}F1: {G}{f1:.3f}  {Y}ROC-AUC {G}{roc_auc:.3f}{RE}"
     )
     achilles.logger.info(
         f"True positives: {tn}  True negatives: {tn}  False positives: {fp}  False negatives: {fn}"
