@@ -152,7 +152,7 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
         )
         for ps in predicted_slices:
             print(ps)
-            predicted_probability = product(ps, axis=1)
+            predicted_probability = product(ps)
             print(predicted_probability)
         predicted_labels = argmax(predicted_probability, 1)
     else:
