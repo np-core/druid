@@ -1,4 +1,5 @@
 import os
+import yaml
 import h5py
 import random
 import pandas
@@ -7,7 +8,7 @@ import itertools
 import numpy as np
 import matplotlib
 
-from matplotlib import pyplot as plt
+from pathlib import Path
 from matplotlib import style
 
 from collections import deque
@@ -16,7 +17,7 @@ from pandas.errors import EmptyDataError
 
 from ont_fast5_api.fast5_file import Fast5File
 from skimage.util import view_as_windows
-from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_curve
 
 from matplotlib import pyplot as plt
 from colorama import Fore
@@ -444,6 +445,14 @@ def get_dataset_dim(dataset):
 
     with h5py.File(dataset, "r") as data:
         return np.array(data["training/data"]).shape
+
+
+def read_yaml(yaml_file: Path):
+
+    with yaml_file.open('r') as fstream:
+        yml = yaml.safe_load(fstream)
+
+    return yml
 
 
 def plot_roc(true_labels, predicted_labels):

@@ -1,9 +1,10 @@
 import click
-import yaml
 
 from pathlib import Path
 from poremongo import PoreMongo
 from achilles.dataset import AchillesDataset
+from achilles.utils import read_yaml
+import multiprocessing as mp
 
 @click.command()
 @click.option(
@@ -119,11 +120,24 @@ from achilles.dataset import AchillesDataset
 )
 @click.option(
     "--achilles_config",
-    "-a",
     default=None,
     type=Path,
     metavar="",
     help="Achilles dataset configuration file",
+)
+@click.option(
+    "--ncpu",
+    default=24,
+    type=int,
+    metavar="",
+    help="Achilles dataset configuration file parallel sampler",
+)
+@click.option(
+    "--outdir",
+    default=Path.cwd(),
+    type=Path,
+    metavar="",
+    help="Achilles dataset configuration file output directory",
 )
 def create(
     uri,
@@ -140,7 +154,9 @@ def create(
     proportion,
     exclude,
     global_tags,
-    validation
+    validation,
+    ncpu,
+    outdir
 ):
     """Sample and compile datasets with PoreMongo"""
 
@@ -184,24 +200,45 @@ def create(
     else:
 
         # input from configuration file
-
+        outdir.mkdir(parents=True, exist_ok=True)
         config = read_yaml(yaml_file=achilles_config)
 
         params = config['params']
         datasets = config['datasets']
 
-        for name, dataset_config in datasets.items():
-            ds_file = f"{name}.hdf5"
-            tag_labels = dataset_config['tags']
-            ds = AchillesDataset(poremongo=pongo, **params)
-            ds.write(tag_labels=tag_labels, data_file=ds_file)
+        if ncpu > 0:
+            pongo.disconnect()
+
+            pool = mp.Pool(processes=ncpu)
+            for (i, (name, dataset_config)) in enumerate(datasets.items()):
+                pool.apply_async(
+                    write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i, ), callback=cbk
+                )  # Only static methods work, out-sourced functions to utils
+            pool.close()
+            pool.join()
+        else:
+            for name, dataset_config in datasets.items():
+                ds_file = outdir / f"{name}.hdf5"
+                tag_labels = dataset_config['tags']
+                ds = AchillesDataset(poremongo=pongo, **params)
+                ds.write(tag_labels=tag_labels, data_file=str(ds_file))
 
     pongo.disconnect()
 
 
-def read_yaml(yaml_file: Path):
+def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
 
-    with yaml_file.open('r') as fstream:
-        yml = yaml.safe_load(fstream)
+    pongo = PoreMongo(uri=uri)
+    pongo.connect()
 
-    return yml
+    ds_file = outdir / f"{name}.hdf5"
+    tag_labels = dataset_config['tags']
+    ds = AchillesDataset(poremongo=pongo, **params)
+    ds.write(tag_labels=tag_labels, data_file=str(ds_file))
+
+    return i, ds_file
+
+
+def cbk(x):
+
+    print(f"Thread {x[0]}: completed file {x[0]}")
