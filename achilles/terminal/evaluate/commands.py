@@ -114,7 +114,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
 
         results = pandas.DataFrame(
             rows, columns=[
-                'model', 'eval', 'batch_size', 'reads', 'sec', 'rs',
+                'model', 'eval', 'batch_size', 'windows', 'sec', 'ws',
                 'accuracy', 'precision', 'recall', 'f1', 'roc-auc',
                 'tp', 'fp', 'tn', 'fn'
             ]
@@ -143,7 +143,7 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
     reads = len(predicted)
 
     achilles.logger.info(
-        f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
+        f'{seconds:.2f} seconds / {reads} windows = {int(reads/seconds)} w/s'
     )
 
     if slice is not None:
