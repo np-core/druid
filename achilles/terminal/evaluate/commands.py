@@ -2,7 +2,8 @@ import click
 import warnings
 import pandas
 
-from numpy import argmax, where, split, product, array
+from numpy import argmax, split, product
+from numpy import asarray
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -149,9 +150,8 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
         predicted_slices = split(
             predicted, [i for i in range(len(predicted)) if i % slice == 0], axis=0
         )
-        print(predicted_slices)
-        print(predicted_slices.shape)
-        predicted_probability = product(predicted_slices, axis=2)
+
+        predicted_probability = product(asarray(predicted_slices), axis=1)
         print(predicted_probability)
         predicted_labels = argmax(predicted_probability, 1)
     else:
