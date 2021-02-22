@@ -217,7 +217,7 @@ class AchillesModel:
         if summary:
             self.model.summary()
 
-        return self.model.layers[0].input_shape
+        return self.model.layers[0].input_shape[0]
 
     @timeit(micro=True)
     def predict(

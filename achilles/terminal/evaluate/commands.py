@@ -120,13 +120,11 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     achilles = AchillesModel(evaluation)
     input_shape = achilles.load_model(model_file=model, summary=model_summary)
 
-    print(input_shape)
-
     achilles.logger.info(f'Evaluating model: {Y}{model.parent.name}{RE}')
     achilles.logger.info(f'Using evaluation data from: {Y}{evaluation.name}{RE}')
 
     achilles.logger.info(f'Conducting null pass to allocate resources')
-    achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
+    achilles.predict(null_pass=(1, 1, input_shape[2], 1), batch_size=batch_size)
 
     achilles.logger.info(f'Starting predictions with batch size: {Y}{batch_size}{RE}')
     predicted, microseconds = achilles.predict(data_type="data", batch_size=batch_size)
