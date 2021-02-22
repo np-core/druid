@@ -2,7 +2,7 @@ import click
 import warnings
 import pandas
 
-from numpy import argmax, where, split, product
+from numpy import argmax, where, split, product, array
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -146,12 +146,15 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
     )
 
     if slice is not None:
-        predicted_probability = product(split(
+        predicted_slices = array(split(
             predicted, [i for i in range(len(predicted)) if i % slice == 0], axis=0
-        ), axis=2)
+        ))
+        print(predicted_slices.shape)
+        predicted_probability = product(predicted_slices, axis=2)
         print(predicted_probability)
-
-    predicted_labels = argmax(predicted, 1)  # one hot decoded
+        predicted_labels = argmax(predicted_probability, 1)
+    else:
+        predicted_labels = argmax(predicted, 1)  # one hot decoded
 
     true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
 
