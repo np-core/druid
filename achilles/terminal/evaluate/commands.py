@@ -86,7 +86,7 @@ RE = Fore.RESET
     show_default=True,
     metavar="",
 )
-def evaluate(model, evaluation, training_path, evaluation_path, batch_size, model_summary):
+def evaluate(model, evaluation, training_path, evaluation_path, batch_size, model_summary, slice):
 
     """ Evaluate a model against a data set from PoreMongo """
 
