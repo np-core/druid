@@ -2,7 +2,7 @@ import click
 import warnings
 import pandas
 
-from numpy import argmax, where
+from numpy import argmax, where, split
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -136,7 +136,14 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
         f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
+    print(predicted)
+
+    predicted_sliced = split(predicted, 5, axis=0)
+
+    print(predicted_sliced)
+
     predicted_labels = argmax(predicted, 1)  # one hot decoded
+
     true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
 
     # Binary case!
