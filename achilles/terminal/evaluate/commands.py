@@ -86,7 +86,10 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
         run_evaluation(model=model, evaluation=evaluation, batch_size=batch_size, model_summary=model_summary)
     else:
         # Pairwise models and evaluation sets
-        model_files = [p / f'model.checkpoint.val_loss.h5' for p in training_path.glob("*/") if p.is_dir()]
+        model_files = [
+            list(p.glob(f'*.checkpoint.val_loss.h5'))[0]
+            for p in training_path.glob("*/") if p.is_dir()
+        ]
         evaluation_files = [p for p in evaluation_path.glob("*.hdf5") if p.is_file()]
 
         rows = [
@@ -115,7 +118,9 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     """ Evaluate a model against a data set from PoreMongo """
 
     achilles = AchillesModel(evaluation)
-    achilles.load_model(model_file=model, summary=model_summary)
+    input_shape = achilles.load_model(model_file=model, summary=model_summary)
+
+    print(input_shape)
 
     achilles.logger.info(f'Evaluating model: {Y}{model.parent.name}{RE}')
     achilles.logger.info(f'Using evaluation data from: {Y}{evaluation.name}{RE}')

@@ -203,7 +203,7 @@ class AchillesModel:
         )
 
         with open(
-            os.path.join(outdir, "{}.model.history".format(run_id)), "wb"
+            os.path.join(outdir, f"{run_id}.model.history"), "wb"
         ) as history_out:
             pickle.dump(history.history, history_out)
 
@@ -216,6 +216,8 @@ class AchillesModel:
         self.model = load_model(model_file)
         if summary:
             self.model.summary()
+
+        return self.model.layers[0].input_shape
 
     @timeit(micro=True)
     def predict(
