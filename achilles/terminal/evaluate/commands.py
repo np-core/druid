@@ -2,7 +2,7 @@ import click
 import warnings
 import pandas
 
-from numpy import argmax, where, split
+from numpy import argmax, where, split, product
 
 from achilles.model import AchillesModel
 from achilles.utils import get_dataset_labels
@@ -113,7 +113,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
         results.to_csv('data.tsv', sep='\t', index=False, header=True)
 
 
-def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_summary: bool = False):
+def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size: int = 5000, model_summary: bool = False):
 
     """ Evaluate a model against a data set from PoreMongo """
 
@@ -136,13 +136,11 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
         f'{seconds:.2f} seconds / {reads} reads = {int(reads/seconds)} reads/second'
     )
 
-    print(predicted)
-
-    predicted_sliced = split(predicted, [i for i in range(len(predicted)) if i % 5 == 0], axis=0)
-
-    print(predicted_sliced)
-    print(predicted_sliced.shape)
-
+    if slice is not None:
+        predicted_probability = split(
+            predicted, [i for i in range(len(predicted)) if i % slice == 0], axis=0
+        ).product(axis=2)
+        print(predicted_probability)
     predicted_labels = argmax(predicted, 1)  # one hot decoded
 
     true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
