@@ -141,6 +141,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     predicted_sliced = split(predicted, [i for i in range(len(predicted)) if i % 5 == 0], axis=0)
 
     print(predicted_sliced)
+    print(predicted_sliced.shape)
 
     predicted_labels = argmax(predicted, 1)  # one hot decoded
 
