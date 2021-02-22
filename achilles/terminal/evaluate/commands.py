@@ -144,7 +144,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
         f"Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}"
     )
     achilles.logger.info(
-        f" True positives: {tn} True negatives: {fp}  False positives: {fn}  False negatives: {tp}"
+        f"True positives: {tn}  True negatives: {tn}  False positives: {fp}  False negatives: {fn}"
     )
 
     return (
