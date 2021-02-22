@@ -19,6 +19,7 @@ from sklearn.metrics import \
 
 warnings.filterwarnings('ignore')
 
+G = Fore.GREEN
 Y = Fore.YELLOW
 RE = Fore.RESET
 
@@ -129,7 +130,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     reads = len(predicted)
 
     achilles.logger.info(
-        f'{seconds:.2f} seconds / {reads} reads = {Y}{int(reads/seconds)} reads/second{RE}'
+        f'{seconds:.2f} seconds / {reads} reads = {G}{int(reads/seconds)} reads/second{RE}'
     )
 
     predicted_labels = argmax(predicted, 1)  # one hot decoded
@@ -145,7 +146,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
     achilles.logger.info(
-        f"Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}"
+        f"{G}Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}{RE}"
     )
     achilles.logger.info(
         f"True positives: {tn}  True negatives: {tn}  False positives: {fp}  False negatives: {fn}"
