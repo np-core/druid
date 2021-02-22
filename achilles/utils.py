@@ -437,7 +437,7 @@ def get_dataset_labels(dataset, slice: int = None):
         if slice is None:
             return np.array(labels)
         else:
-            return [i for i, _ in enumerate(labels) if i % slice == 0]
+            return [_ for i, _ in enumerate(labels) if i % slice == 0]
 
 
 def get_dataset_dim(dataset):
