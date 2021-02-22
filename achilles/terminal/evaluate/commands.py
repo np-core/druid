@@ -96,7 +96,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
 
         results = pandas.DataFrame(
             rows, columns=[
-                'model', 'eval', 'reads', 'batch_size', 'seconds',
+                'model', 'eval', 'batch_size', 'reads', 'sec', 'rs',
                 'accuracy', 'precision', 'recall', 'f1', 'roc-auc',
                 'tp', 'fp', 'tn', 'fn'
             ]
@@ -148,7 +148,6 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     )
 
     return (
-        model.parent.stem, evaluation.stem, reads, batch_size, seconds,
-        accuracy, precision, recall, f1, roc_auc,
-        tp, fp, tn, fn
+        model.parent.stem, evaluation.stem, batch_size, reads, seconds, int(reads/seconds),
+        accuracy, precision, recall, f1, roc_auc, tp, fp, tn, fn
     )
