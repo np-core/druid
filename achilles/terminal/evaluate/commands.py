@@ -138,7 +138,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
 
     print(predicted)
 
-    predicted_sliced = split(predicted, 5, axis=0)
+    predicted_sliced = split(predicted, [i for i in range(len(predicted)) if i % 5 == 0], axis=0)
 
     print(predicted_sliced)
 
