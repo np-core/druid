@@ -49,7 +49,7 @@ def plot_training(log_path, plot_file, color):
     log_data = []
     for f in logs:
         d = pandas.read_csv(f, sep=",")
-        d['name'] = [f.parent.name for _ in d.iterrows()]
+        d['name'] = [f.parent.name.replace(".training", "") for _ in d.iterrows()]
         log_data.append(d)
 
     if log_data:

@@ -1,5 +1,6 @@
 import click
 import warnings
+import pandas
 
 from numpy import argmax, where
 
@@ -13,10 +14,7 @@ from sklearn.metrics import \
     accuracy_score, \
     recall_score, \
     f1_score, \
-    roc_auc_score, \
-    roc_curve
-
-from matplotlib import pyplot as plt
+    roc_auc_score
 
 warnings.filterwarnings('ignore')
 
@@ -26,6 +24,7 @@ warnings.filterwarnings('ignore')
     "--model",
     "-m",
     default=None,
+    type=Path,
     help="Model file (HDF5) for prediction",
     show_default=True,
     metavar="",
@@ -34,7 +33,26 @@ warnings.filterwarnings('ignore')
     "--evaluation",
     "-e",
     default=None,
+    type=Path,
     help="Evaluation file (HDF5) for prediction generator",
+    show_default=True,
+    metavar="",
+)
+@click.option(
+    "--model_path",
+    "-mp",
+    default=None,
+    type=Path,
+    help="Path to model files (HDF5) for pairwise comparison",
+    show_default=True,
+    metavar="",
+)
+@click.option(
+    "--evaluation_path",
+    "-ep",
+    default=None,
+    type=Path,
+    help="Path to evaluation files (HDF5) for pairwise comparison",
     show_default=True,
     metavar="",
 )
@@ -54,15 +72,48 @@ warnings.filterwarnings('ignore')
     show_default=True,
     metavar="",
 )
-def evaluate(model, evaluation, batch_size, model_summary):
+def evaluate(model, evaluation, model_path, evaluation_path, batch_size, model_summary):
+
+    """ Evaluate a model against a data set from PoreMongo """
+
+    if not model_path and not evaluation_path:
+        # Single evaluation of model
+        run_evaluation(model=model, evaluation=evaluation, batch_size=batch_size, model_summary=model_summary)
+    else:
+        # Pairwise models and evaluation sets
+        model_files = [p / f'{p.name}.hdf5' for p in model_path.glob("*/") if p.is_dir()]
+        evaluation_files = [p / f'{p.name}.hdf5' for p in model_path.glob("*/") if p.is_dir()]
+
+        rows = [
+            run_evaluation(
+                model=model,
+                evaluation=evaluation,
+                batch_size=batch_size
+            )
+            for model in model_files
+            for evaluation in evaluation_files
+        ]
+
+        results = pandas.DataFrame(
+            rows, columns=[
+                'model', 'eval', 'reads', 'batch_size', 'seconds',
+                'accuracy', 'precision', 'recall', 'f1', 'roc-auc',
+                'tp', 'fp', 'tn', 'fn'
+            ]
+        )
+
+        print(results)
+
+
+def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_summary: bool = False):
 
     """ Evaluate a model against a data set from PoreMongo """
 
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    achilles.logger.info(f'Evaluating model: {Path(model).name}')
-    achilles.logger.info(f'Using evaluation data from: {Path(evaluation).name}')
+    achilles.logger.info(f'Evaluating model: {model.name}')
+    achilles.logger.info(f'Using evaluation data from: {evaluation.name}')
 
     achilles.logger.info(f'Conducting null pass to allocate resources')
     achilles.predict(null_pass=(1, 1, 300, 1), batch_size=batch_size)
@@ -80,7 +131,8 @@ def evaluate(model, evaluation, batch_size, model_summary):
     predicted_labels = argmax(predicted, 1)  # one hot decoded
     true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
 
-    cm = confusion_matrix(true_labels, predicted_labels)
+    # Binary case!
+    tn, fp, fn, tp = confusion_matrix(true_labels, predicted_labels).ravel()
 
     accuracy = accuracy_score(true_labels, predicted_labels)
     precision = precision_score(true_labels, predicted_labels)
@@ -88,38 +140,15 @@ def evaluate(model, evaluation, batch_size, model_summary):
     f1 = f1_score(true_labels, predicted_labels)
     roc_auc = roc_auc_score(true_labels, predicted_labels)
 
-    fpr, tpr, _ = roc_curve(true_labels, predicted_labels)
-
-    color = ""
-    with plt.style.context('seaborn-white'):
-        f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
-
-        params = {
-            'legend.fontsize': 6, 'axes.labelsize': 10
-        }
-
-        plt.rcParams.update(params)
-
-        for ax in axes:
-            ax.spines['right'].set_visible(False)
-            ax.spines['top'].set_visible(False)
-            ax.tick_params(axis='both', labelsize=8, length=2, width=2)
-            ax.set_xlabel('\nEpochs')
-
-        axes[0].plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {roc_auc})')
-        axes[0].plot([0, 1], [0, 1], color='black', lw=2, linestyle='--', )
-        axes[0].set_xlim([0.0, 1.0])
-        axes[0].set_ylim([0.0, 1.05])
-        axes[0].set_xlabel('\nFalse Positive Rate')
-        axes[0].set_ylabel('True Positive Rate\n')
-        axes[0].set_title('ROC')
-        axes[0].legend(loc="lower right")
-
-        plt.tight_layout()
-        plt.savefig("roc.png")
-
-
     achilles.logger.info(
         f"Accuracy: {accuracy:.3f}  Precision: {precision:.3f}  Recall: {recall:.3f}  F1: {f1:.3f}  ROC-AUC {roc_auc:.3f}"
     )
+    achilles.logger.info(
+        f" True positives: {tn} True negatives: {fp}  False positives: {fn}  False negatives: {tp}"
+    )
 
+    return (
+        model.stem, evaluation.stem, reads, batch_size, seconds,
+        accuracy, precision, recall, f1, roc_auc,
+        tp, fp, tn, fn
+    )

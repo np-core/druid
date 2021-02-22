@@ -16,7 +16,9 @@ from pandas.errors import EmptyDataError
 
 from ont_fast5_api.fast5_file import Fast5File
 from skimage.util import view_as_windows
+from sklearn.metrics import roc_curve, auc
 
+from matplotlib import pyplot as plt
 from colorama import Fore
 
 Y = Fore.YELLOW
@@ -439,6 +441,41 @@ def get_dataset_dim(dataset):
 
     with h5py.File(dataset, "r") as data:
         return np.array(data["training/data"]).shape
+
+
+def plot_roc(true_labels, predicted_labels):
+
+    fpr, tpr, _ = roc_curve(true_labels, predicted_labels)
+    auc = auc(true_labels, predicted_labels)
+
+    color = ""
+    with plt.style.context('seaborn-white'):
+        f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+
+        params = {
+            'legend.fontsize': 6, 'axes.labelsize': 10
+        }
+
+        plt.rcParams.update(params)
+
+        for ax in axes:
+            ax.spines['right'].set_visible(False)
+            ax.spines['top'].set_visible(False)
+            ax.tick_params(axis='both', labelsize=8, length=2, width=2)
+            ax.set_xlabel('\nEpochs')
+
+        axes[0].plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (area = {auc})')
+        axes[0].plot([0, 1], [0, 1], color='black', lw=2, linestyle='--', )
+        axes[0].set_xlim([0.0, 1.0])
+        axes[0].set_ylim([0.0, 1.05])
+        axes[0].set_xlabel('\nFalse Positive Rate')
+        axes[0].set_ylabel('True Positive Rate\n')
+        axes[0].set_title('ROC')
+        axes[0].legend(loc="lower right")
+
+        plt.tight_layout()
+        plt.savefig("roc.png")
+
 
 
 def get_recursive_files(
