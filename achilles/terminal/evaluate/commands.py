@@ -186,7 +186,7 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
         if score >= 0.9:
             c.append(fg.green)
         elif score >= 0.8:
-            c.append(fg(254, 153, 41))
+            c.append(fg(255, 123, 0))
         else:
             c.append(fg.red)
 
