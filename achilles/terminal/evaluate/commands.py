@@ -153,11 +153,10 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
 
         predicted_probability = [product(ps, axis=0) for ps in predicted_slices]
         predicted_labels = argmax(predicted_probability, 1)
-        print(predicted_labels)
     else:
         predicted_labels = argmax(predicted, 1)  # one hot decoded
 
-    true_labels = argmax(get_dataset_labels(evaluation), 1)  # one dim, true labels
+    true_labels = argmax(get_dataset_labels(evaluation, slice=slice), 1)  # one dim, true labels
 
     # Binary case!
     tn, fp, fn, tp = confusion_matrix(true_labels, predicted_labels).ravel()

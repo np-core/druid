@@ -430,11 +430,14 @@ def get_dataset_file_names(datasets):
     return file_names
 
 
-def get_dataset_labels(dataset):
+def get_dataset_labels(dataset, slice: int = None):
 
     with h5py.File(dataset, "r") as data:
         labels = data["data/labels"]
-        return np.array(labels)
+        if slice is None:
+            return np.array(labels)
+        else:
+            return [i for i, _ in enumerate(labels) if i % slice == 0]
 
 
 def get_dataset_dim(dataset):
