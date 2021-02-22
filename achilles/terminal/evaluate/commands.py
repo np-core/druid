@@ -146,9 +146,9 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
     )
 
     if slice is not None:
-        predicted_slices = array(split(
+        predicted_slices = split(
             predicted, [i for i in range(len(predicted)) if i % slice == 0], axis=0
-        ))
+        )
         print(predicted_slices)
         print(predicted_slices.shape)
         predicted_probability = product(predicted_slices, axis=2)
