@@ -63,15 +63,24 @@ RE = Fore.RESET
 )
 @click.option(
     "--batch_size",
-    "-b",
+    "-bs",
     default=1000,
     help="Prediction batch size",
     show_default=True,
     metavar="",
 )
 @click.option(
+    "--slice",
+    "-sc",
+    default=None,
+    type=int,
+    help="Prediction on the product of <slice> overlapping windows; HDF5 evaluatio nfile must be ordered as such",
+    show_default=True,
+    metavar="",
+)
+@click.option(
     "--model_summary",
-    "-s",
+    "-ms",
     is_flag=True,
     help="Print the model summary before prediction",
     show_default=True,
@@ -83,7 +92,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
 
     if not training_path and not evaluation_path:
         # Single evaluation of model
-        run_evaluation(model=model, evaluation=evaluation, batch_size=batch_size, model_summary=model_summary)
+        run_evaluation(model=model, evaluation=evaluation, slice=slice, batch_size=batch_size, model_summary=model_summary)
     else:
         # Pairwise models and evaluation sets
         model_files = [
