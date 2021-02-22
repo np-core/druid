@@ -39,11 +39,11 @@ warnings.filterwarnings('ignore')
     metavar="",
 )
 @click.option(
-    "--model_path",
-    "-mp",
+    "--training_path",
+    "-tp",
     default=None,
     type=Path,
-    help="Path to model files (HDF5) for pairwise comparison",
+    help="Path to training path containing dirs with model files (HDF5) for pairwise comparison",
     show_default=True,
     metavar="",
 )
@@ -72,17 +72,17 @@ warnings.filterwarnings('ignore')
     show_default=True,
     metavar="",
 )
-def evaluate(model, evaluation, model_path, evaluation_path, batch_size, model_summary):
+def evaluate(model, evaluation, training_path, evaluation_path, batch_size, model_summary):
 
     """ Evaluate a model against a data set from PoreMongo """
 
-    if not model_path and not evaluation_path:
+    if not training_path and not evaluation_path:
         # Single evaluation of model
         run_evaluation(model=model, evaluation=evaluation, batch_size=batch_size, model_summary=model_summary)
     else:
         # Pairwise models and evaluation sets
-        model_files = [p / f'{p.name}.hdf5' for p in model_path.glob("*/") if p.is_dir()]
-        evaluation_files = [p / f'{p.name}.hdf5' for p in model_path.glob("*/") if p.is_dir()]
+        model_files = [p / f'{p.name}.hdf5' for p in training_path.glob("*/") if p.is_dir()]
+        evaluation_files = [p for p in evaluation_path.glob("*.hdf5") if p.is_file()]
 
         rows = [
             run_evaluation(
