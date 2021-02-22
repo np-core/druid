@@ -186,11 +186,9 @@ def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size:
         if score >= 0.9:
             c.append(fg.green)
         elif score >= 0.8:
-            c.append(fg.orange)
+            c.append(fg(252, 78, 42))
         else:
             c.append(fg.red)
-
-    fg.orange = Style(RgbFg(252, 78, 42))
 
     achilles.logger.info(
         f"{Y}Accuracy: {c[0]}{accuracy:.3f}  {Y}Precision: {c[1]}{precision:.3f}  "
