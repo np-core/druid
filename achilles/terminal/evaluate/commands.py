@@ -27,8 +27,8 @@ RE = Fore.RESET
 
 @click.command()
 @click.option(
-    "--model",
-    "-m",
+    "--trained_model",
+    "-t",
     default=None,
     type=Path,
     help="Model file (HDF5) for prediction",
@@ -36,7 +36,7 @@ RE = Fore.RESET
     metavar="",
 )
 @click.option(
-    "--evaluation",
+    "--evaluation_dataset",
     "-e",
     default=None,
     type=Path,
@@ -64,15 +64,15 @@ RE = Fore.RESET
 )
 @click.option(
     "--batch_size",
-    "-bs",
+    "-b",
     default=1000,
     help="Prediction batch size",
     show_default=True,
     metavar="",
 )
 @click.option(
-    "--slice",
-    "-sc",
+    "--slices",
+    "-s",
     default=None,
     type=int,
     help="Prediction on the product of <slice> overlapping windows; HDF5 evaluatio nfile must be ordered as such",
@@ -80,20 +80,34 @@ RE = Fore.RESET
     metavar="",
 )
 @click.option(
-    "--model_summary",
-    "-ms",
+    "--print_summary",
+    "-p",
     is_flag=True,
     help="Print the model summary before prediction",
     show_default=True,
     metavar="",
 )
-def evaluate(model, evaluation, training_path, evaluation_path, batch_size, model_summary, slice):
+@click.option(
+    "--output",
+    "-o",
+    default=Path("data.tsv"),
+    type=Path,
+    help="Summary of evaluation results; tab-delimited file",
+    show_default=True,
+    metavar="",
+)
+def evaluate(
+    trained_model, evaluation_dataset, training_path, evaluation_path, batch_size, print_summary, slices, output
+):
 
     """ Evaluate a model against a data set from PoreMongo """
 
     if not training_path and not evaluation_path:
         # Single evaluation of model
-        run_evaluation(model=model, evaluation=evaluation, slice=slice, batch_size=batch_size, model_summary=model_summary)
+        run_evaluation(
+            model=trained_model, evaluation=evaluation_dataset, slice=slices,
+            batch_size=batch_size, model_summary=print_summary
+        )
     else:
         # Pairwise models and evaluation sets
         model_files = [
@@ -120,7 +134,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
             ]
         )
 
-        results.to_csv('data.tsv', sep='\t', index=False, header=True)
+        results.to_csv(output, sep='\t', index=False, header=True)
 
 
 def run_evaluation(model: Path, evaluation: Path, slice: int = None, batch_size: int = 5000, model_summary: bool = False):
