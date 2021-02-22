@@ -102,7 +102,7 @@ def evaluate(model, evaluation, training_path, evaluation_path, batch_size, mode
             ]
         )
 
-        print(results)
+        results.to_csv('data.tsv', sep='\t', index=False, header=True)
 
 
 def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_summary: bool = False):
@@ -112,7 +112,7 @@ def run_evaluation(model: Path, evaluation: Path, batch_size: int = 5000, model_
     achilles = AchillesModel(evaluation)
     achilles.load_model(model_file=model, summary=model_summary)
 
-    achilles.logger.info(f'Evaluating model: {model.name}')
+    achilles.logger.info(f'Evaluating model: {model.parent.name}')
     achilles.logger.info(f'Using evaluation data from: {evaluation.name}')
 
     achilles.logger.info(f'Conducting null pass to allocate resources')
