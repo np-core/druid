@@ -1,10 +1,11 @@
 import click
+import logging
+import multiprocessing as mp
 
 from pathlib import Path
 from poremongo import PoreMongo
 from achilles.dataset import AchillesDataset
 from achilles.utils import read_yaml
-import multiprocessing as mp
 
 @click.command()
 @click.option(
@@ -215,7 +216,7 @@ def create(
                     write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i,),  #
                     callback=lambda x: print(f"Thread {x[0]}: completed file {x[1]}")
                 )  # Only static methods work, out-sourced functions to utils
-                
+
             pool.close()
             pool.join()
         else:
@@ -231,6 +232,7 @@ def create(
 def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
 
     pongo = PoreMongo(uri=uri)
+    pongo.logger.setLevel(logging.ERROR)
     pongo.connect()
 
     ds_file = outdir / f"{name}.hdf5"
