@@ -50,7 +50,8 @@ class AchillesDataset:
         exclude_datasets: str = None,
         validation: float = 0.3,
         chunk_size: int = 10000,
-        max_reads: int = None
+        max_reads: int = None,
+        quiet: bool = False
     ):
 
         self.dataset = dataset
@@ -70,6 +71,8 @@ class AchillesDataset:
         self.validation = validation
         self.chunk_size = chunk_size
         self.max_reads = max_reads
+        
+        self.quiet = quiet
 
     @staticmethod
     def get_signal_generator(
@@ -162,21 +165,23 @@ class AchillesDataset:
                 file=f, window_size=self.window_size, classes=classes
             )
 
-            self.print_write_summary()
+            if not self.quiet:
+                self.print_write_summary()
 
             # Each input tag corresponds to label (0, 1, 2, ...)
             for label, tags in enumerate(tag_labels):
 
-                print(
-                    dedent(f"""
-                {Y}Class label: {C}{label}{Y} 
-                ----------------------------------
-                {G}Global tags: {C}{', '.join(self.global_tags if self.global_tags else [])}{Y}
-                {G}Sample tags: {C}{', '.join(tags)}{Y}
-                ----------------------------------
-                {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
-                """)
-                )
+                if not self.quiet:
+                    print(
+                        dedent(f"""
+                    {Y}Class label: {C}{label}{Y} 
+                    ----------------------------------
+                    {G}Global tags: {C}{', '.join(self.global_tags if self.global_tags else [])}{Y}
+                    {G}Sample tags: {C}{', '.join(tags)}{Y}
+                    ----------------------------------
+                    {Y}Exclude {C}{len(exclude)}{Y} reads from {C}{ndatasets}{Y} datasets{RE}
+                    """)
+                    )
 
                 reads = self.poremongo.sample(
                     Read.objects,
@@ -200,7 +205,7 @@ class AchillesDataset:
                 total = 0
                 read_ids = []
 
-                with tqdm(total=max_windows) as pbar:
+                with tqdm(total=max_windows, disable=self.quiet) as pbar:
                     pbar.set_description(f"Extracting tensors for label {label}")
                     for read in reads:
                         # e.g. 100000 max_windows, 50 per read set
@@ -243,7 +248,8 @@ class AchillesDataset:
                             if total >= max_windows:
                                 break
 
-                self.poremongo.logger.info(f"Extracted {total} / {max_windows} windows for label {label}")
+                if not self.quiet:
+                    self.poremongo.logger.info(f"Extracted {total} / {max_windows} windows for label {label}")
 
                 # Writing all training labels to HDF5, as categorical (one-hot) encoding:
                 encoded_labels = to_categorical(
@@ -266,7 +272,8 @@ class AchillesDataset:
                 # under a different UUID or DOC ID
                 self.write_chunk(sampled_reads, read_id_array)
 
-        self.print_data_summary(data_file=data_file)
+        if not self.quiet:
+            self.print_data_summary(data_file=data_file)
 
         if self.validation > 0:
             # Split dataset into training / validation data:
