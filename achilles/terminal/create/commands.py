@@ -212,7 +212,7 @@ def create(
             pool = mp.Pool(processes=ncpu)
             for (i, (name, dataset_config)) in enumerate(datasets.items()):
                 pool.apply_async(
-                    write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i, ),
+                    write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i,),
                     callback=lambda x: print(f"Thread {x[0]}: completed file {x[1]} with tags: {', '.join(x[3])}")
                 )  # Only static methods work, out-sourced functions to utils
             pool.close()
