@@ -134,6 +134,7 @@ def evaluate(
             ]
         )
 
+        results.sort_values(['model', 'eval'], inplace=True)
         results.to_csv(output, sep='\t', index=False, header=True)
 
 
