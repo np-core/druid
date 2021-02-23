@@ -213,8 +213,9 @@ def create(
             for (i, (name, dataset_config)) in enumerate(datasets.items()):
                 pool.apply_async(
                     write_dataset_parallel, args=(name, outdir, dataset_config, params, uri, i,),  #
-                    callback=lambda x: print(x)
+                    callback=lambda x: print(f"Thread {x[0]}: completed file {x[1]}")
                 )  # Only static methods work, out-sourced functions to utils
+                
             pool.close()
             pool.join()
         else:
@@ -224,7 +225,7 @@ def create(
                 ds = AchillesDataset(poremongo=pongo, **params)
                 ds.write(tag_labels=tag_labels, data_file=str(ds_file))
 
-    pongo.disconnect()
+            pongo.disconnect()
 
 
 def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
@@ -235,10 +236,12 @@ def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
     ds_file = outdir / f"{name}.hdf5"
     tag_labels = dataset_config['tags']
     ds = AchillesDataset(poremongo=pongo, **params)
-    # ds.write(tag_labels=tag_labels, data_file=str(ds_file))
+    ds.write(
+        tag_labels=tag_labels, data_file=str(ds_file)
+    )
 
     pongo.disconnect()
 
-    return i, ds_file, tag_labels
+    return i, ds_file
 
 
