@@ -237,7 +237,7 @@ def write_dataset_parallel(name, outdir, dataset_config, params, uri, i):
 
     ds_file = outdir / f"{name}.hdf5"
     tag_labels = dataset_config['tags']
-    ds = AchillesDataset(poremongo=pongo, **params)
+    ds = AchillesDataset(poremongo=pongo, quiet=True, **params)
     ds.write(
         tag_labels=tag_labels, data_file=str(ds_file)
     )

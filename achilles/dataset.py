@@ -71,7 +71,7 @@ class AchillesDataset:
         self.validation = validation
         self.chunk_size = chunk_size
         self.max_reads = max_reads
-        
+
         self.quiet = quiet
 
     @staticmethod
