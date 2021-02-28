@@ -3,7 +3,8 @@ import pandas
 import seaborn as sn
 from pathlib import Path
 from matplotlib import pyplot as plt
-
+from matplotlib.colors import ListedColormap
+from achilles.utils import carto_fall_diverging
 
 @click.command()
 @click.option(
@@ -24,16 +25,7 @@ from matplotlib import pyplot as plt
     show_default=True,
     metavar="",
 )
-@click.option(
-    "--color",
-    "-c",
-    default="Greens",
-    type=str,
-    help="Color palette for confusion heatmaps",
-    show_default=True,
-    metavar="",
-)
-def plot_evaluation(data, plot_file, color):
+def plot_evaluation(data, plot_file):
 
     """Plot training accuracy and loss """
 
@@ -42,6 +34,8 @@ def plot_evaluation(data, plot_file, color):
     print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
 
     matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
+
+    cm = ListedColormap(colors=carto_fall_diverging())
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(
@@ -59,7 +53,7 @@ def plot_evaluation(data, plot_file, color):
                 d.index.name = 'Model'
                 d.columns.name = 'Evaluation'
                 sn.set(font_scale=1.4)  # for label size
-                sn.heatmap(d, cmap=color, annot=True, annot_kws={"size": 16}, ax=axes[i][j])  # font size
+                sn.heatmap(d, cmap=cm, annot=True, annot_kws={"size": 16}, ax=axes[i][j])  # font size
 
     plt.tight_layout()
     plt.savefig(plot_file)

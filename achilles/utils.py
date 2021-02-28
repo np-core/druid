@@ -39,6 +39,23 @@ style.use("ggplot")
 # Data IO and Transformation
 
 
+def carto_fall_diverging():
+
+    return "#3d5941,#778868,#b5b991,#f6edbd,#edbb8a,#de8a5a,#ca562c".split(',')
+
+
+def carto_tropical_diverging():
+
+    return "#009B9E,#42B7B9,#A7D3D4,#F1F1F1,#E4C1D9,#D691C1,#C75DAB".split(',')
+
+
+def mononoke_medium():
+
+    """ https://raw.githubusercontent.com/ewenme/ghibli/master/inst/extdata/palettes.yml """
+
+    return ['#06141F', '#742C14', '#3D4F7D', '#657060', '#CD4F38', '#E48C2A', '#EAD890']
+
+
 def read_signal(
     fast5: str,
     normalize: bool = False,
