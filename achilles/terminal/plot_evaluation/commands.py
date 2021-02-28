@@ -42,7 +42,6 @@ def plot_evaluation(data, plot_file, remove):
     df = pandas.read_csv(data, sep="\t", header=0)
 
     print(df)
-    print(df.columns)
 
     to_remove = remove.split(',')
     rows = []
@@ -55,7 +54,7 @@ def plot_evaluation(data, plot_file, remove):
             else:
                 rows.append(row.tolist())
 
-    df = pandas.DataFrame(rows, columns=df.columns.names)
+    df = pandas.DataFrame(rows, columns=df.columns.to_list())
 
     print(df)
 
