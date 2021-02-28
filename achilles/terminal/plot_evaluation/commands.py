@@ -41,13 +41,13 @@ def plot_evaluation(data, plot_file, remove):
 
     df = pandas.read_csv(data, sep="\t", header=0)
 
-    to_remove = remove.split('')
+    to_remove = remove.split(',')
     rows = []
     for i, row in df.iterrows():
         for rm in to_remove:
-            model = row['model'].values[0]
-            eval = row['eval'].values[0]
-            if rm in model or rm in eval:
+            model = row['model']
+            eval = row['eval']
+            if rm in str(model) or rm in str(eval):
                 continue
             else:
                 rows.append(row)
