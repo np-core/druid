@@ -41,6 +41,9 @@ def plot_evaluation(data, plot_file, remove):
 
     df = pandas.read_csv(data, sep="\t", header=0)
 
+    print(df)
+    print(df.columns)
+
     to_remove = remove.split(',')
     rows = []
     for i, row in df.iterrows():
@@ -52,9 +55,9 @@ def plot_evaluation(data, plot_file, remove):
             else:
                 rows.append(row)
 
-    print(rows)
-    print(df.columns.names)
     df = pandas.DataFrame(rows, columns=df.columns.names)
+
+    print(df)
 
     print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
 
