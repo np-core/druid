@@ -41,7 +41,7 @@ def plot_evaluation(data, plot_file, color):
 
     print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
 
-    matrices = ('accuracy', 'precision', 'recall', 'f1', 'roc-auc')
+    matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(
@@ -51,7 +51,7 @@ def plot_evaluation(data, plot_file, color):
         for (i, row) in enumerate(axes):
             for j, _ in enumerate(row):
                 try:
-                    metric = matrices[i]
+                    metric = matrices[i][j]
                 except IndexError:
                     continue
 
