@@ -47,15 +47,12 @@ def plot_evaluation(data, plot_file, color):
         f, axes = plt.subplots(nrows=3, ncols=2, figsize=(14, 4.5))
 
         for i, ax in enumerate(axes):
-            dm, labels = create_data_matrix(data_frame=df, column=matrices[i])
-            print(dm)
-            print(labels)
-            df_cm = pandas.DataFrame(dm, columns=labels, index=labels)
-
-            df_cm.index.name = 'Actual'
-            df_cm.columns.name = 'Predicted'
+            df = create_data_matrix(data_frame=df, column=matrices[i])
+            print(df)
+            df.index.name = 'Actual'
+            df.columns.name = 'Predicted'
             sn.set(font_scale=1.4)  # for label size
-            sn.heatmap(df_cm, cmap=color, annot=True, annot_kws={"size": 16}, ax=ax)  # font size
+            sn.heatmap(df, cmap=color, annot=True, annot_kws={"size": 16}, ax=ax)  # font size
 
     plt.tight_layout()
     plt.savefig(plot_file)
@@ -63,13 +60,19 @@ def plot_evaluation(data, plot_file, color):
 
 def create_data_matrix(data_frame: pandas.DataFrame, column: str = "accuracy"):
 
+    # dataframes of pairwise evaluation are ordered
+
     dm = []
-    labels = []  # dataframes of pairwise evaluation are ordered
-    for model, dt in data_frame.groupby('model'):
-        print(model, dt)
-        labels.append(model)
+    column_labels = []
+    row_labels = []
+    for (i, (model, dt)) in enumerate(data_frame.groupby('model')):
+        row_labels.append(model)
         dm.append(
             dt[column].tolist()
         )
+        if i == 0:
+            column_labels = dt['eval'].tolist()
 
-    return dm, labels
+    df_cm = pandas.DataFrame(dm, columns=column_labels, index=row_labels)
+
+    return df_cm
