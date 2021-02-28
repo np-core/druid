@@ -53,7 +53,6 @@ def plot_evaluation(data, plot_file, color):
             df.columns.name = 'Evaluation'
             sn.heatmap(df, cmap=color, annot=True, annot_kws={"size": 16}, ax=ax)  # font size
 
-    plt.tight_layout()
     plt.savefig(plot_file)
 
 
