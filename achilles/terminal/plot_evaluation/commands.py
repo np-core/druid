@@ -66,6 +66,7 @@ def create_data_matrix(data_frame: pandas.DataFrame, column: str = "accuracy"):
     dm = []
     labels = []  # dataframes of pairwise evaluation are ordered
     for model, dt in data_frame.groupby('model'):
+        print(model, dt)
         labels.append(model)
         dm.append(
             dt[column].tolist()
