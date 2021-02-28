@@ -1,11 +1,11 @@
 import click
 import pandas
 import seaborn as sn
-import numpy as np
 
 from pathlib import Path
 from matplotlib import pyplot as plt
 from achilles.utils import carto_fall_diverging
+
 
 @click.command()
 @click.option(
@@ -43,10 +43,11 @@ def plot_evaluation(data, plot_file, remove):
 
     rows = []
     for i, row in df.iterrows():
-        if remove in row['model'] or remove in row['eval']:
-            continue
-        else:
-            rows.append(row)
+        for rm in remove.split():
+            if rm in row['model'] or rm in row['eval']:
+                continue
+            else:
+                rows.append(row)
 
     df = pandas.DataFrame(rows, columns=df.columns.tolist())
 
@@ -69,13 +70,16 @@ def plot_evaluation(data, plot_file, remove):
                     continue
 
                 d = create_data_matrix(data_frame=df, column=metric)
-                d.index.name = 'Model'
-                d.columns.name = 'Evaluation'
+                d.index.name = 'Model\n'
+                d.columns.name = '\nEvaluation'
                 sn.set(font_scale=1.4)  # for label size
-                sn.heatmap(d, cmap="Greens", annot=True, annot_kws={"size": 16}, ax=axes[i][j], linewidths=5)  # font size
-                axes[i][j].set_title(metric.capitalize() if not metric == 'roc-auc' else metric.upper())
+                sn.heatmap(
+                    d, cmap="Greens", annot=True, annot_kws={"size": 16}, ax=axes[i][j], linewidths=5
+                )  # font size
+                axes[i][j].set_title(
+                    metric.capitalize() if not metric == 'roc-auc' else metric.upper()
+                )
 
-    plt.tight_layout()
     plt.savefig(plot_file)
 
 
