@@ -5,7 +5,7 @@ import numpy as np
 
 from pathlib import Path
 from matplotlib import pyplot as plt
-from matplotlib.colors import ListedColormap
+from matplotlib.colors import LinearSegmentedColormap
 from achilles.utils import carto_fall_diverging
 
 @click.command()
@@ -37,8 +37,7 @@ def plot_evaluation(data, plot_file):
 
     matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
 
-    colors = np.linspace(carto_fall_diverging())
-    cm = ListedColormap(colors=)
+    cm = carto_fall_diverging()
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(

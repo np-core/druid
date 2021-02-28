@@ -20,6 +20,7 @@ from skimage.util import view_as_windows
 from sklearn.metrics import roc_curve
 
 from matplotlib import pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 from colorama import Fore
 
 Y = Fore.YELLOW
@@ -41,19 +42,25 @@ style.use("ggplot")
 
 def carto_fall_diverging():
 
-    return "#3d5941,#778868,#b5b991,#f6edbd,#edbb8a,#de8a5a,#ca562c".split(',')
+    return LinearSegmentedColormap.from_list(
+        'carto-fall', "#3d5941,#778868,#b5b991,#f6edbd,#edbb8a,#de8a5a,#ca562c".split(','), N=256
+    )
 
 
 def carto_tropical_diverging():
 
-    return "#009B9E,#42B7B9,#A7D3D4,#F1F1F1,#E4C1D9,#D691C1,#C75DAB".split(',')
+    return LinearSegmentedColormap.from_list(
+        'carto-tropical', "#009B9E,#42B7B9,#A7D3D4,#F1F1F1,#E4C1D9,#D691C1,#C75DAB".split(','), N=256
+    )
 
 
 def mononoke_medium():
 
     """ https://raw.githubusercontent.com/ewenme/ghibli/master/inst/extdata/palettes.yml """
 
-    return ['#06141F', '#742C14', '#3D4F7D', '#657060', '#CD4F38', '#E48C2A', '#EAD890']
+    return LinearSegmentedColormap.from_list(
+        'mononoke-medium', ['#06141F', '#742C14', '#3D4F7D', '#657060', '#CD4F38', '#E48C2A', '#EAD890'], N=256
+    )
 
 
 def read_signal(
