@@ -48,8 +48,10 @@ def plot_evaluation(data, plot_file, color):
 
         for i, ax in enumerate(axes):
             dm, labels = create_data_matrix(data_frame=df, column=matrices[i])
+            print(dm)
+            print(labels)
             df_cm = pandas.DataFrame(dm, columns=labels, index=labels)
-            print(df_cm)
+
             df_cm.index.name = 'Actual'
             df_cm.columns.name = 'Predicted'
             sn.set(font_scale=1.4)  # for label size
