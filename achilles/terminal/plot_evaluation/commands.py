@@ -27,11 +27,31 @@ from achilles.utils import carto_fall_diverging
     show_default=True,
     metavar="",
 )
-def plot_evaluation(data, plot_file):
+@click.option(
+    "--remove",
+    "-r",
+    default="ecoli2",
+    type=str,
+    help="Remove any training or evaluation files that contain this string [ecoli2]",
+    show_default=True,
+    metavar="",
+)
+def plot_evaluation(data, plot_file, remove):
 
     """Plot training accuracy and loss """
 
     df = pandas.read_csv(data, sep="\t", header=0)
+
+    rows = []
+    for i, row in df.iterrows():
+        if remove in row['model'] or remove in row['eval']:
+            continue
+        else:
+            rows.append(row)
+
+    df = pandas.DataFrame(rows, columns=df.columns.tolist())
+
+    print(df)
 
     print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
 
