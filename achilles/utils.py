@@ -44,14 +44,14 @@ def carto_fall_diverging(reverse=False):
 
     colors = "#3d5941,#778868,#b5b991,#f6edbd,#edbb8a,#de8a5a,#ca562c".split(',')
 
-    return LinearSegmentedColormap.from_list('carto-fall', reversed(colors) if reverse else colors, N=256)
+    return LinearSegmentedColormap.from_list('carto-fall', list(reversed(colors)) if reverse else colors, N=256)
 
 
 def carto_tropical_diverging(reverse=False):
 
     colors = "#009B9E,#42B7B9,#A7D3D4,#F1F1F1,#E4C1D9,#D691C1,#C75DAB".split(',')
 
-    return LinearSegmentedColormap.from_list('carto-tropical', reversed(colors) if reverse else colors, N=256)
+    return LinearSegmentedColormap.from_list('carto-tropical', list(reversed(colors)) if reverse else colors, N=256)
 
 
 def mononoke_medium():
