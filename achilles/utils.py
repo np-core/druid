@@ -167,7 +167,7 @@ def plot_signal(fast5):
 
 
 def plot_confusion_matrix(
-    cm, class_labels, title="Confusion Matrix", normalize=True, cmap="Blues", save=""
+    cm, class_labels, plot_file, title="Confusion Matrix", normalize=True, cmap="Blues"
 ):
 
     """
@@ -185,6 +185,7 @@ def plot_confusion_matrix(
         cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
 
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
+
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(class_labels))
@@ -209,11 +210,7 @@ def plot_confusion_matrix(
 
     plt.tight_layout()
 
-    if save:
-        plt.savefig(save)
-    else:
-        plt.show()
-
+    plt.savefig(plot_file)
     plt.close()
 
 

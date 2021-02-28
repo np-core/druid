@@ -1,13 +1,17 @@
 import click
 import pandas
-
+import numpy as np
+import seaborn as sn
 from pathlib import Path
 from matplotlib import pyplot as plt
 
+from achilles.utils import plot_confusion_matrix
+
+
 @click.command()
 @click.option(
-    "--evaluation_path",
-    "-e",
+    "--data",
+    "-d",
     default="local",
     type=Path,
     help="Path to directory containing the evaluation directories",
@@ -26,58 +30,46 @@ from matplotlib import pyplot as plt
 @click.option(
     "--color",
     "-c",
-    default="tab20",
+    default="Greens",
     type=str,
-    help="Matplotlib color map for unique color per log file",
+    help="Color palette for confusion heatmaps",
     show_default=True,
     metavar="",
 )
-@click.option(
-    "--detail",
-    "-d",
-    is_flag=True,
-    help="Output additional plots: AUC ROC",
-    show_default=True,
-    metavar="",
-)
-def plot_evaluation(log_path, plot_file, color, detail):
+def plot_evaluation(data, plot_file, color):
 
     """Plot training accuracy and loss """
 
-    if log_path.is_dir():
-        logs = list(Path(log_path).glob("**/*.log"))
-    else:
-        raise ValueError(f"Could not find log path or file: {log_path}")
+    df = pandas.read_csv(data, sep="\t", header=0)
 
-    if not logs:
-        print(f"Could not find log files (.log) at: {log_path}")
-        exit(1)
+    print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
+
+    matrices = ('accuracy', 'precision', 'recall', 'f1', 'roc-auc')
 
     with plt.style.context('seaborn-white'):
-        f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
+        f, axes = plt.subplots(nrows=3, ncols=2, figsize=(14, 4.5))
 
-        params = {
-            'legend.fontsize': 6, 'axes.labelsize': 10
-        }
+        for i, ax in enumerate(axes):
+            dm, labels = create_data_matrix(data_frame=df, column=matrices[i])
+            df_cm = pandas.DataFrame(dm, columns=labels, index=labels)
+            print(df_cm)
+            df_cm.index.name = 'Actual'
+            df_cm.columns.name = 'Predicted'
+            sn.set(font_scale=1.4)  # for label size
+            sn.heatmap(df_cm, cmap=color, annot=True, annot_kws={"size": 16}, ax=ax)  # font size
 
-        plt.rcParams.update(params)
+    plt.tight_layout()
+    plt.savefig(plot_file)
 
-        for ax in axes:
-            ax.spines['right'].set_visible(False)
-            ax.spines['top'].set_visible(False)
-            ax.tick_params(axis='both', labelsize=8, length=2, width=2)
-            ax.set_xlabel('\nEpochs')
 
-        cm = plt.get_cmap(color)
-        cmp = [cm(1. * i / len(log_data)) for i in range(len(log_data))]
+def create_data_matrix(data_frame: pandas.DataFrame, column: str = "accuracy"):
 
-        axes[0].set_prop_cycle(color=cmp)
-        axes[1].set_prop_cycle(color=cmp)
+    dm = []
+    labels = []  # dataframes of pairwise evaluation are ordered
+    for model, dt in data_frame.groupby('model'):
+        labels.append(model)
+        dm.append(
+            dt[column].tolist()
+        )
 
-        axes[0].set_ylabel('Accuracy\n')
-        axes[1].set_ylabel('Loss\n')
-
-        # Plot
-
-        plt.tight_layout()
-        plt.savefig(plot_file)
+    return dm, labels
