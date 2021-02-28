@@ -72,7 +72,7 @@ def plot_evaluation(data, plot_file, remove):
                 d.index.name = 'Model'
                 d.columns.name = 'Evaluation'
                 sn.set(font_scale=1.4)  # for label size
-                sn.heatmap(d, cmap=cm, annot=True, annot_kws={"size": 16}, ax=axes[i][j], linewidths=5)  # font size
+                sn.heatmap(d, cmap="Greens", annot=True, annot_kws={"size": 16}, ax=axes[i][j], linewidths=5)  # font size
                 axes[i][j].set_title(metric.capitalize() if not metric == 'roc-auc' else metric.upper())
 
     plt.tight_layout()
