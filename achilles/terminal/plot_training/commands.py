@@ -61,7 +61,6 @@ def plot_training(log_path, plot_file, color):
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(nrows=1, ncols=2, figsize=(14, 4.5))
-
         params = {
             'legend.fontsize': 6, 'axes.labelsize': 10
         }

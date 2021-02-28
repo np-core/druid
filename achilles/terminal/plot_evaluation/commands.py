@@ -1,11 +1,8 @@
 import click
 import pandas
-import numpy as np
 import seaborn as sn
 from pathlib import Path
 from matplotlib import pyplot as plt
-
-from achilles.utils import plot_confusion_matrix
 
 
 @click.command()
