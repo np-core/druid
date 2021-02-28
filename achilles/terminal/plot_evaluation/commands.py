@@ -1,6 +1,8 @@
 import click
 import pandas
 import seaborn as sn
+import numpy as np
+
 from pathlib import Path
 from matplotlib import pyplot as plt
 from matplotlib.colors import ListedColormap
@@ -35,7 +37,8 @@ def plot_evaluation(data, plot_file):
 
     matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
 
-    cm = ListedColormap(colors=carto_fall_diverging())
+    colors = np.linspace(carto_fall_diverging())
+    cm = ListedColormap(colors=)
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(
