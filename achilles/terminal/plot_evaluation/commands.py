@@ -46,13 +46,13 @@ def plot_evaluation(data, plot_file, remove):
     to_remove = remove.split(',')
     rows = []
     for i, row in df.iterrows():
+        row_pass = True
         for rm in to_remove:
-            model = row['model']
-            eval = row['eval']
-            if rm in str(model) or rm in str(eval):
-                continue
-            else:
-                rows.append(row.tolist())
+            if rm in str(row['model']) or rm in str(row['eval']):
+                row_pass = False
+
+        if row_pass:
+            rows.append(row.tolist())
 
     df = pandas.DataFrame(rows, columns=df.columns.to_list())
 
