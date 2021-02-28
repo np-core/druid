@@ -48,12 +48,12 @@ def plot_evaluation(data, plot_file, color):
 
         for (i, row) in enumerate(axes):
             for j, _ in enumerate(row):
-                df = create_data_matrix(data_frame=df, column=matrices[i])
+                d = create_data_matrix(data_frame=df, column=matrices[i])
                 print(df)
-                df.index.name = 'Model'
-                df.columns.name = 'Evaluation'
+                d.index.name = 'Model'
+                d.columns.name = 'Evaluation'
                 sn.set(font_scale=1.4)  # for label size
-                sn.heatmap(df, cmap=color, annot=True, annot_kws={"size": 16}, ax=axes[i][j])  # font size
+                sn.heatmap(d, cmap=color, annot=True, annot_kws={"size": 16}, ax=axes[i][j])  # font size
 
     plt.tight_layout()
     plt.savefig(plot_file)
