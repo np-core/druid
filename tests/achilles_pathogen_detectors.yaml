@@ -24,12 +24,12 @@ params:
   validation: 0.4
 
 descriptions:
-  saureus1: Staphylococcus aureus isolate (PNG)
-  saureus2: Staphylococcus aureus isolate (FNQ)
-  saureus3: Staphylococcus aureus isolate (PAK)
-  bp1: Burkholderia pseudomallei (PNG-01)
-  bp2: Burkholderia pseudomallei (TSV-12)
-  bp3: Burkholderia pseudomallei (TSV-24)
+  saureus1: Staphylococcus aureus isolate (PNG, R9.4.1 revD)
+  saureus2: Staphylococcus aureus isolate (FNQ, R9.4.1 revD)
+  saureus3: Staphylococcus aureus isolate (PAK, R9.4.1)
+  bp1: Burkholderia pseudomallei (PNG-01, R9.4.1)
+  bp2: Burkholderia pseudomallei (TSV-12, R9.4.1 revD)
+  bp3: Burkholderia pseudomallei (TSV-24, R9.4.1 revD)
   ecoli1: Escherichia coli (Coin)
   ecoli2: Escherichia coli (Loman)
   kp1: Klebsiella pneumoniae (Greece1)

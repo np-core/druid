@@ -44,12 +44,18 @@ def plot_evaluation(data, plot_file, color):
     matrices = ('accuracy', 'precision', 'recall', 'f1', 'roc-auc')
 
     with plt.style.context('seaborn-white'):
-        f, axes = plt.subplots(nrows=3, ncols=2, figsize=(14*3, 14*2))
+        f, axes = plt.subplots(
+            nrows=3, ncols=2, figsize=(14*3, 14*2)
+        )
 
         for (i, row) in enumerate(axes):
             for j, _ in enumerate(row):
-                d = create_data_matrix(data_frame=df, column=matrices[i])
-                print(df)
+                try:
+                    metric = matrices[i]
+                except IndexError:
+                    continue
+
+                d = create_data_matrix(data_frame=df, column=metric)
                 d.index.name = 'Model'
                 d.columns.name = 'Evaluation'
                 sn.set(font_scale=1.4)  # for label size
