@@ -5,7 +5,7 @@ import numpy as np
 
 from pathlib import Path
 from matplotlib import pyplot as plt
-from achilles.utils import carto_tropical_diverging
+from achilles.utils import carto_fall_diverging
 
 @click.command()
 @click.option(
@@ -54,7 +54,7 @@ def plot_evaluation(data, plot_file, remove):
 
     matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
 
-    cm = carto_tropical_diverging(reverse=True)
+    cm = carto_fall_diverging(reverse=True)
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(
