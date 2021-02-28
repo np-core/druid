@@ -52,7 +52,7 @@ def plot_evaluation(data, plot_file, remove):
             else:
                 rows.append(row)
 
-    df = pandas.DataFrame(rows, columns=df.columns.tolist())
+    df = pandas.DataFrame(rows, columns=[n for n in df.columns.names])
 
     print(f'Average prediction speed: {df.ws.mean():.2f} windows / second')
 
