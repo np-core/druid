@@ -53,7 +53,7 @@ def plot_evaluation(data, plot_file, remove):
             if rm in str(model) or rm in str(eval):
                 continue
             else:
-                rows.append(row)
+                rows.append(row.tolist())
 
     df = pandas.DataFrame(rows, columns=df.columns.names)
 
