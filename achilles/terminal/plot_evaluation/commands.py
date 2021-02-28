@@ -37,7 +37,7 @@ def plot_evaluation(data, plot_file):
 
     matrices = [['accuracy', 'precision'], ['recall', 'f1'], ['roc-auc']]
 
-    cm = carto_fall_diverging()
+    cm = carto_fall_diverging(reverse=True)
 
     with plt.style.context('seaborn-white'):
         f, axes = plt.subplots(
