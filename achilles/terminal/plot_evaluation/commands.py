@@ -49,9 +49,8 @@ def plot_evaluation(data, plot_file, color):
         for i, ax in enumerate(axes):
             df = create_data_matrix(data_frame=df, column=matrices[i])
             print(df)
-            df.index.name = 'Actual'
-            df.columns.name = 'Predicted'
-            sn.set(font_scale=1.4)  # for label size
+            df.index.name = 'Model'
+            df.columns.name = 'Evaluation'
             sn.heatmap(df, cmap=color, annot=True, annot_kws={"size": 16}, ax=ax)  # font size
 
     plt.tight_layout()
