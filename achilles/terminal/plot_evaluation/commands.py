@@ -44,7 +44,7 @@ def plot_evaluation(data, plot_file, color):
     matrices = ('accuracy', 'precision', 'recall', 'f1', 'roc-auc')
 
     with plt.style.context('seaborn-white'):
-        f, axes = plt.subplots(nrows=3, ncols=2, figsize=(14, 4.5))
+        f, axes = plt.subplots(nrows=3, ncols=2, figsize=(14*3, 14*2))
 
         for (i, row) in enumerate(axes):
             for j, _ in enumerate(row):
