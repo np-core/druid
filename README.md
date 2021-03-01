@@ -12,8 +12,6 @@
 
 `Druid` is a fork of the hybrid neural net platform for training, evaluating and deploying neural network models that originally act as taxonomic classifiers of raw nanopore signal (`Achilles`). It reimplements the basecaller function of `Chiron` as a Keras model with the specific purpose to detect non canonical base modifications.
 
-<p align="center"><img src="logo/achilles_pretrained.png"></img></p>
-
 ### Install
 ---
 
