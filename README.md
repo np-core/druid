@@ -1,5 +1,3 @@
-<p align="left"><img src="logo/logo.png" height="115" width="110"></img></p>
-
 # Druid
 
 ![](https://img.shields.io/badge/tf--gpu-1.12.0-blue.svg)
