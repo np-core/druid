@@ -84,7 +84,7 @@ workflow clusterDnD {
     main:
 
     emit:
-        
+
 }
 
 
