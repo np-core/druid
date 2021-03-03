@@ -13,22 +13,14 @@
 ### Install
 ---
 
-`Druid` can be installed with **`Python 3.6`**:
-
 ```
 pip install git+https://github.com/esteinig/druid  # does not install tensorflow-gpu or keras
 ```
 
-It requires `PoreMongo`, which can for now be installed with:
+`PoreMongo` dependency, which can for now be installed with:
 
 ```
-pip install git+https://github.com/esteinig/poremongo@v0.3-pre
-```
-
-You know if the driver and `tensorflow-gpu` work when you call the main help interface of `Achilles`:
-
-```
-achilles --help
+pip install git+https://github.com/esteinig/poremongo
 ```
 
 ### Documentation
@@ -36,7 +28,7 @@ achilles --help
 
 Coming soon.
 
-[achilles.readthedocs.io](https://achilles.readthedocs.io)
+[druid.readthedocs.io](https://druid.readthedocs.io)
 
 ### Contributors
 ---
