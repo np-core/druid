@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="achilles",
-    url="https://github.com/esteinig/achilles",
-    author="Eike J. Steinig",
-    author_email="eikejoachim.steinig@my.jcu.edu.au",
+    name="druid",
+    url="https://github.com/esteinig/druid",
+    author="Eike Steinig",
+    author_email="eike.steinig@unimelb.edu.au",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
@@ -27,28 +27,29 @@ setup(
         "wget",
         "watchdog",
         "paramiko",
-        'numpy',
-        'tqdm',
-        'colorama',
-        'pymongo',
-        'mongoengine',
-        'ont_fast5_api',
-        'pandas',
-        'paramiko',
-        'scp',
-        'scikit-image',
-        'scipy',
-        'watchdog',
-        'apscheduler',
-        'click',
-        'deprecation',
-        'pyfastaq'
+        "numpy",
+        "tqdm",
+        "colorama",
+        "pymongo",
+        "mongoengine",
+        "ont_fast5_api",
+        "pandas",
+        "paramiko",
+        "scp",
+        "scikit-image",
+        "scipy",
+        "watchdog",
+        "apscheduler",
+        "click",
+        "deprecation",
+        "pyfastaq"
     ],
     entry_points="""
         [console_scripts]
-        achilles=achilles.terminal.client:terminal_client
+        druid=druid.terminal.client:terminal_client
     """,
     version="0.4",
     license="MIT",
-    description="Achilles is a platform to train and evaluate neural networks for nanopore signal classification",
+    description="Druid is a platform to train and evaluate neural networks for "
+                "nanopore signal classification of non-canonical base modifications",
 )
