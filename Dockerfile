@@ -19,5 +19,5 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERS
 
 RUN conda install tensorflow-gpu keras
 
-RUN git clone https://github.com/esteinig/achilles && pip install achilles/
+RUN git clone https://github.com/np-core/druid && pip install druid/
 

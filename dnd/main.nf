@@ -39,27 +39,12 @@ def get_matching_data( channel1, channel2, illumina = false ){
 
 
 params.workflow = 'hybrid'
-params.reference = ""
-params.fastq = 'fastq/*.fq'
+
+params.fastq = 'fastq/'
+params.fasta = "fasta/"
+
 params.outdir = 'results'
-params.length = 200
-params.quality = 7
-params.coverage = 200
-params.genome_size = '2.8m'
-params.preset = 'minimap2-ont'  // coverm
 
-// ONT assembly and polishing subworkflow
-
-params.assembly_options = "--plasmids"
-params.medaka_model = "r941_min_high_g360"
-
-if ( file(params.medaka_model).exists() ){
-    params.medaka_model = file(params.medaka_model)
-}
-
-// Illumina assembly, hybrid correction and reference comparison subworkflow
-
-params.fasta = "fasta/*.fasta"
 params.illumina = "fastq/*_R{1,2}.fastq.gz"
 params.depth = 200
 params.assembler = "skesa"
@@ -75,12 +60,16 @@ reference = file(params.reference)
 // Modules
 
 include { Fastp } from '../modules/fastp'
-include { Rasusa } from './modules/rasusa'
+include { GriftM  } from './modules/griftm'
+
 include { CoverM  } from './modules/coverm'
 
-workflow clusterDnD {
+workflow searchDND {
+
+    // A workflow to search for phosphothioate modification operons
+
     take:
-        reads // id, reads
+        
     main:
 
     emit:
