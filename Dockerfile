@@ -17,7 +17,8 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERS
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN conda install -y -c ursky metawrap-mg=1.3.2 python=3.7
+RUN conda install -y python=3.5
+RUN conda install -y -c ursky metawrap-mg=1.3.2 
 RUN conda install -y -c bioconda fastp graftm=0.13.1
 
 
