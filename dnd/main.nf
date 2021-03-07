@@ -1,4 +1,4 @@
-/ Hybrid assembly workflow: DSL2
+// Hybrid assembly workflow: DSL2
 
 nextflow.enable.dsl=2
 
@@ -12,7 +12,7 @@ def get_paired_fastq( glob ){
     return channel.fromFilePairs(glob, flat: true)
 }
 
-def get_matching_data( channel1, channel2, illumina = false ){
+def get_matching_data( channel1, channel2){
 
     // Get matching data by ID (first field) from two channels
     // by crossing, checking for matched ID and returning
@@ -20,11 +20,6 @@ def get_matching_data( channel1, channel2, illumina = false ){
 
     channel1.cross(channel2).map { crossed ->
         if (crossed[0][0] == crossed[1][0]){
-            if (illumina){
-                // First channel returning Illumina only for hybrid reference assembly
-                crossed[0]
-            } else {
-                // Return mix of channels for evaluations in hybrid assembly workflow
                 tuple( crossed[0][0], *crossed[0][1..-1], *crossed[1][1..-1] )
             }
         } else {
@@ -35,61 +30,41 @@ def get_matching_data( channel1, channel2, illumina = false ){
 
 }
 
-// ONT Quality control subworkflow
 
+params.workflow = 'mag_assembly'
+params.outdir = 'mag_assembly'
 
-params.workflow = 'hybrid'
-
-params.fastq = 'fastq/'
-params.fasta = "fasta/"
-
-params.outdir = 'results'
-
-params.illumina = "fastq/*_R{1,2}.fastq.gz"
-params.depth = 200
-params.assembler = "skesa"
-
-params.tag = null
-params.saureus = true
-params.kpneumoniae = false
-
-// Stage files
-
-reference = file(params.reference)
+params.fastq = "*_{1,2}.fastq"
 
 // Modules
 
 include { Fastp } from '../modules/fastp'
-include { GriftM  } from './modules/griftm'
+include { GraftM  } from '../modules/graftm'
+include { MetaWrap  } from '../modules/metawrap'
 
-include { CoverM  } from './modules/coverm'
+workflow metawrap_assembly {
 
-workflow searchDND {
-
-    // A workflow to search for phosphothioate modification operons
+    // Illumina PE workflow to assemble metagenomes according to Robbins et al. (2021)
 
     take:
-        
+        reads  // id, fwd, rv
     main:
-
-    emit:
-
+        Fastp(reads) | MetaWrap
 }
 
 
+workflow mag_dnd {
 
-workflow dnd_enquiry {
-
-   if (params.workflow == "search_assemblies") {
-       get_single_fastx(params.fasta)  | clusterDnD
+   if (params.workflow == "mag_assembly") {
+       get_paired_fastq(params.fastq) | metawrap_assembly
    }
-   if (params.workflow == "search_metagenomes"){
-        get_single_fastx(params.fastq)
+   if (params.workflow == "mag_search"){
+        get_single_fastx(params.fastq) | view
    }
 }
 
 // Execute
 
 workflow {
-    dnd_enquiry()
+    mag_dnd()
 }
