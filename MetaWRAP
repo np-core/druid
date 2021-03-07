@@ -17,8 +17,8 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERS
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
+
 RUN conda create -n metawrap -c conda-forge -c bioconda -c ursky metawrap-mg=1.3.2 && echo "conda activate metawrap" >> ~/.bashrc
-RUN conda create -n graftm -c conda-forge -c bioconda graftm=0.13.1 && echo "conda activate graftm" >> ~/.bashrc
 
 RUN git clone -b v0.1.0 https://github.com/np-core/druid && pip install druid/
 
