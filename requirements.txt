@@ -33,3 +33,4 @@ apscheduler
 click
 deprecation
 pyfastaq
+drep

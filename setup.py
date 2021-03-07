@@ -42,7 +42,8 @@ setup(
         "apscheduler",
         "click",
         "deprecation",
-        "pyfastaq"
+        "pyfastaq",
+        "drep"
     ],
     entry_points="""
         [console_scripts]
