@@ -17,7 +17,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERS
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc
 
-RUN conda install tensorflow-gpu keras
+RUN conda install -y -c ursky metawrap-mg=1.3.2 fastp graftm=0.13.1
 
-RUN git clone https://github.com/np-core/druid && pip install druid/
+RUN git clone -b v0.1.0 https://github.com/np-core/druid && pip install druid/
 
