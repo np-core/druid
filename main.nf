@@ -38,9 +38,9 @@ params.fastq = "*_{1,2}.fastq"
 
 // Modules
 
-include { Fastp } from '../modules/fastp'
-include { GraftM  } from '../modules/graftm'
-include { MetaWrap  } from '../modules/metawrap'
+include { Fastp } from './modules/fastp'
+include { GraftM  } from './modules/graftm'
+include { MetaWrap  } from './modules/metawrap'
 
 workflow metawrap_assembly {
 
