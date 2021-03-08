@@ -1,4 +1,5 @@
-// Hybrid assembly workflow: DSL2
+
+// @JCU: nextflow np-core/druid -profile zodiac --container ~/bin/metawrap.sif --worfklow mag_assembly --fastq "/path/to/*_{1,2}.fastq" --outdir test_assembly --completeness 70 --contamination 5 --assembly_memory 300G --process_memory 128G --assembly_threads 80 --process_threads 32
 
 nextflow.enable.dsl=2
 
