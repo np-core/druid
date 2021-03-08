@@ -28,10 +28,7 @@ RUN source activate metawrap && checkm_db="/db/checkm" && echo ${checkm_db} | ch
 
 RUN git clone -b v0.1.0 https://github.com/np-core/druid && pip install druid/
 
-RUN mkdir /NCBI_nt && cd /NCBI_nt && wget "ftp://ftp.ncbi.nlm.nih.gov/blast/db/nt.*.tar.gz" && for a in nt.*.tar.gz; do tar xzf $a; done
-
-ENV BLASTDB /NCBI_nt
-
 RUN mkdir /NCBI_tax && cd /NCBI_tax && wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxonomy/taxdump.tar.gz && tar -xvf taxdump.tar.gz
 
 ENV TAXDUMP /NCBI_tax
+ENV BLASTDB /NCBI_nt
