@@ -22,7 +22,6 @@ def get_matching_data( channel1, channel2){
     channel1.cross(channel2).map { crossed ->
         if (crossed[0][0] == crossed[1][0]){
                 tuple( crossed[0][0], *crossed[0][1..-1], *crossed[1][1..-1] )
-            }
         } else {
             null
         }
