@@ -9,8 +9,8 @@ from keras.callbacks import CSVLogger, ModelCheckpoint
 
 from keras import callbacks
 
-from achilles.utils import timeit
-from achilles.dataset import AchillesDataset
+from druid.utils import timeit
+from druid.dataset import DruidDataset
 
 
 class AchillesModel:

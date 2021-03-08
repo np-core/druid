@@ -1,6 +1,5 @@
 import os
 import h5py
-import json
 import random
 import logging
 import numpy as np

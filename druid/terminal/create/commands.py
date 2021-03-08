@@ -2,8 +2,8 @@ import click
 
 from pathlib import Path
 from poremongo import PoreMongo
-from achilles.terminal.utils import OptionEatAll
-from achilles.dataset import AchillesDataset
+from druid.terminal.utils import OptionEatAll
+from druid.dataset import DruidDataset
 
 
 @click.command()
