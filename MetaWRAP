@@ -22,7 +22,7 @@ RUN conda create -n metawrap -c conda-forge -c bioconda -c ursky metawrap-mg=1.3
 
 RUN mkdir -p /db/checkm && cd /db/checkm && wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && tar -xvf *.tar.gz && rm *.gz
 
-RUN ls /opt/conda/envs/ 
+RUN ls /opt/conda/envs/metawrap 
 RUN /opt/conda/bin/conda/envs/metawrap/bin/checkm data setRoot /db
 
 RUN git clone -b v0.1.0 https://github.com/np-core/druid && pip install druid/
