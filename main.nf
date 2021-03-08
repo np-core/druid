@@ -30,12 +30,14 @@ def get_matching_data( channel1, channel2){
 
 }
 
-
 params.workflow = 'mag_assembly'
+
+params.fastq = "*_{1,2}.fastq"
 params.outdir = 'mag_assembly'
+
 params.qc_options = '--skip-bmtagger'
 params.assembly_options = '--metaspades'
-params.fastq = "*_{1,2}.fastq"
+
 params.completeness = 70
 params.contamination = 5
 
