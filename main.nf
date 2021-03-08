@@ -33,23 +33,32 @@ def get_matching_data( channel1, channel2){
 
 params.workflow = 'mag_assembly'
 params.outdir = 'mag_assembly'
-
+params.qc_options = '--skip-bmtagger'
+params.assembly_options = '--metaspades'
 params.fastq = "*_{1,2}.fastq"
+params.completeness = 70
+params.contamination = 5
 
 // Modules
 
-include { Fastp } from './modules/fastp'
-include { GraftM  } from './modules/graftm'
-include { MetaWrap  } from './modules/metawrap'
+include { MetaWrapQC  } from './modules/metawrap'
+include { MetaWrapAssembly  } from './modules/metawrap'
+include { MetaWrapBinning } from './modules/metawrap'
+include { MetaWrapBinAssembly  } from './modules/metawrap'
+include { MetaWrapBinOps  } from './modules/metawrap'
 
 workflow metawrap_assembly {
 
-    // Illumina PE workflow to assemble metagenomes according to Robbins et al. (2021)
+    // Illumina PE MetaWRAP
 
     take:
         reads  // id, fwd, rv
     main:
-        Fastp(reads) | MetaWrap
+        MetaWrapQC(reads)
+        MetaWrapAssembly(MetaWrapQC.out)
+        MetaWrapBinning(MetaWrapAssembly.out, MetaWrapQC.out)
+        MetaWrapBinAssembly(MetaWrapBinning.out, MetaWrapQC.out)
+        MetaWrapBinOps(MetaWrapBinAssembly.out, MetaWrapQC.out)
 }
 
 
