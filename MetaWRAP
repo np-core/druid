@@ -24,7 +24,7 @@ RUN mkdir -p /db/checkm && cd /db/checkm && wget https://data.ace.uq.edu.au/publ
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-RUN source activate metawrap && conda list && checkm data -h
+RUN source activate metawrap && checkm_db="/db/checkm" && echo ${checkm_db} | checkm data setRoot ${checkm_db}
 
 RUN git clone -b v0.1.0 https://github.com/np-core/druid && pip install druid/
 
