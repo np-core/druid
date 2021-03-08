@@ -1,10 +1,7 @@
 import click
 
-VERSION = "0.3-alpha"
-
-
 @click.group()
-@click.version_option(version=VERSION)
+@click.version_option()
 def utils():
     pass
 

@@ -13,7 +13,7 @@ from druid.utils import timeit
 from druid.dataset import DruidDataset
 
 
-class AchillesModel:
+class DruidModel:
     def __init__(self, data_file=None, log_dir=""):
 
         self.data_file = data_file
@@ -252,7 +252,7 @@ class AchillesModel:
     def predict_generator(self, data_type="data", batch_size=1000):
 
         # Reads data from HDF5 data file:
-        dataset = AchillesDataset()
+        dataset = DruidDataset()
 
         # Get training and validation data generators
         prediction_generator = dataset.get_signal_generator(

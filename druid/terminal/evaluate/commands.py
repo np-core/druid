@@ -1,7 +1,7 @@
 import click
 from numpy import argmax
-from achilles.model import AchillesModel
-from achilles.utils import get_dataset_labels
+from druid.model import DruidModel
+from druid.utils import get_dataset_labels
 from colorama import Fore
 from pathlib import Path
 
