@@ -1,6 +1,4 @@
-ARG IMAGE=nvidia/cuda:10.2-cudnn8-devel-ubuntu18.04
-
-FROM $IMAGE
+FROM continuumio/miniconda3
 
 ARG MINICONDA_VERSION=latest
 
@@ -11,15 +9,6 @@ ENV TAXDUMP /NCBI_tax
 ENV BLASTDB /NCBI_nt
 
 RUN apt-get update && apt-get install -y wget git
-
-# Anaconda for BioConda
-RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
-    /bin/bash ~/miniconda.sh -b -p /opt/conda && \
-    rm ~/miniconda.sh && \
-    /opt/conda/bin/conda clean -tipsy && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc 
 
 RUN conda install -c conda-forge -c bioconda -c ursky metawrap-mg=1.3.2
 
