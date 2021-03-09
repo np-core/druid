@@ -32,4 +32,4 @@ RUN mkdir /NCBI_tax && cd /NCBI_tax && wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxon
 ENV TAXDUMP /NCBI_tax
 ENV BLASTDB /NCBI_nt
 
-ENTRYPOINT source activate metawrap
+CMD source activate metawrap
