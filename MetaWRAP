@@ -19,7 +19,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERS
     echo "conda activate base" >> ~/.bashrc 
 
 
-RUN conda create -n metawrap -c conda-forge -c bioconda -c ursky metawrap-mg=1.3.2 && echo "conda activate metawrap" >> ~/.bashrc
+RUN conda create -n metawrap -c conda-forge -c bioconda -c ursky metawrap-mg=1.3.2 && echo "source activate metawrap" >> ~/.bashrc
 
 RUN mkdir -p /db/checkm && cd /db/checkm && wget https://data.ace.uq.edu.au/public/CheckM_databases/checkm_data_2015_01_16.tar.gz && tar -xvf *.tar.gz && rm *.gz
 
@@ -32,4 +32,4 @@ RUN mkdir /NCBI_tax && cd /NCBI_tax && wget ftp://ftp.ncbi.nlm.nih.gov/pub/taxon
 ENV TAXDUMP /NCBI_tax
 ENV BLASTDB /NCBI_nt
 
-ENV BASH_ENV ~/.bashrc
+ENV PATH /opt/conda/envs/metawrap/bin:$PATH
