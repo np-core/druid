@@ -42,7 +42,7 @@ setup(
         "apscheduler",
         "click",
         "deprecation",
-        "pyfastaq",
+        "pyfasta",
         "drep",
         "tensorflow"
     ],

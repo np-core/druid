@@ -1,7 +1,7 @@
 import click
 import pandas
 from pathlib import Path
-from pyfastaq import sequences
+from pyfasta import Fasta
 
 
 @click.command()
@@ -45,18 +45,16 @@ def create_graftm(fasta, name, acc2tax, outdir):
 
     seqs = []
     for file in fasta.glob("*.fasta"):
-        for seq in sequences.file_reader(str(file)):
-            print(seq.id)
-            seqs.append(seq)
+        for seq in Fasta(file):
+            print(seq)
 
     for s in seqs:
-        print(s.id)
+        print(s)
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
         for seq in seqs:
-            print(seq.id)
-            fout.write(str(seq) + '\n')
+            fout.write(seq + '\n')
 
 
 
