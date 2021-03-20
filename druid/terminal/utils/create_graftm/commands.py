@@ -46,11 +46,11 @@ def create_graftm(fasta, name, acc2tax, outdir):
     seqs = []
     for file in fasta.glob("*.fasta"):
         for seq in sequences.file_reader(str(file)):
-            print(seq)
+            print(seq.id)
             seqs.append(seq)
 
-    for seq in seqs:
-        print(seq.id)
+    for s in seqs:
+        print(s.id)
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
