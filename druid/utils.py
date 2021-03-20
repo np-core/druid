@@ -4,13 +4,14 @@ import random
 import datetime
 import numpy as np
 import matplotlib
-
-from matplotlib import style
-
-from ont_fast5_api.fast5_file import Fast5File
-from skimage.util import view_as_windows
+import subprocess
+import shlex
 import click
+
 from colorama import Fore
+from matplotlib import style
+from skimage.util import view_as_windows
+from ont_fast5_api.fast5_file import Fast5File
 
 Y = Fore.YELLOW
 R = Fore.RED
@@ -315,3 +316,56 @@ def get_dataset_dim(dataset):
     with h5py.File(dataset, "r") as data:
         return np.array(data["training/data"]).shape
 
+
+def run_cmd(cmd, callback=None, watch=False, background=False, shell=False):
+
+    """Runs the given command and gathers the output.
+
+    If a callback is provided, then the output is sent to it, otherwise it
+    is just returned.
+
+    Optionally, the output of the command can be "watched" and whenever new
+    output is detected, it will be sent to the given `callback`.
+
+    Returns:
+        A string containing the output of the command, or None if a `callback`
+        was given.
+    Raises:
+        RuntimeError: When `watch` is True, but no callback is given.
+
+    """
+
+    if watch and not callback:
+        raise RuntimeError(
+            "You must provide a callback when watching a process."
+        )
+
+    output = None
+
+    if shell:
+        proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    else:
+        proc = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
+
+    if background:
+        # Let task run in background and return pmid for monitoring:
+        return proc.pid, proc
+
+    if watch:
+        while proc.poll() is None:
+            line = proc.stdout.readline()
+            if line != "":
+                callback(line)
+
+        # Sometimes the process exits before we have all of the output, so
+        # we need to gather the remainder of the output.
+        remainder = proc.communicate()[0]
+        if remainder:
+            callback(remainder)
+    else:
+        output = proc.communicate()[0]
+
+    if callback and output is not None:
+        return callback(output)
+
+    return output

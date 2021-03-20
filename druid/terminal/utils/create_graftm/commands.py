@@ -2,7 +2,7 @@ import click
 import pandas
 from pathlib import Path
 from pyfasta import Fasta
-
+from druid.utils import run_cmd
 
 @click.command()
 @click.option(
@@ -30,14 +30,14 @@ from pyfasta import Fasta
     help="Path to output directory for the GraftM package files",
 )
 @click.option(
-    "--acc2tax",
-    "-a",
+    "--nucl_gb",
+    "-n",
     type=Path,
     default=None,
     metavar="",
-    help="Accession to taxid resources file to add taxonomy file to GraftM from FASTA parsed from headers",
+    help="Accession",
 )
-def create_graftm(fasta, name, acc2tax, outdir):
+def create_graftm(fasta, name, nucl_gb, outdir):
 
     """Create a GraftM package from a set of fasta files"""
 
@@ -45,10 +45,11 @@ def create_graftm(fasta, name, acc2tax, outdir):
 
     seqs = [seq for file in fasta.glob("*.fasta") for seq in Fasta(str(file))]
 
-    for seq in seqs:
-        seqid, descr = str(seq).split()
-        print(seqid)
-        print(descr)
+    grep = "|".join([str(seq).split()[0] for seq in seqs])
+    
+    output = run_cmd(f"grep -E {grep} {nucl_gb}")
+
+    print(output)
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
