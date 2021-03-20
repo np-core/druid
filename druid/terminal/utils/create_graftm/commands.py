@@ -3,6 +3,8 @@ import pandas
 from pathlib import Path
 from pyfasta import Fasta
 from druid.utils import run_cmd
+from io import StringIO
+
 
 @click.command()
 @click.option(
@@ -50,9 +52,11 @@ def create_graftm(fasta, name, nucl_gb, outdir):
     print(grep)
     print(nucl_gb)
 
-    output = run_cmd(f"grep -E {grep} {nucl_gb}")
+    output = StringIO(
+        run_cmd(f"grep -E {grep} {nucl_gb}").decode("utf-8")
+    )
 
-    print(output)
+    print(pandas.read_csv(output, sep='\t', header=None))
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
