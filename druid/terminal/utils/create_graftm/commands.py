@@ -43,7 +43,11 @@ def create_graftm(fasta, name, acc2tax, outdir):
 
     outdir.mkdir(parents=True, exist_ok=True)
 
-    seqs = [seq for file in fasta.glob("*.fasta") for seq in sequences.file_reader(str(file))]
+    for file in fasta.glob("*.fasta"):
+        print(file)
+        for seq in sequences.file_reader(str(file)):
+            #print(seq)
+            pass
 
     for seq in seqs:
         if seq.id is not None:
