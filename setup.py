@@ -44,6 +44,7 @@ setup(
         "deprecation",
         "pyfastaq",
         "drep"
+        "tensorflow"
     ],
     entry_points="""
         [console_scripts]
