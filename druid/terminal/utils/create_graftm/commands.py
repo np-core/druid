@@ -4,7 +4,7 @@ from pathlib import Path
 from pyfasta import Fasta
 from druid.utils import run_cmd, prep_tax, get_tax
 from io import StringIO
-
+from collections import OrderedDict
 
 @click.command()
 @click.option(
@@ -61,8 +61,9 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     for _, row in taxids.iterrows():
         taxid = row['taxid']
-        print(taxid)
-        print(get_tax(taxid, nodes, names, merged))
+        tax_hierarchy = get_tax(taxid, nodes, names, merged)
+        tax_greengenes = tax_to_greengenes(tax_hierarchy)
+        print(tax_greengenes)
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
@@ -70,5 +71,28 @@ def create_graftm(fasta, name, tax_path, outdir):
             fout.write(seq + '\n')
 
 
+def tax_to_greengenes(tax_hierarchy: dict):
 
+    """ Convert a hierarchical taxonomy to GreenGenes format """
+
+    convert = [
+        ('superkingdom', 'k__'),
+        ('phylum', 'p__'),
+        ('class', 'c__'),
+        ('order', 'o__'),
+        ('family', 'f__'),
+        ('genus', 'g__'),
+        ('species', 's__')
+    ]
+
+    gg = []
+    for (level, short) in convert:
+        try:
+            val = tax_hierarchy[level]
+        except KeyError:
+            val = ''
+
+        gg.append(f"{short}{val}")
+
+    return ";".join(gg)
 
