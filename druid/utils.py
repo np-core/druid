@@ -4,10 +4,12 @@ import random
 import datetime
 import numpy as np
 import matplotlib
+import pandas
 import subprocess
 import shlex
 import click
 
+from pathlib import Path
 from colorama import Fore
 from matplotlib import style
 from skimage.util import view_as_windows
@@ -369,3 +371,62 @@ def run_cmd(cmd, callback=None, watch=False, background=False, shell=False):
         return callback(output)
 
     return output
+
+
+# TAXONOMY IDENTIFICATION
+
+# Make sure you have downloaded ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdmp.zip
+# and have its contents in ./data/.
+
+# Note: This is just another reinvention of NCBITaxonomy of ETE Toolkit.
+# http://etetoolkit.org/docs/latest/tutorial/tutorial_ncbitaxonomy.html
+
+
+def _read_nodes(path: Path):
+    nodes = pandas.read_csv(path / "nodes.dmp", sep="|", header=None)
+    nodes = nodes.drop(nodes.columns[3:], axis=1)
+    nodes.columns = ["taxid", "parentid", "rank"]
+    nodes = nodes.set_index("taxid")
+    nodes["rank"] = nodes["rank"].apply(lambda x: x.strip())
+    return nodes
+
+
+def _read_names(path: Path):
+    names = pandas.read_csv(path / "names.dmp", sep="|", header=None)
+    names = names.drop([names.columns[2], names.columns[4]], axis=1)
+    names.columns = ["taxid", "name", "type"]
+    names = names.set_index("taxid")
+    names = names.applymap(lambda x: x.strip())
+    names = names[names["type"] == "scientific name"]
+    return names
+
+
+def _read_merged(path: Path):
+    merged = pandas.read_csv(path / "merged.dmp", sep="|", header=None)
+    merged = merged.drop([merged.columns[2]], axis=1)
+    merged.columns = ["original", "mergedto"]
+    merged = merged.set_index("original")
+    return merged
+
+
+def get_tax(taxid, nodes, names, merged, prev_tax=None):
+    if prev_tax is None:
+        prev_tax = dict()  # DO NOT GIVE IT AS A DEFAULT PARAMETER
+    while taxid in merged.index:  # substitute with merged taxid ITERATIVELY just in case
+        taxid = merged.loc[taxid]["mergedto"]
+
+    prev_tax[nodes.loc[taxid]["rank"]] = names.loc[taxid]["name"]
+
+    # recursion
+    if "kingdom" in nodes.loc[taxid]["rank"]:
+        return prev_tax
+    else:
+        return get_tax(nodes.loc[taxid]["parentid"], nodes, names, merged, prev_tax)
+
+
+def prep_tax(tax_path: Path):
+    nodes = _read_nodes(path=tax_path)
+    names = _read_names(path=tax_path)
+    merged = _read_merged(path=tax_path)
+
+    return nodes, names, merged

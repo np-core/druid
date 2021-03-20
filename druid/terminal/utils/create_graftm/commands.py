@@ -2,7 +2,7 @@ import click
 import pandas
 from pathlib import Path
 from pyfasta import Fasta
-from druid.utils import run_cmd
+from druid.utils import run_cmd, prep_tax, get_tax
 from io import StringIO
 
 
@@ -32,14 +32,14 @@ from io import StringIO
     help="Path to output directory for the GraftM package files",
 )
 @click.option(
-    "--nucl_gb",
-    "-n",
+    "--tax_path",
+    "-t",
     type=Path,
     default=None,
     metavar="",
     help="Accession",
 )
-def create_graftm(fasta, name, nucl_gb, outdir):
+def create_graftm(fasta, name, tax_path, outdir):
 
     """Create a GraftM package from a set of fasta files"""
 
@@ -49,18 +49,20 @@ def create_graftm(fasta, name, nucl_gb, outdir):
 
     grep = "|".join([str(seq).split()[0].split(":")[0] for seq in seqs])
 
-    print(grep)
-    print(nucl_gb)
-
     output = StringIO(
-        run_cmd(f"grep -E {grep} {nucl_gb}").decode("utf-8")
+        run_cmd(f"grep -E {grep} {tax_path / 'nucl_gb.accession2taxid'}").decode("utf-8")
     )
+
+    nodes, names, merged = prep_tax(tax_path=tax_path)
 
     taxids = pandas.read_csv(
         output, sep='\t', header=None, names=["accession", "version", "taxid", "gi"]
     )
 
-    print(taxids)
+    for _, row in taxids.iterrow():
+        taxid = row['taxid']
+        print(taxid)
+        print(get_tax(taxid, nodes, names, merged))
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
