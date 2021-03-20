@@ -59,7 +59,7 @@ def create_graftm(fasta, name, tax_path, outdir):
         output, sep='\t', header=None, names=["accession", "version", "taxid", "gi"]
     )
 
-    for _, row in taxids.iterrow():
+    for _, row in taxids.iterrows():
         taxid = row['taxid']
         print(taxid)
         print(get_tax(taxid, nodes, names, merged))
