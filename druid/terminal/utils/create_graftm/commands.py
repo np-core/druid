@@ -46,7 +46,7 @@ def create_graftm(fasta, name, nucl_gb, outdir):
     seqs = [seq for file in fasta.glob("*.fasta") for seq in Fasta(str(file))]
 
     grep = "|".join([str(seq).split()[0] for seq in seqs])
-    
+
     output = run_cmd(f"grep -E {grep} {nucl_gb}")
 
     print(output)
