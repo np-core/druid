@@ -92,6 +92,12 @@ def tax_to_greengenes(tax_hierarchy: dict):
         except KeyError:
             val = ''
 
+        if level == 'species':
+            try:
+                val = val.split()[1]
+            except IndexError:
+                val = ""
+
         gg.append(f"{short}{val}")
 
     return ";".join(gg)
