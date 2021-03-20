@@ -35,25 +35,22 @@ from pyfastaq import sequences
     type=Path,
     default=None,
     metavar="",
-    help="Accession to taxid reosurce file to add taxonomy file to GraftM from FASTA parsed from headers",
+    help="Accession to taxid resources file to add taxonomy file to GraftM from FASTA parsed from headers",
 )
 def create_graftm(fasta, name, acc2tax, outdir):
 
-    """Creat a GraftM package from a set of fasta files"""
+    """Create a GraftM package from a set of fasta files"""
 
     outdir.mkdir(parents=True, exist_ok=True)
-    seqs = [
-        seq for file in fasta.glob("*.fasta")
-        for seq in sequences.file_reader(str(file))
-    ]
+
+    seqs = [seq for file in fasta.glob("*.fasta") for seq in sequences.file_reader(str(file))]
 
     # Write GraftM sequence file:
-    writer = sequences.file_writer(str(outdir / f"{name}.fasta"))
-    for seq in seqs:
-        writer.write(seq)
+    with (outdir / f"{name}.fasta").open('w') as fout:
+        for seq in seqs:
+            print(seq.id)
+            fout.write(str(seq) + '\n')
 
-    for seq in seqs:
-        print(seq)
 
 
 
