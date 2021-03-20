@@ -56,7 +56,11 @@ def create_graftm(fasta, name, nucl_gb, outdir):
         run_cmd(f"grep -E {grep} {nucl_gb}").decode("utf-8")
     )
 
-    print(pandas.read_csv(output, sep='\t', header=None))
+    taxids = pandas.read_csv(
+        output, sep='\t', header=None, names=["accession", "version", "taxid", "gi"]
+    )
+
+    print(taxids)
 
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
