@@ -43,7 +43,7 @@ setup(
         "click",
         "deprecation",
         "pyfastaq",
-        "drep"
+        "drep",
         "tensorflow"
     ],
     entry_points="""
