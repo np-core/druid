@@ -98,6 +98,9 @@ def tax_to_greengenes(tax_hierarchy: dict):
             except IndexError:
                 val = ""
 
+            if 'sp.' in val:
+                val = ""
+
         if 'Candidatus' in val:
             try:
                 val = f"[{val.split()[1]}]"  # take first should be: Candidatus Nitrospec...
