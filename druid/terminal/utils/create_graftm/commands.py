@@ -98,6 +98,18 @@ def tax_to_greengenes(tax_hierarchy: dict):
             except IndexError:
                 val = ""
 
+        if 'Candidatus' in val:
+            try:
+                val = f"[{val.split()[1]}]"  # take first should be: Candidatus Nitrospec...
+            except IndexError:
+                val = ""
+
+        # Check if there are some weird name formats and use first only
+        values = val.split()
+        if len(values) > 1:
+            val = values[0]
+
+
         gg.append(f"{short}{val}")
 
     return ";".join(gg)
