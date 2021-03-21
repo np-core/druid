@@ -39,7 +39,15 @@ from collections import OrderedDict
     metavar="",
     help="Accession",
 )
-def create_graftm(fasta, package_name, tax_path, outdir):
+@click.option(
+    "--level",
+    "-l",
+    type=Path,
+    default=None,
+    metavar="",
+    help="Limit the taxonomy file to a specific level [none]",
+)
+def create_graftm(fasta, package_name, tax_path, outdir, level):
 
     """Create a GraftM package from a set of fasta files"""
 
@@ -76,7 +84,7 @@ def create_graftm(fasta, package_name, tax_path, outdir):
         taxid = row['taxid']
         a = row['version']
         tax_hierarchy = get_tax(taxid, nodes, names, merged)
-        tax_greengenes = tax_to_greengenes(tax_hierarchy)
+        tax_greengenes = tax_to_greengenes(tax_hierarchy, level)
         gg.append(tax_greengenes)
         access.append(a)
 
@@ -99,7 +107,7 @@ def create_graftm(fasta, package_name, tax_path, outdir):
     taxids.to_csv(outdir / f"{package_name}.tsv", sep='\t', index=False)
 
 
-def tax_to_greengenes(tax_hierarchy: dict):
+def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
 
     """ Convert a hierarchical taxonomy to GreenGenes format """
 
@@ -116,6 +124,7 @@ def tax_to_greengenes(tax_hierarchy: dict):
     gg = []
     vals = []
     for i, (level, short) in enumerate(convert):
+
         try:
             val = tax_hierarchy[level]
         except KeyError:
@@ -147,6 +156,9 @@ def tax_to_greengenes(tax_hierarchy: dict):
 
         gg.append(f"{short}{val}")
         vals.append(val)
+        
+        if limit_level and limit_level == level:
+            break
 
     return ";".join(gg)
 
