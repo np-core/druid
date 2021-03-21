@@ -47,7 +47,12 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     seqs = [seq for file in fasta.glob("*.fasta") for seq in Fasta(str(file))]
 
-    grep = "|".join([str(seq).split()[0].split(":")[0] for seq in seqs])
+    try:
+        acc = str(seq).split()[0].split(":")[0]
+    except IndexError:
+        raise
+
+    grep = "|".join([acc for seq in seqs])
 
     output = StringIO(
         run_cmd(f"grep -E {grep} {tax_path / 'nucl_gb.accession2taxid'}").decode("utf-8")
@@ -59,6 +64,8 @@ def create_graftm(fasta, name, tax_path, outdir):
         output, sep='\t', header=None, names=["accession", "version", "taxid", "gi"]
     )
 
+    print(taxids)
+
     for _, row in taxids.iterrows():
         taxid = row['taxid']
         tax_hierarchy = get_tax(taxid, nodes, names, merged)
@@ -68,7 +75,7 @@ def create_graftm(fasta, name, tax_path, outdir):
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
         for seq in seqs:
-            fout.write(seq + '\n')
+            fout.write('>' + acc + '\n' + seq.seq)
 
 
 def tax_to_greengenes(tax_hierarchy: dict):
@@ -86,7 +93,8 @@ def tax_to_greengenes(tax_hierarchy: dict):
     ]
 
     gg = []
-    for (level, short) in convert:
+    vals = []
+    for i, (level, short) in enumerate(convert):
         try:
             val = tax_hierarchy[level]
         except KeyError:
@@ -111,7 +119,6 @@ def tax_to_greengenes(tax_hierarchy: dict):
         values = val.split()
         if len(values) > 1:
             val = values[0]
-
 
         gg.append(f"{short}{val}")
 
