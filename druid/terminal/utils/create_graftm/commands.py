@@ -157,7 +157,7 @@ def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
         gg.append(f"{short}{val}")
         vals.append(val)
 
-        print(limit_level, level)
+        print(type(limit_level), type(level))
         if limit_level == level:
             print(f"Limiting level to: {limit_level} at {level}")
             return ";".join(gg)
