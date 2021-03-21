@@ -1,7 +1,7 @@
 import click
 import pandas
 from pathlib import Path
-from pyfasta import Fasta
+from pyfastaq import sequences
 from druid.utils import run_cmd, prep_tax, get_tax
 from io import StringIO
 from collections import OrderedDict
@@ -45,7 +45,9 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     outdir.mkdir(parents=True, exist_ok=True)
 
-    seqs = [seq for file in fasta.glob("*.fasta") for seq in Fasta(str(file))]
+    seqs = [seq for file in fasta.glob("*.fasta") for seq in sequences.file_reader(file)]
+
+    print(seqs)
 
     grep = "|".join([str(seq).split()[0].split(":")[0] for seq in seqs])
 
