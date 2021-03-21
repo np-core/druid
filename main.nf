@@ -57,6 +57,7 @@ include { MetaWrapAssembly  } from './modules/metawrap'
 include { MetaWrapBinning } from './modules/metawrap'
 include { MetaWrapBinAssembly  } from './modules/metawrap'
 include { MetaWrapBinOps  } from './modules/metawrap'
+include { GraftM  } from './modules/graftm'
 
 workflow metawrap_assembly {
 
@@ -72,7 +73,6 @@ workflow metawrap_assembly {
         MetaWrapBinOps(MetaWrapBinAssembly.out, MetaWrapQC.out)
 }
 
-include { GraftM  } from './modules/graftm'
 
 workflow graftm_search {
 
