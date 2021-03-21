@@ -124,7 +124,12 @@ def tax_to_greengenes(tax_hierarchy: dict):
         if len(values) > 1:
             val = values[0]
 
+        if level == 'species':  # no species name without genus
+            if val and vals[i-1] == "":
+                val = ""
+
         gg.append(f"{short}{val}")
+        vals.append(val)
 
     return ";".join(gg)
 
