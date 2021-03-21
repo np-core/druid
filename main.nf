@@ -1,6 +1,3 @@
-
-// @JCU: nextflow np-core/druid -profile zodiac --container ~/bin/metawrap.sif --worfklow mag_assembly --fastq "/path/to/*_{1,2}.fastq" --outdir test_assembly --completeness 70 --contamination 5 --assembly_memory 300G --process_memory 128G --assembly_threads 80 --process_threads 32
-
 nextflow.enable.dsl=2
 
 // Helper functions
@@ -40,8 +37,14 @@ params.fastq = "*_{1,2}.fastq"
 params.outdir = 'mag_assembly'
 
 // GraftM search workflow
+// nextflow run np-core/druid --container np-core/graftm -profile docker --workflow graftm_search --fastq "*_{1,2}.fastq"--packages /path/to/packages --outdir graftm_search
 
 params.packages = ""
+if ( params.coverage_databases instanceof String and params.packages){
+    packages = params.packages.split(",").collect { file(it) }
+} else {
+    packages = ""
+}
 
 
 // MAG assembly workflow
@@ -78,7 +81,6 @@ workflow graftm_search {
 
     take:
         reads  // id, fwd, rv
-        packages // id, dir
     main:
         GraftM(reads, packages)
 }
@@ -93,7 +95,7 @@ workflow dnd {
         get_single_fastx(params.fasta) | view
    }
    if (params.workflow == "graftm_search"){
-        graftm_search(get_paired_fastq(params.fastq), get_dir(params.packages))
+        graftm_search(get_paired_fastq(params.fastq))
    }
 }
 
