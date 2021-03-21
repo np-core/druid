@@ -1,7 +1,6 @@
 import click
 
 from pathlib import Path
-from poremongo import PoreMongo
 from druid.utils import OptionEatAll
 from druid.dataset import DruidDataset
 
