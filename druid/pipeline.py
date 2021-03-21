@@ -45,7 +45,7 @@ class Druid:
         bacteria = 0
         archaea = 0
         for i, row in df.iterrows():
-            reads = df.at[i, "SAMPLE"]
+            reads = df.at[i, "READS"]
             if row["TAX"] == "Root":
                 root += reads
             if "k__Bacteria" in row["TAX"]:
