@@ -47,11 +47,14 @@ def create_graftm(fasta, package_name, tax_path, outdir):
 
     seqs = []
     accessions = []
+    descriptions = []
     for file in fasta.glob("*.fasta"):
-        for name, seq in pyfastx.Fasta(str(file), build_index=False):
+        for name, seq in pyfastx.Fasta(str(file), build_index=False, full_name=True):
             acc = name.split()[0].split(":")[0].replace(">", "")
+            descr = ' '.join(name.split()[1:].replace(">", ""))
             seqs.append(f">{acc}\n{seq}")
             accessions.append(acc)
+            descriptions.append(descr)
 
     for seq in seqs:
         print(seq)
@@ -70,16 +73,33 @@ def create_graftm(fasta, package_name, tax_path, outdir):
 
     print(taxids)
 
+    gg = []
+    access = []
     for _, row in taxids.iterrows():
         taxid = row['taxid']
+        a = row['accession']
         tax_hierarchy = get_tax(taxid, nodes, names, merged)
         tax_greengenes = tax_to_greengenes(tax_hierarchy)
-        print(tax_greengenes)
+        gg.append(tax_greengenes)
+        access.append(a)
+
+    for _, row in taxids.iterrows():
+        taxids.at[_, 'gg'] = gg[_]
+        taxids.at[_, 'descr'] = descriptions[_]
+
 
     # Write GraftM sequence file:
     with (outdir / f"{package_name}.fasta").open('w') as fout:
         for seq in seqs:
             fout.write(seq + '\n')
+
+    # Write GreenGenes taxonomy file
+    with (outdir / f"{package_name}.tax").open('w') as fout:
+        for i, g in enumerate(gg):
+            fout.write(f"{access[i]} {g}\n")
+
+    # Write data table
+    taxids.to_csv(outdir / f"{package_name}.tsv", sep='\t', index=False)
 
 
 def tax_to_greengenes(tax_hierarchy: dict):
