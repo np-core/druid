@@ -107,6 +107,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
     # Write data table
     taxids.to_csv(outdir / f"{package_name}.tsv", sep='\t', index=False)
 
+    print(f"Queried {len(accessions)} seqeunce files, found {len(taxids)} TaxIDs")
 
 def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
 
