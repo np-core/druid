@@ -49,18 +49,17 @@ class DruidPipeline:
 
         fig, axes = plt.subplots(
             nrows=nrow, ncols=ncol, figsize=(
-                ncol * 4.5, nrow * 4.5
+                ncol * 9, nrow * 9
             )
         )
 
         for i, (package, df) in enumerate(package_data.items()):
             r, c = self._get_axes_idx(i, ncol)
-            print(i, r, c)
             a = sns.barplot(
                 data=df, ax=axes[r, c] if nrow > 1 else axes[i],
                 x="name", y="reads", hue="tax", palette="dark", alpha=.6
             )
-            a.set_title(package)
+            a.set_title(package.name)
             a.set_ylabel("Reads\n")
 
         plt.tight_layout()
