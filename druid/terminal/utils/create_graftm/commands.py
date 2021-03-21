@@ -77,8 +77,6 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
         output, sep='\t', header=None, names=["accession", "version", "taxid", "gi"]
     )
 
-    print(taxids)
-
     gg = []
     access = []
     for _, row in taxids.iterrows():
