@@ -39,12 +39,7 @@ params.outdir = 'mag_assembly'
 // GraftM search workflow
 // nextflow run np-core/druid --container np-core/graftm -profile docker --workflow graftm_search --fastq "*_{1,2}.fastq"--packages /path/to/packages --outdir graftm_search
 
-params.packages = ""
-if ( params.coverage_databases instanceof String and params.packages){
-    packages = params.packages.split(",").collect { file(it) }
-} else {
-    packages = ""
-}
+params.packages = ""  // directory with graftm packages
 
 
 // MAG assembly workflow
@@ -95,7 +90,10 @@ workflow dnd {
         get_single_fastx(params.fasta) | view
    }
    if (params.workflow == "graftm_search"){
-        graftm_search(get_paired_fastq(params.fastq))
+        reads = get_paired_fastq(params.fastq)
+        packages = get_dir(params.packages)
+
+        graftm_search(reads.combine(packages))
    }
 }
 
