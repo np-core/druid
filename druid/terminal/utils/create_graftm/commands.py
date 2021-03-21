@@ -16,10 +16,10 @@ from collections import OrderedDict
     help="Path to directory containing fasta file to process (one gene per entry)",
 )
 @click.option(
-    "--name",
+    "--package_name",
     "-n",
     type=str,
-    default="grftm_pckg",
+    default="graftm_package",
     metavar="",
     help="Name of GraftM package to create",
 )
@@ -39,7 +39,7 @@ from collections import OrderedDict
     metavar="",
     help="Accession",
 )
-def create_graftm(fasta, name, tax_path, outdir):
+def create_graftm(fasta, package_name, tax_path, outdir):
 
     """Create a GraftM package from a set of fasta files"""
 
@@ -77,7 +77,7 @@ def create_graftm(fasta, name, tax_path, outdir):
         print(tax_greengenes)
 
     # Write GraftM sequence file:
-    with (outdir / f"{name}.fasta").open('w') as fout:
+    with (outdir / f"{package_name}.fasta").open('w') as fout:
         for seq in seqs:
             fout.write(seq + '\n')
 
