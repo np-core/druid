@@ -13,6 +13,10 @@ def get_paired_fastq( glob ){
     return channel.fromFilePairs(glob, flat: true)
 }
 
+def get_dir( glob ){
+    return channel.fromPath(dir, type: 'dir').map { tuple(it.getName(), it) }
+}
+
 def get_matching_data( channel1, channel2){
 
     // Get matching data by ID (first field) from two channels
@@ -34,6 +38,13 @@ params.workflow = 'mag_assembly'
 
 params.fastq = "*_{1,2}.fastq"
 params.outdir = 'mag_assembly'
+
+// GraftM search workflow
+
+params.packages = ""
+
+
+// MAG assembly workflow
 
 params.qc_options = '--skip-bmtagger'
 params.assembly_options = '--metaspades'
@@ -78,11 +89,11 @@ workflow dnd {
        get_paired_fastq(params.fastq) | metawrap_assembly
    }
    
-   if (params.workflow == "graftm_search"){
-        get_paired_fastq(params.fastq) | view
-   }
    if (params.workflow == "mag_search"){
-        graftm_search(get_single_fastx(params.fastq), get_directories(params.packages))
+        get_single_fastx(params.fasta) | view
+   }
+   if (params.workflow == "graftm_search"){
+        graftm_search(get_paired_fastq(params.fastq), get_dir(params.packages))
    }
 }
 
