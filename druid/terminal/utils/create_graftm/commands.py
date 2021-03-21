@@ -92,7 +92,6 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
         taxids.at[_, 'gg'] = gg[_]
         taxids.at[_, 'descr'] = descriptions[row['version']]
 
-
     # Write GraftM sequence file:
     with (outdir / f"{package_name}.fasta").open('w') as fout:
         for seq in seqs:
@@ -101,7 +100,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
     # Write GreenGenes taxonomy file
     with (outdir / f"{package_name}.tax").open('w') as fout:
         for i, g in enumerate(gg):
-            fout.write(f"{access[i]} {g}\n")
+            fout.write(f"{access[i]}\t{g}\n")
 
     # Write data table
     taxids.to_csv(outdir / f"{package_name}.tsv", sep='\t', index=False)
@@ -158,7 +157,7 @@ def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
         vals.append(val)
 
         if limit_level == level:
-            return ";".join(gg)
+            return "; ".join(gg)
 
-    return ";".join(gg)
+    return "; ".join(gg)
 
