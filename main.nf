@@ -27,6 +27,10 @@ def get_matching_data( channel1, channel2){
 
 }
 
+def get_packages(glob){
+    return channel.fromPath(glob, type: 'dir')
+}
+
 params.workflow = 'mag_assembly'
 
 params.fastq = "*_{1,2}.fastq"
@@ -89,7 +93,7 @@ workflow dnd {
    }
    if (params.workflow == "graftm_search"){
         reads = get_paired_fastq(params.fastq)
-        packages = get_single_fastx(params.packages)
+        packages = get_packages(params.packages)
         reads.combine(packages) | view
         //graftm_search()
    }
