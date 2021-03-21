@@ -57,13 +57,12 @@ class DruidPipeline:
 
         for i, (package, df) in enumerate(package_data.items()):
             r, c = self._get_axes_idx(i, ncol)
-            a = sns.barplot(
-                data=df, ax=axes[r, c] if nrow > 1 else axes[i],
-                x="name", y="reads", hue="tax", palette="dark", alpha=.6
-            )
-            a.set_title(package.name)
-            a.set_ylabel("Reads\n")
-            a.set_xlabel("")
+            ax = axes[r, c] if nrow > 1 else axes[i]
+
+            sns.barplot(data=df, ax=ax, x="name", y="reads", hue="tax", palette="dark", alpha=.6)
+            ax.set_title(package.name)
+            ax.set_ylabel("Reads\n")
+            ax.set_xlabel("")
 
         sns.despine()
         plt.tight_layout()
