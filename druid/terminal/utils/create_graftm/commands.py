@@ -109,6 +109,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
 
     print(f"Queried {len(accessions)} sequence files, found {len(taxids)} identifiers ({package_name}.tsv)")
 
+
 def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
 
     """ Convert a hierarchical taxonomy to GreenGenes format """
