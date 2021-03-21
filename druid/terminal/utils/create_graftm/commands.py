@@ -56,9 +56,6 @@ def create_graftm(fasta, package_name, tax_path, outdir):
             accessions.append(acc)
             descriptions[acc] = descr
 
-    for seq in seqs:
-        print(seq)
-
     grep = "|".join(accessions)
 
     output = StringIO(
@@ -77,7 +74,7 @@ def create_graftm(fasta, package_name, tax_path, outdir):
     access = []
     for _, row in taxids.iterrows():
         taxid = row['taxid']
-        a = row['accession']
+        a = row['version']
         tax_hierarchy = get_tax(taxid, nodes, names, merged)
         tax_greengenes = tax_to_greengenes(tax_hierarchy)
         gg.append(tax_greengenes)
