@@ -56,10 +56,9 @@ class DruidPipeline:
         for i, (package, df) in enumerate(package_data.items()):
             r, c = self._get_axes_idx(i, ncol)
             print(i, r, c)
-            g = sns.catplot(
-                data=df, kind="bar", ax=axes[r, c] if nrow > 1 else axes[i],
-                x="name", y="reads", hue="tax",
-                ci=None, palette="dark", alpha=.6
+            g = sns.barplot(
+                data=df, ax=axes[r, c] if nrow > 1 else axes[i],
+                x="name", y="reads", hue="tax", palette="dark", alpha=.6
             )
             g.despine(left=True)
             g.set_axis_labels("", "Read counts")
@@ -99,7 +98,7 @@ class DruidPipeline:
             r, c = 0, 0
         else:
             r = math.floor(i / ncol)
-            c = math.ceil(i / ncol) - 1
+            c = i % ncol
 
         return r, c
 
