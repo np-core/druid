@@ -1,7 +1,8 @@
 import pandas
 from pathlib import Path
 
-class Druid:
+
+class DruidPipeline:
 
     """ Druid pipeline operations """
 
@@ -9,7 +10,7 @@ class Druid:
 
         self.directory = directory
 
-    def collect_graftm(self):
+    def collect_graftm(self) -> dict:
 
         graftm_path = self.directory / 'graftm'
 
@@ -32,11 +33,10 @@ class Druid:
 
         package_data = {}
         for package, count_data in counts.items():
-            package_data[package] = pandas.DataFrame(count_data).sort_values("name")
+            package_data[package] = pandas.DataFrame(count_data).sort_values("name").reset_index().unstack()
+            print(package_data[package])
 
-        for p, df in package_data.items():
-            print(p)
-            print(df)
+        return package_data
 
     @staticmethod
     def process_graftm_counts(file: Path):

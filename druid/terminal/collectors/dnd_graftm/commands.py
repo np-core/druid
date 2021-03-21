@@ -1,6 +1,6 @@
 import click
 from pathlib import Path
-from druid.pipeline import Druid
+from druid.pipeline import DruidPipeline
 
 
 @click.command()
@@ -16,7 +16,7 @@ def dnd_graftm(directory):
 
     """GraftM collector from the metagenome search pipeline """
 
-    dr = Druid(directory=directory)
+    dr = DruidPipeline(directory=directory)
 
     dr.collect_graftm()
 
