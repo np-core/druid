@@ -57,7 +57,7 @@ class DruidPipeline:
             r, c = self._get_axes_idx(i, ncol)
             print(i, r, c)
             g = sns.catplot(
-                data=df, kind="bar", ax=axes[r, c],
+                data=df, kind="bar", ax=axes[r, c] if nrow > 1 else axes[i],
                 x="name", y="reads", hue="tax",
                 ci=None, palette="dark", alpha=.6
             )
