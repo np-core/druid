@@ -28,7 +28,7 @@ def get_matching_data( channel1, channel2){
 }
 
 def get_packages(glob){
-    return channel.fromPath(glob, type: 'dir')
+    return channel.fromPath(glob, type: 'dir') | map { tuple(it.getName(), it) }
 }
 
 params.workflow = 'mag_assembly'
