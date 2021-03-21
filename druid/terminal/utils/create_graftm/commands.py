@@ -47,12 +47,7 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     seqs = [seq for file in fasta.glob("*.fasta") for seq in Fasta(str(file))]
 
-    try:
-        acc = str(seq).split()[0].split(":")[0]
-    except IndexError:
-        raise
-
-    grep = "|".join([acc for seq in seqs])
+    grep = "|".join([str(seq).split()[0].split(":")[0] for seq in seqs])
 
     output = StringIO(
         run_cmd(f"grep -E {grep} {tax_path / 'nucl_gb.accession2taxid'}").decode("utf-8")
@@ -75,6 +70,7 @@ def create_graftm(fasta, name, tax_path, outdir):
     # Write GraftM sequence file:
     with (outdir / f"{name}.fasta").open('w') as fout:
         for seq in seqs:
+            acc = str(seq).split()[0].split(":")[0]
             fout.write('>' + acc + '\n' + seq.seq)
 
 
