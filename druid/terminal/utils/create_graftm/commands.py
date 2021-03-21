@@ -96,7 +96,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
     # Write GraftM sequence file:
     with (outdir / f"{package_name}.fasta").open('w') as fout:
         for acc, seq in seqs.items():
-            if acc in taxids['version'].toist():
+            if acc in taxids['version'].tolist():
                 fout.write(seq + '\n')
 
     # Write GreenGenes taxonomy file
