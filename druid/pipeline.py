@@ -30,9 +30,13 @@ class Druid:
                 sample_data = {'name': sample_path.name, 'root': root, 'bacteria': bacteria, 'archaea': archaea}
                 counts[package].append(sample_data)
 
+        package_data = {}
         for package, count_data in counts.items():
-            print(package)
-            print(count_data)
+            package_data[package] = pandas.DataFrame(count_data)
+
+        for p, df in package_data.items():
+            print(p)
+            print(df)
 
     @staticmethod
     def process_graftm_counts(file: Path):
