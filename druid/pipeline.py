@@ -60,7 +60,6 @@ class DruidPipeline:
                 data=df, ax=axes[r, c] if nrow > 1 else axes[i],
                 x="name", y="reads", hue="tax", palette="dark", alpha=.6
             )
-            g.despine(left=True)
             g.set_axis_labels("", "Read counts")
             g.legend.set_title("")
 
