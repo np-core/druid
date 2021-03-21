@@ -10,10 +10,6 @@ def get_paired_fastq( glob ){
     return channel.fromFilePairs(glob, flat: true)
 }
 
-def get_dir( glob ){
-    return channel.fromPath(glob) | map { dir -> tuple(dir.getName(), dir) }
-}
-
 def get_matching_data( channel1, channel2){
 
     // Get matching data by ID (first field) from two channels
@@ -93,7 +89,7 @@ workflow dnd {
    }
    if (params.workflow == "graftm_search"){
         reads = get_paired_fastq(params.fastq)
-        packages = get_dir(params.packages)
+        packages = get_single_fastx(params.packages)
         reads.combine(packages) | view
         //graftm_search()
    }
