@@ -63,6 +63,7 @@ class DruidPipeline:
             )
             a.set_title(package.name)
             a.set_ylabel("Reads\n")
+            a.set_ylabel("")
 
         sns.despine()
         plt.tight_layout()
