@@ -63,19 +63,31 @@ workflow metawrap_assembly {
         MetaWrapBinOps(MetaWrapBinAssembly.out, MetaWrapQC.out)
 }
 
+workflow graftm_search {
 
-workflow mag_dnd {
+    take:
+        reads  // id, fwd, rv
+        packages // id, dir
+    main:
+        GraftM(reads, packages)
+}
 
+
+workflow dnd {
    if (params.workflow == "mag_assembly") {
        get_paired_fastq(params.fastq) | metawrap_assembly
    }
+   
+   if (params.workflow == "graftm_search"){
+        get_paired_fastq(params.fastq) | view
+   }
    if (params.workflow == "mag_search"){
-        get_single_fastx(params.fastq) | view
+        graftm_search(get_single_fastx(params.fastq), get_directories(params.packages))
    }
 }
 
 // Execute
 
 workflow {
-    mag_dnd()
+    dnd()
 }
