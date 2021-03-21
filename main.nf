@@ -80,6 +80,7 @@ workflow graftm_search {
         GraftM(read_packages)
 }
 
+include { GraftM  } from './modules/graftm'
 
 workflow dnd {
    if (params.workflow == "mag_assembly") {
