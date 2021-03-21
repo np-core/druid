@@ -8,6 +8,7 @@ import pandas
 import subprocess
 import shlex
 import click
+import pyfastx
 
 from pathlib import Path
 from colorama import Fore
@@ -430,3 +431,19 @@ def prep_tax(tax_path: Path):
     merged = _read_merged(path=tax_path)
 
     return nodes, names, merged
+
+
+def parse_operon_sequences(fasta: Path) -> (list, dict, dict):
+
+    accessions = []
+    descriptions = {}
+    seqs = {}
+    for file in fasta.glob("*.fasta"):
+        for name, seq in pyfastx.Fasta(str(file), build_index=False, full_name=True):
+            acc = name.split()[0].split(":")[0].replace(">", "")
+            descr = ' '.join(name.split()[1:])
+            accessions.append(acc)
+            descriptions[acc] = descr
+            seqs[acc] = f">{acc}\n{seq}"
+
+    return accessions, descriptions, seqs

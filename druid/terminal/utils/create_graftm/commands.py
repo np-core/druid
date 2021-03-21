@@ -1,10 +1,8 @@
 import click
 import pandas
-import pyfastx
 from pathlib import Path
-from druid.utils import run_cmd, prep_tax, get_tax
+from druid.utils import run_cmd, prep_tax, get_tax, parse_operon_sequences
 from io import StringIO
-from collections import OrderedDict
 
 @click.command()
 @click.option(
@@ -49,20 +47,11 @@ from collections import OrderedDict
 )
 def create_graftm(fasta, package_name, tax_path, outdir, level):
 
-    """Create a GraftM package from a set of fasta files"""
+    """Create a GraftM package from a set of sequences"""
 
     outdir.mkdir(parents=True, exist_ok=True)
 
-    accessions = []
-    descriptions = {}
-    seqs = {}
-    for file in fasta.glob("*.fasta"):
-        for name, seq in pyfastx.Fasta(str(file), build_index=False, full_name=True):
-            acc = name.split()[0].split(":")[0].replace(">", "")
-            descr = ' '.join(name.split()[1:])
-            accessions.append(acc)
-            descriptions[acc] = descr
-            seqs[acc] = f">{acc}\n{seq}"
+    accessions, descriptions, seqs = parse_operon_sequences(fasta=fasta)
 
     grep = "|".join(accessions)
 
