@@ -45,7 +45,7 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     outdir.mkdir(parents=True, exist_ok=True)
 
-    seqs = [seq for file in fasta.glob("*.fasta") for seq in sequences.file_reader(file)]
+    seqs = [seq for file in fasta.glob("*.fasta") for seq in sequences.file_reader(str(file))]
 
     print(seqs)
 
