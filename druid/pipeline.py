@@ -32,7 +32,7 @@ class Druid:
 
         package_data = {}
         for package, count_data in counts.items():
-            package_data[package] = pandas.DataFrame(count_data)
+            package_data[package] = pandas.DataFrame(count_data).sort_values("name")
 
         for p, df in package_data.items():
             print(p)
