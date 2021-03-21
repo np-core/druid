@@ -19,7 +19,6 @@ from textwrap import dedent
 from pathlib import Path
 from keras.utils import Sequence
 from keras.utils.np_utils import to_categorical
-from poremongo.poremodels import Read
 from colorama import Fore
 
 Y = Fore.YELLOW
