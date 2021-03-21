@@ -32,5 +32,5 @@ watchdog
 apscheduler
 click
 deprecation
-pyfastaq
+pyfastx==0.8.2
 drep

@@ -51,7 +51,7 @@ def create_graftm(fasta, package_name, tax_path, outdir):
     for file in fasta.glob("*.fasta"):
         for name, seq in pyfastx.Fasta(str(file), build_index=False, full_name=True):
             acc = name.split()[0].split(":")[0].replace(">", "")
-            descr = ' '.join(name.split()[1:].replace(">", ""))
+            descr = ' '.join(name.split()[1:])
             seqs.append(f">{acc}\n{seq}")
             accessions.append(acc)
             descriptions.append(descr)
