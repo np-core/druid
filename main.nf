@@ -28,7 +28,7 @@ def get_matching_data( channel1, channel2){
 }
 
 def get_packages(glob){
-    return channel.fromPath(glob, type: 'dir') | map { tuple(it.getName(), it) }
+    return channel.fromPath(glob, type: 'dir') | map { tuple(it, it.getName()) }
 }
 
 params.workflow = 'mag_assembly'
@@ -94,8 +94,7 @@ workflow dnd {
    if (params.workflow == "graftm_search"){
         reads = get_paired_fastq(params.fastq)
         packages = get_packages(params.packages)
-        reads.combine(packages) | view
-        //graftm_search()
+        graftm_search(reads.combine(packages))
    }
 }
 
