@@ -49,7 +49,7 @@ class DruidPipeline:
 
         fig, axes = plt.subplots(
             nrows=nrow, ncols=ncol, figsize=(
-                nrow * 9, ncol * 4.5
+                nrow * 14, ncol * 4.5 * nrow
             )
         )
 
