@@ -18,5 +18,5 @@ def dnd_graftm(directory):
 
     dr = DruidPipeline(directory=directory)
 
-    dr.collect_graftm()
-
+    data = dr.collect_graftm()
+    dr.plot_graftm_counts(package_data=data, plot_name="graftm")
