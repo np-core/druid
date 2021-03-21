@@ -94,8 +94,8 @@ workflow dnd {
    if (params.workflow == "graftm_search"){
         reads = get_paired_fastq(params.fastq)
         packages = get_dir(params.packages)
-
-        graftm_search(reads.combine(packages))
+        reads.combine(packages) | view
+        //graftm_search()
    }
 }
 
