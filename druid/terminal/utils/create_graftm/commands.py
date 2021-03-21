@@ -49,8 +49,8 @@ def create_graftm(fasta, name, tax_path, outdir):
 
     accessions = []
     for seq in seqs:
-        print(seq.id)
-        acc = str(seq.id).split()[0].split(":")[0]
+        print(seq)
+        acc = str(seq).split('\n')[0].split()[0].split(":")[0]
         print(acc)
         accessions.append(acc)
 
