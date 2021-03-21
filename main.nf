@@ -11,7 +11,7 @@ def get_paired_fastq( glob ){
 }
 
 def get_dir( glob ){
-    return channel.fromPath(glob, type: 'dir') | map { dir -> tuple(dir.getName(), dir) }
+    return channel.fromPath(glob) | map { dir -> tuple(dir.getName(), dir) }
 }
 
 def get_matching_data( channel1, channel2){
