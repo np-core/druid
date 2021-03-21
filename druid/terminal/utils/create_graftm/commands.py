@@ -57,6 +57,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
     accessions = []
     descriptions = {}
     for file in fasta.glob("*.fasta"):
+        print(file)
         for name, seq in pyfastx.Fasta(str(file), build_index=False, full_name=True):
             acc = name.split()[0].split(":")[0].replace(">", "")
             descr = ' '.join(name.split()[1:])
@@ -66,6 +67,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
 
     grep = "|".join(accessions)
 
+    print("Grepping")
     output = StringIO(
         run_cmd(f"grep -E {grep} {tax_path / 'nucl_gb.accession2taxid'}").decode("utf-8")
     )
