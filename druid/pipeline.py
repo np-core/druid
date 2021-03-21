@@ -1,6 +1,9 @@
 import pandas
+import math
 from pathlib import Path
 
+from matplotlib import pyplot as plt
+import seaborn as sns
 
 class DruidPipeline:
 
@@ -34,11 +37,39 @@ class DruidPipeline:
         package_data = {}
         for package, count_data in counts.items():
             package_data[package] = pandas.DataFrame(count_data).sort_values("name").reset_index().melt(
-                id_vars=['name'], value_vars=['root', 'bacteria', 'archaea'], var_name='kingdom', value_name='reads'
+                id_vars=['name'], value_vars=['root', 'bacteria', 'archaea'], var_name='tax', value_name='reads'
             )
             print(package_data[package])
 
         return package_data
+
+    def plot_graftm_counts(self, package_data: dict, plot_name: str):
+
+        nrow, ncol = math.ceil(len(package_data) / 2), 2
+
+        fig, axes = plt.subplots(
+            nrows=nrow, ncols=ncol, figsize=(
+                nrow * 7, ncol * 4.5
+            )
+        )
+
+        for i, (package, df) in enumerate(package_data.items()):
+            r, c = self._get_axes_idx(i, ncol)
+            print(i, r, c)
+            g = sns.catplot(
+                data=df, kind="bar", ax=axes[r, c],
+                x="name", y="reads", hue="tax",
+                ci=None, palette="dark", alpha=.6
+            )
+            g.despine(left=True)
+            g.set_axis_labels("", "Read counts")
+            g.legend.set_title("")
+
+        plt.tight_layout()
+
+        fig.savefig(f'{plot_name}.pdf')
+        fig.savefig(f'{plot_name}.svg')
+        fig.savefig(f'{plot_name}.png')
 
     @staticmethod
     def process_graftm_counts(file: Path):
@@ -60,6 +91,17 @@ class DruidPipeline:
                 archaea += reads
 
         return root, bacteria, archaea
+
+    @staticmethod
+    def _get_axes_idx(i, ncol):
+
+        if i == 0:
+            r, c = 0, 0
+        else:
+            r = math.floor(i / ncol)
+            c = math.ceil(i / ncol) - 1
+
+        return r, c
 
 
 
