@@ -75,9 +75,9 @@ workflow metawrap_assembly {
 workflow graftm_search {
 
     take:
-        reads  // id, fwd, rv
+        read_packages  // id, fwd, rv, package_name, package_dir
     main:
-        GraftM(reads, packages)
+        GraftM(read_packages)
 }
 
 
