@@ -34,7 +34,7 @@ class DruidPipeline:
         package_data = {}
         for package, count_data in counts.items():
             package_data[package] = pandas.DataFrame(count_data).sort_values("name").reset_index().melt(
-                id_vars=['name'], value_vars=['root', 'bacteria', 'archaea']
+                id_vars=['name'], value_vars=['root', 'bacteria', 'archaea'], var_name='kingdom', value_name='reads'
             )
             print(package_data[package])
 
