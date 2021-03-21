@@ -17,7 +17,7 @@ from collections import OrderedDict
 )
 @click.option(
     "--package_name",
-    "-n",
+    "-p",
     type=str,
     default="graftm_package",
     metavar="",
@@ -158,6 +158,7 @@ def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
         vals.append(val)
 
         if limit_level is not None and limit_level == level:
+            print(f"Limiting level to: {limit_level} at {level}")
             return ";".join(gg)
 
     return ";".join(gg)
