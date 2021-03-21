@@ -49,15 +49,13 @@ def create_graftm(fasta, name, tax_path, outdir):
     accessions = []
     for file in fasta.glob("*.fasta"):
         for seq in sequences.file_reader(str(file)):
-            print(seq)
             acc = str(seq).split('\n')[0].split()[0].split(":")[0].replace(">", "")
-            print(acc)
-            seq.id = acc
-            seqs.append(seq)
+            sequence = str(seq).split('\n')[0]
+            seqs.append(f">{acc}\n{sequence}")
             accessions.append(acc)
 
     for seq in seqs:
-        print(seq.id)
+        print(seq)
 
     grep = "|".join(accessions)
 
