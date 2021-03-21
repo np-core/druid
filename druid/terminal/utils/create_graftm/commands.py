@@ -71,7 +71,7 @@ def create_graftm(fasta, name, tax_path, outdir):
     with (outdir / f"{name}.fasta").open('w') as fout:
         for seq in seqs:
             acc = str(seq).split()[0].split(":")[0]
-            fout.write('>' + acc + '\n' + seq.seq)
+            fout.write('>' + acc + '\n' + str(seq[str(seq)]))
 
 
 def tax_to_greengenes(tax_hierarchy: dict):
