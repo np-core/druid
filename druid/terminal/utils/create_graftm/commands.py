@@ -49,7 +49,7 @@ def create_graftm(fasta, name, tax_path, outdir):
     accessions = []
     for file in fasta.glob("*.fasta"):
         for name, seq in pyfastx.Fasta(str(file), build_index=False):
-            acc = str(seq).split()[0].split(":")[0].replace(">", "")
+            acc = name.split()[0].split(":")[0].replace(">", "")
             seqs.append(f">{acc}\n{seq}")
             accessions.append(acc)
 
