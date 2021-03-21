@@ -56,13 +56,14 @@ class DruidPipeline:
         for i, (package, df) in enumerate(package_data.items()):
             r, c = self._get_axes_idx(i, ncol)
             print(i, r, c)
-            sns.barplot(
+            a = sns.barplot(
                 data=df, ax=axes[r, c] if nrow > 1 else axes[i],
                 x="name", y="reads", hue="tax", palette="dark", alpha=.6
             )
+            a.set_title(package)
+            a.set_ylabel("Reads\n")
 
         plt.tight_layout()
-
         fig.savefig(f'{plot_name}.pdf')
         fig.savefig(f'{plot_name}.svg')
         fig.savefig(f'{plot_name}.png')
