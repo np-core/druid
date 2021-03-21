@@ -4,6 +4,8 @@ from pathlib import Path
 
 from matplotlib import pyplot as plt
 import seaborn as sns
+sns.set_style("white")
+
 
 class DruidPipeline:
 
@@ -62,6 +64,7 @@ class DruidPipeline:
             a.set_title(package.name)
             a.set_ylabel("Reads\n")
 
+        sns.despine()
         plt.tight_layout()
         fig.savefig(f'{plot_name}.pdf')
         fig.savefig(f'{plot_name}.svg')
