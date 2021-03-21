@@ -40,14 +40,14 @@ from collections import OrderedDict
     help="Accession",
 )
 @click.option(
-    "--level",
+    "--limit",
     "-l",
     type=Path,
     default=None,
     metavar="",
     help="Limit the taxonomy file to a specific level [none]",
 )
-def create_graftm(fasta, package_name, tax_path, outdir, level):
+def create_graftm(fasta, package_name, tax_path, outdir, limit):
 
     """Create a GraftM package from a set of fasta files"""
 
@@ -84,7 +84,7 @@ def create_graftm(fasta, package_name, tax_path, outdir, level):
         taxid = row['taxid']
         a = row['version']
         tax_hierarchy = get_tax(taxid, nodes, names, merged)
-        tax_greengenes = tax_to_greengenes(tax_hierarchy, level)
+        tax_greengenes = tax_to_greengenes(tax_hierarchy, limit)
         gg.append(tax_greengenes)
         access.append(a)
 
@@ -157,7 +157,6 @@ def tax_to_greengenes(tax_hierarchy: dict, limit_level: str):
         gg.append(f"{short}{val}")
         vals.append(val)
 
-        print(type(limit_level), type(level))
         if limit_level == level:
             print(f"Limiting level to: {limit_level} at {level}")
             return ";".join(gg)
