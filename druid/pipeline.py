@@ -56,12 +56,10 @@ class DruidPipeline:
         for i, (package, df) in enumerate(package_data.items()):
             r, c = self._get_axes_idx(i, ncol)
             print(i, r, c)
-            g = sns.barplot(
+            sns.barplot(
                 data=df, ax=axes[r, c] if nrow > 1 else axes[i],
                 x="name", y="reads", hue="tax", palette="dark", alpha=.6
             )
-            g.set_axis_labels("", "Read counts")
-            g.legend.set_title("")
 
         plt.tight_layout()
 
