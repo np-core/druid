@@ -53,7 +53,9 @@ class DruidPipeline:
         if not all(k in graftm_data for k in ("dndC", "dndD")):
             raise ValueError('Could not find results for packages dndC and dndD')
         else:
-            dndcd = graftm_data['dndC'].merge(graftm_data['dndD'], on="name", how='outer', suffixes=['dndC', 'dndD'])
+            dndcd = graftm_data['dndC'].merge(
+                graftm_data['dndD'], on=["name", "tax"], how='outer', suffixes=['_dndC', '_dndD']
+            )
 
         print(dndcd)
 
