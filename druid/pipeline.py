@@ -41,9 +41,13 @@ class DruidPipeline:
             package_data[package] = pandas.DataFrame(count_data).sort_values("name").reset_index().melt(
                 id_vars=['name'], value_vars=['root', 'bacteria', 'archaea'], var_name='tax', value_name='reads'
             )
-            print(package_data[package])
 
         return package_data
+
+    def get_graftm_mags(self, graftm_data: dict):
+
+        pass
+
 
     def plot_graftm_counts(self, package_data: dict, plot_name: str):
 
