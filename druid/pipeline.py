@@ -48,7 +48,7 @@ class DruidPipeline:
 
         # Merge dndCD to check if MAGs have one or both
 
-        if ('dndC', 'dndD') not in graftm_data.keys():
+        if not all(k in graftm_data for k in ("dndC", "dndD")):
             raise ValueError('Could not find results for packages dndC and dndD')
         else:
             dndcd = graftm_data['dndC'].merge(graftm_data['dndD'], on="name", how='outer', suffixes=['dndC', 'dndD'])
