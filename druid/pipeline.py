@@ -11,9 +11,10 @@ class DruidPipeline:
 
     """ Druid pipeline operations """
 
-    def __init__(self, directory: Path):
+    def __init__(self, directory: Path, outdir: Path):
 
         self.directory = directory
+        self.outdir = outdir
 
     def collect_graftm(self) -> dict:
 
@@ -48,8 +49,6 @@ class DruidPipeline:
 
         # Merge dndCD to check if MAGs have one or both
 
-        print(graftm_data.keys())
-
         if not all(k in graftm_data for k in ("dndC", "dndD")):
             raise ValueError('Could not find results for packages dndC and dndD')
         else:
@@ -57,8 +56,7 @@ class DruidPipeline:
                 graftm_data['dndD'], on=["name", "tax"], how='outer', suffixes=['_dndC', '_dndD']
             )
 
-        print(dndcd)
-
+        dndcd.to_csv(self.outdir / "dndCD.tsv", sep="\t", index=False)
 
     def plot_graftm_counts(self, package_data: dict, plot_name: str):
 
@@ -81,9 +79,9 @@ class DruidPipeline:
 
         sns.despine()
         plt.tight_layout()
-        fig.savefig(f'{plot_name}.pdf')
-        fig.savefig(f'{plot_name}.svg')
-        fig.savefig(f'{plot_name}.png')
+        fig.savefig(self.outdir / f'{plot_name}.pdf')
+        fig.savefig(self.outdir / f'{plot_name}.svg')
+        fig.savefig(self.outdir / f'{plot_name}.png')
 
     @staticmethod
     def process_graftm_counts(file: Path):
