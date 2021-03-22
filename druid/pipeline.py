@@ -38,7 +38,7 @@ class DruidPipeline:
 
         package_data = {}
         for package, count_data in counts.items():
-            package_data[package] = pandas.DataFrame(count_data).sort_values("name").reset_index().melt(
+            package_data[package.name] = pandas.DataFrame(count_data).sort_values("name").reset_index().melt(
                 id_vars=['name'], value_vars=['root', 'bacteria', 'archaea'], var_name='tax', value_name='reads'
             )
 
@@ -73,7 +73,7 @@ class DruidPipeline:
             ax = axes[r, c] if nrow > 1 else axes[i]
 
             sns.barplot(data=df, ax=ax, x="name", y="reads", hue="tax", palette="dark", alpha=.6)
-            ax.set_title(package.name)
+            ax.set_title(package)
             ax.set_ylabel("Reads\n")
             ax.set_xlabel("")
 
