@@ -34,4 +34,4 @@ def dnd_graftm(directory, graftm_reads, graftm_mags):
         dr.plot_graftm_counts(package_data=data, plot_name="graftm")
 
     if graftm_mags:
-        dr.get_graftm_mag_table(graftm_data=data)
+        dr.get_graftm_mags(graftm_data=data)
