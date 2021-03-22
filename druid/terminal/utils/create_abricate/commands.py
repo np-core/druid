@@ -49,6 +49,9 @@ def create_abricate(genes, db_name, outdir):
 
 def make_abricate_header(accessions, entries, db_name, gene_name):
 
-    seqs = [e.split('\n')[1] for e in entries]
+    seqs = {a: e.split('\n')[1] for a, e in entries.items()}
 
-    return [f">{db_name}~~~{gene_name}_{i}~~~{accession}~~~\n{seqs[i]}" for i, accession in enumerate(accessions)]
+    return [
+        f">{db_name}~~~{gene_name}_{i}~~~{accession}~~~\n{seqs[accession]}"
+        for i, accession in enumerate(accessions)
+    ]
