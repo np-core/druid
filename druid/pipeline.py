@@ -16,6 +16,8 @@ class DruidPipeline:
         self.directory = directory
         self.outdir = outdir
 
+        self.outdir.mkdir(exist_ok=True, parents=True)
+
     def collect_graftm(self) -> dict:
 
         graftm_path = self.directory / 'graftm'

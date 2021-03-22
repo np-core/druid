@@ -22,11 +22,19 @@ from druid.pipeline import DruidPipeline
     is_flag=True,
     help="Collect GraftM results executed on MAGs [FASTA]",
 )
-def dnd_graftm(directory, graftm_reads, graftm_mags):
+@click.option(
+    "--outdir",
+    "-o",
+    type=Path,
+    default=Path.cwd(),
+    metavar="",
+    help="Path to output directory for results",
+)
+def dnd_graftm(directory, graftm_reads, graftm_mags, outdir):
 
     """GraftM collector from the metagenome search pipeline """
 
-    dr = DruidPipeline(directory=directory)
+    dr = DruidPipeline(directory=directory, outdir=outdir)
 
     data = dr.collect_graftm()
 
