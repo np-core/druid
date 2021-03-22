@@ -46,8 +46,14 @@ class DruidPipeline:
 
     def get_graftm_mags(self, graftm_data: dict):
 
-        for package, df in graftm_data.items():
-            print(df[df['reads'] > 0])
+        # Merge dndCD to check if MAGs have one or both
+
+        if ('dndC', 'dndD') not in graftm_data.keys():
+            raise ValueError('Could not find results for packages dndC and dndD')
+        else:
+            dndcd = graftm_data['dndC'].merge(graftm_data['dndD'], on="name", how='outer', suffixes=['dndC', 'dndD'])
+
+        print(dndcd)
 
 
     def plot_graftm_counts(self, package_data: dict, plot_name: str):
