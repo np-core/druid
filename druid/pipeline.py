@@ -46,7 +46,8 @@ class DruidPipeline:
 
     def get_graftm_mags(self, graftm_data: dict):
 
-        pass
+        for package, df in graftm_data.items():
+            print(df)
 
 
     def plot_graftm_counts(self, package_data: dict, plot_name: str):
