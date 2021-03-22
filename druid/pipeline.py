@@ -58,6 +58,9 @@ class DruidPipeline:
                 graftm_data['dndD'], on=["name", "tax"], how='outer', suffixes=['_dndC', '_dndD']
             ).sort_values('name')
 
+        for sample, data in dndcd.groupby('name'):
+            print(data)
+
         dndcd.to_csv(self.outdir / "dndCD.tsv", sep="\t", index=False)
 
     def plot_graftm_counts(self, package_data: dict, plot_name: str):
