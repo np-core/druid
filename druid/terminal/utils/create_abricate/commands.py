@@ -39,18 +39,18 @@ def create_abricate(genes, db_name, outdir):
     db_seqs = []
     for gene_path in gene_paths:
         accessions, descriptions, entries = parse_operon_sequences(fasta=gene_path)
-        db_seqs += make_abricate_header(accessions, entries, db_name, gene_path.name)
+        db_seqs += make_abricate_header(accessions, descriptions, entries, db_name, gene_path.name)
 
     with (outdir / f"{db_name}.fasta").open('w') as outfile:
         for seq in db_seqs:
             outfile.write(seq + '\n')
 
 
-def make_abricate_header(accessions, entries, db_name, gene_name):
+def make_abricate_header(accessions, descriptions, entries, db_name, gene_name):
 
     seqs = {a: e.split('\n')[1] for a, e in entries.items()}
 
     return [
-        f">{db_name}~~~{gene_name}_{i}~~~{accession}~~~\n{seqs[accession]}"
+        f">{db_name}~~~{gene_name}_{i}~~~{accession}~~~ {descriptions[accession]}\n{seqs[accession]}"
         for i, accession in enumerate(accessions)
     ]

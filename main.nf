@@ -33,14 +33,15 @@ def get_packages(glob){
 
 params.workflow = 'mag_assembly'
 
+// IO
+
+params.fasta = ""
 params.fastq = "*_{1,2}.fastq"
 params.outdir = 'mag_assembly'
 
 // GraftM search workflow
-// nextflow run np-core/druid --container np-core/graftm -profile docker --workflow graftm_search --fastq "*_{1,2}.fastq"--packages /path/to/packages --outdir graftm_search
 
 params.packages = ""  // directory with graftm packages
-
 
 // MAG assembly workflow
 
@@ -58,6 +59,7 @@ include { MetaWrapBinning } from './modules/metawrap'
 include { MetaWrapBinAssembly  } from './modules/metawrap'
 include { MetaWrapBinOps  } from './modules/metawrap'
 include { GraftM  } from './modules/graftm'
+include { GraftMAG  } from './modules/graftm'
 
 workflow metawrap_assembly {
 
@@ -73,28 +75,20 @@ workflow metawrap_assembly {
         MetaWrapBinOps(MetaWrapBinAssembly.out, MetaWrapQC.out)
 }
 
-
-workflow graftm_search {
-
-    take:
-        read_packages  // id, fwd, rv, package_name, package_dir
-    main:
-        GraftM(read_packages)
-}
-
-
 workflow dnd {
    if (params.workflow == "mag_assembly") {
        get_paired_fastq(params.fastq) | metawrap_assembly
    }
    
-   if (params.workflow == "mag_search"){
-        get_single_fastx(params.fasta) | view
+   if (params.workflow == "graftm_mags"){
+        assemblies = get_single_fastx(params.fasta) 
+        packages = get_packages(params.packages)
+        GraftMAG(assemblies.combine(packages))
    }
-   if (params.workflow == "graftm_search"){
+   if (params.workflow == "graftm_reads"){
         reads = get_paired_fastq(params.fastq)
         packages = get_packages(params.packages)
-        graftm_search(reads.combine(packages))
+        GraftM(reads.combine(packages))
    }
 }
 
