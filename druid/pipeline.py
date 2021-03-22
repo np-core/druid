@@ -56,7 +56,7 @@ class DruidPipeline:
         else:
             dndcd = graftm_data['dndC'].merge(
                 graftm_data['dndD'], on=["name", "tax"], how='outer', suffixes=['_dndC', '_dndD']
-            )
+            ).sort_values('name')
 
         dndcd.to_csv(self.outdir / "dndCD.tsv", sep="\t", index=False)
 
