@@ -175,7 +175,7 @@ class Tricorder(PoreLogger):
         # Output the selected residues
         pdbio = PDBIO()
         pdbio.set_structure(output_struct)
-        pdbio.save(pdb_out, select=NotDisordered())
+        pdbio.save(str(pdb_out), select=NotDisordered())
 
     def compute_surface_mesh(self, density: float = 3.0, hdensity: float = 3.0, probe_radius: float = 1.5):
 
