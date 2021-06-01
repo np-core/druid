@@ -1,6 +1,6 @@
 import click
 from pathlib import Path
-from druid.pipeline import DruidPipeline
+from druid.ptmod import DruidPipeline
 
 
 @click.command()
