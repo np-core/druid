@@ -52,11 +52,15 @@ class DruidPipeline:
         # Merge dndCD to check if MAGs have one or both
 
         if not all(k in graftm_data for k in ("dndC", "dndD")):
-            raise ValueError('Could not find results for packages dndC and dndD')
+            raise ValueError('Could not find results for GraftM packages: dndC and dndD')
         else:
             dndcd = graftm_data['dndC'].merge(
                 graftm_data['dndD'], on=["name", "tax"], how='outer', suffixes=['_dndC', '_dndD']
             ).sort_values('name')
+
+        # Classify the combinations dndC and dndD genes:
+        #   - orphans: single gene, either dndC or dnD, any taxonomic categories
+        #   -
 
         for sample, data in dndcd.groupby('name'):
             print(data)

@@ -1,0 +1,1 @@
+ARG IMAGE=nvidia/cuda:11-cudnn8-devel-ubuntu18.04
