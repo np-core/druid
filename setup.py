@@ -34,7 +34,6 @@ setup(
         "mongoengine",
         "ont_fast5_api",
         "pandas",
-        "paramiko",
         "scp",
         "scikit-image",
         "scipy",
