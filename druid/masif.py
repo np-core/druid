@@ -65,7 +65,6 @@ class ProteinModel(PoreLogger):
 
         self.surface_model = tricorder.compute_surface_mesh()
 
-
     def download(self):
 
         self.logger.info(f"Downloading: {self.pdb_id} from PDB")
