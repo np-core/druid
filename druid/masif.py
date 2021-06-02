@@ -187,7 +187,7 @@ class Tricorder(PoreLogger):
         :param hdensity: surface points high density
         """
 
-        msms_base = str(self.protein_model.outdir / f"{self.protein_model.pdb_id}")
+        msms_base = str((self.protein_model.outdir / f"{self.protein_model.pdb_id}").absolute())
 
         self.write_chain_spheres(self.protein_model.chains_pdb_file, msms_base+".xyzrn")
 
