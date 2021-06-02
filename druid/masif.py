@@ -168,7 +168,7 @@ class ProteinModel(PoreLogger):
             a = res[donor_atom_name].get_coord()  # N/O
             b = res[atom_name].get_coord()  # H
             # Donor-H is always 180.0 degrees, = pi
-            angle_deviation = self._compute_angle_deviation((a, b, v, np.pi)
+            angle_deviation = self._compute_angle_deviation(a, b, v, np.pi)
             angle_penalty = self._compute_angle_penalty(angle_deviation)
             return 1.0 * angle_penalty
         # Check if it is an acceptor oxygen or nitrogen
