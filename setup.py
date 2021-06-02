@@ -34,7 +34,6 @@ setup(
         "pyfastx",
         "drep",
         "tensorflow",
-        "pymesh",
         "pyvista"
     ],
     entry_points="""

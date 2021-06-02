@@ -11,10 +11,10 @@ Released under an Apache License 2.0
 import os
 import logging
 import numpy as np
-import pymesh
 import pyvista as pv
 from pathlib import Path
 from subprocess import PIPE, Popen
+from pymesh import
 
 from Bio.PDB import *
 from Bio.PDB import StructureBuilder
@@ -107,7 +107,7 @@ class ProteinModel(PoreLogger):
             vertex_hphobicity = tricorder.compute_hydrophobicity(self.surface_model['names'])
 
         # Fix the mesh and regularize (see paper)
-        mesh = pymesh.form_mesh(
+        mesh = pymesh(
             self.surface_model['vertices'], self.surface_model['faces']
         )
 
