@@ -344,7 +344,6 @@ class Tricorder(PoreLogger):
             except IndexError:
                 faces[fi][2] = np.nan
 
-
             count["faces"] -= 1
 
         assert count["vertices"] == 0
