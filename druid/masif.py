@@ -303,6 +303,8 @@ class Tricorder(PoreLogger):
             res_id[vi] = fields[9]
             count["vertices"] -= 1
 
+        print(header, count['vertices'], vertices, normalv)
+
         # Read faces.
         face_file = Path(file_root + ".face")
         self.logger.info(f"Parsing MSMS mesh faces: {face_file}")
