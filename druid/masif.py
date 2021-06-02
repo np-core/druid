@@ -301,6 +301,7 @@ class Tricorder(PoreLogger):
             normalv[vi][2] = float(fields[5])
             atom_id[vi] = fields[7]
             res_id[vi] = fields[9]
+            # sanity counter
             count["vertices"] -= 1
 
         print(header, count['vertices'], vertices, normalv)
@@ -309,19 +310,19 @@ class Tricorder(PoreLogger):
         face_file = Path(file_root + ".face")
         self.logger.info(f"Parsing MSMS mesh faces: {face_file}")
         with face_file.open() as facefile:
-            meshdata = (facefile.read().rstrip()).split("\n")
+            face_meshdata = (facefile.read().rstrip()).split("\n")
 
         # Read number of vertices.
-        header = meshdata[2].split()
+        header = face_meshdata[2].split()
         count["faces"] = int(header[0])
         faces = np.zeros((count["faces"], 3), dtype=int)
 
         print(header, count, faces)
         # normalf = np.zeros((count["faces"], 3))
 
-        for i in range(3, len(meshdata)):
+        for i in range(3, len(face_meshdata)):
             fi = i - 3
-            fields = meshdata[i].split()
+            fields = face_meshdata[i].split()
             faces[fi][0] = int(fields[0]) - 1
             faces[fi][1] = int(fields[1]) - 1
             faces[fi][2] = int(fields[2]) - 1
