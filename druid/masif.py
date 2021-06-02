@@ -201,7 +201,7 @@ class Tricorder(PoreLogger):
         vertices, faces, normals, names = self.read_msms(file_root=msms_base)
 
         # Extract areas from file
-        self.logger.inf("Extracting surface area data from MSMS output")
+        self.logger.info("Extracting surface area data from MSMS output")
         areas = {}
         ses_file = open(msms_base + ".area")
         next(ses_file)  # ignore header line
