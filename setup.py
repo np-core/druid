@@ -33,7 +33,9 @@ setup(
         "deprecation",
         "pyfastx",
         "drep",
-        "tensorflow"
+        "tensorflow",
+        "pymesh",
+        "pyvista"
     ],
     entry_points="""
         [console_scripts]
