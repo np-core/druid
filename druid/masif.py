@@ -89,10 +89,12 @@ class ProteinModel(PoreLogger):
             extract_chains=self.chains
         )
 
-        # Compute MSMS of surface w/ hydrogens
-        self.surface_model = tricorder.compute_surface_mesh()
+        # Compute MSMS of surface w/ hydrogens and parameters from paper
+        self.surface_model = tricorder.compute_surface_mesh(density=3.0, hdensity=3.0, probe_radius=1.5)
 
-        self.visualize_surface_mesh(vertices=self.surface_model['vertices'], faces=self.surface_model['faces'])
+        # self.visualize_surface_mesh(
+        #     vertices=self.surface_model['vertices'], faces=self.surface_model['faces']
+        # )
 
         if compute_hbond:
             # Compute "charged" vertices
@@ -110,9 +112,11 @@ class ProteinModel(PoreLogger):
         )
 
         print(mesh)
+
         # regular_mesh = fix_mesh(mesh, 1.0)
 
-    def visualize_surface_mesh(self, vertices, faces):
+    @staticmethod
+    def visualize_surface_mesh(vertices, faces):
 
         surf = pv.PolyData(vertices, faces)
         surf.show()
@@ -238,6 +242,7 @@ class Tricorder(PoreLogger):
 
         :param density: surface points density
         :param hdensity: surface points high density
+        :param probe_radius:
         """
 
         msms_base = str((self.protein_model.outdir / f"{self.protein_model.pdb_id}").absolute())
