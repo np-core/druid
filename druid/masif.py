@@ -318,7 +318,6 @@ class Tricorder(PoreLogger):
         faces = np.zeros((count["faces"], 3), dtype=int)
 
         print(header, count, faces)
-        # normalf = np.zeros((count["faces"], 3))
 
         for i in range(3, len(face_meshdata)):
             fi = i - 3
@@ -327,23 +326,19 @@ class Tricorder(PoreLogger):
             try:
                 faces[fi][0] = int(fields[0]) - 1
             except IndexError:
-                pass
-
+                continue
 
             try:
                 faces[fi][1] = int(fields[1]) - 1
             except IndexError:
-                pass
-
+                continue
 
             try:
                 faces[fi][2] = int(fields[2]) - 1
             except IndexError:
-                pass
+                continue
 
             count["faces"] -= 1
-
-        print(i, fi, fields)
 
         assert count["vertices"] == 0
         assert count["faces"] == 0
