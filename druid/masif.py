@@ -425,7 +425,10 @@ class Tricorder(PoreLogger):
             os.remove(msms_base + ext)
 
         self.logger.info("Completed MSMS surface prediction and data extraction")
-
+        self.logger.info(
+            f"Surface mesh for protein ({self.protein_model.pdb_id}): "
+            f"{len(vertices)} vertices {len(faces)} faces {len(areas)} areas"
+        )
         return {
             'vertices': vertices, 'faces': faces, 'normals': normals, 'names': names, 'areas': areas
         }
