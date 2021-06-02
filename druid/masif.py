@@ -25,7 +25,7 @@ class ProteinModel(PoreLogger):
 
     def __init__ (self, pdb_id: str, outdir: Path, chains: str):
 
-        PoreLogger.__init__(self, name="ProteinModel")
+        PoreLogger.__init__(self, name="ProteinModel", level=logging.INFO)
 
         self.outdir = outdir  # the working output directory
         self.outdir.mkdir(parents=True, exist_ok=True)
@@ -65,6 +65,8 @@ class ProteinModel(PoreLogger):
         self.surface_model = tricorder.compute_surface_mesh()
 
     def download(self):
+
+        """ Overwrite is false so acts as a check on existing analysis in outdir """
 
         self.logger.info(f"Downloading: {self.pdb_id} from PDB")
         pdbl = PDBList(server='http://ftp.wwpdb.org')
@@ -273,9 +275,9 @@ class Tricorder(PoreLogger):
 
         """ Read the surface from the MSMS output """
 
-        vert_file = file_root + ".vert"
+        vert_file = Path(file_root + ".vert")
         self.logger.info(f"Parsing MSMS mesh vertices: {vert_file}")
-        with open(vert_file) as vertfile:
+        with vert_file.open() as vertfile:
             meshdata = (vertfile.read().rstrip()).split("\n")
 
         # Read number of vertices.
@@ -304,9 +306,9 @@ class Tricorder(PoreLogger):
             count["vertices"] -= 1
 
         # Read faces.
-        face_file = file_root + ".face"
+        face_file = Path(file_root + ".face")
         self.logger.info(f"Parsing MSMS mesh faces: {face_file}")
-        with open(face_file) as facefile:
+        with face_file.open() as facefile:
             meshdata = (facefile.read().rstrip()).split("\n")
 
         # Read number of vertices.
