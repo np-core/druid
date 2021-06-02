@@ -15,8 +15,7 @@ from Bio.PDB import *
 from Bio.PDB import StructureBuilder
 
 import os
-import sys
-import random
+import logging
 import numpy as np
 
 
@@ -86,7 +85,7 @@ class Tricorder(PoreLogger):
 
     def __init__(self, protein_model: ProteinModel):
 
-        PoreLogger.__init__(self, name="Tricorder")
+        PoreLogger.__init__(self, name="Tricorder", level=logging.INFO)
 
         self.protein_model = protein_model  # the protein model to extract features from
 
@@ -188,7 +187,7 @@ class Tricorder(PoreLogger):
         :param hdensity: surface points high density
         """
 
-        msms_base = str(self.protein_model.outdir / f"msms_surface_model")
+        msms_base = str(self.protein_model.outdir / f"{self.protein_model.pdb_id}")
 
         self.write_chain_spheres(self.protein_model.chains_pdb_file, msms_base+".xyzrn")
 
@@ -254,7 +253,7 @@ class Tricorder(PoreLogger):
                     atom.get_coord()[0], atom.get_coord()[1], atom.get_coord()[2]
                 )
 
-            # sanity check if same output moved insertion and full_id <-- tab-left
+            # es: sanity check if same output moved insertion and full_id <-- tab-left
 
             insertion = "x"
             if residue.get_id()[2] != " ":
