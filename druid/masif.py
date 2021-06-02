@@ -49,14 +49,14 @@ class ProteinModel(PoreLogger):
         tricorder = Tricorder(protein_model=self)
 
         # Protonate the file (strip before protonation)
-        tricorder.protonate(
+        proton_pdb_file = tricorder.protonate(
             pdb_file=self.pdb_file,
             pdb_out=self.proton_pdb_file
         )
 
         # Extract the chains from the PDB
         tricorder.extract_pdb(
-            pdb_file=self.proton_pdb_file,
+            pdb_file=proton_pdb_file,
             pdb_out=self.chains_pdb_file,
             extract_chains=self.chains
         )
