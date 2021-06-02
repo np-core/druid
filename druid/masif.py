@@ -304,8 +304,6 @@ class Tricorder(PoreLogger):
             # sanity counter
             count["vertices"] -= 1
 
-        print(header, count['vertices'], vertices, normalv)
-
         # Read faces.
         face_file = Path(file_root + ".face")
         self.logger.info(f"Parsing MSMS mesh faces: {face_file}")
@@ -316,8 +314,6 @@ class Tricorder(PoreLogger):
         header = face_meshdata[2].split()
         count["faces"] = int(header[0])
         faces = np.zeros((count["faces"], 3), dtype=int)
-
-        print(header, count, faces)
 
         for i in range(3, len(face_meshdata)):
             fi = i - 3
@@ -340,6 +336,7 @@ class Tricorder(PoreLogger):
 
             count["faces"] -= 1
 
+        # sanity checks will fail if IndexError and continued in last loop
         assert count["vertices"] == 0
         assert count["faces"] == 0
 
