@@ -325,11 +325,23 @@ class Tricorder(PoreLogger):
             fi = i - 3
             fields = face_meshdata[i].split()
 
-            # print(i, fi, fields)
+            print(i, fi, fields)
 
-            faces[fi][0] = int(fields[0]) - 1
-            faces[fi][1] = int(fields[1]) - 1
-            faces[fi][2] = int(fields[2]) - 1
+            try:
+                faces[fi][0] = int(fields[0]) - 1
+            except IndexError:
+                faces[fi][0] = None
+
+            try:
+                faces[fi][1] = int(fields[1]) - 1
+            except IndexError:
+                faces[fi][1] = None
+
+            try:
+                faces[fi][2] = int(fields[2]) - 1
+            except IndexError:
+                faces[fi][2] = None
+
             count["faces"] -= 1
 
         assert count["vertices"] == 0
