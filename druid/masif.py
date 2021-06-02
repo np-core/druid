@@ -196,7 +196,8 @@ class Tricorder(PoreLogger):
 
         fnull = open(os.devnull, 'w')
         Popen(args, stdout=fnull, stderr=fnull)
-
+        fnull.close()
+        
         # Extract surface graph from MSMS files
         vertices, faces, normals, names = self.read_msms(file_root=msms_base)
 
