@@ -330,19 +330,19 @@ class Tricorder(PoreLogger):
             try:
                 faces[fi][0] = int(fields[0]) - 1
             except IndexError:
-                faces[fi][0] = np.nan
+                pass
 
 
             try:
                 faces[fi][1] = int(fields[1]) - 1
             except IndexError:
-                faces[fi][1] = np.nan
+                pass
 
 
             try:
                 faces[fi][2] = int(fields[2]) - 1
             except IndexError:
-                faces[fi][2] = np.nan
+                pass
 
             count["faces"] -= 1
 
