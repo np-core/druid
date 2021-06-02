@@ -214,7 +214,7 @@ class Tricorder(PoreLogger):
         for ext in ('.area', '.xyzrn', '.vert', '.face'):
             os.remove(msms_base + ext)
 
-        self.logger.inf("Completed MSMS surface prediction and data extraction")
+        self.logger.info("Completed MSMS surface prediction and data extraction")
 
         return {
             'vertices': vertices, 'faces': faces, 'normals': normals, 'names': names, 'areas': areas
