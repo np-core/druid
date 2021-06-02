@@ -7,16 +7,43 @@ This file is part of MaSIF.
 
 Released under an Apache License 2.0
 """
-from druid.utils import PoreLogger
-from subprocess import PIPE, Popen
-from Bio.SeqUtils import IUPACData
-from pathlib import Path
-from Bio.PDB import *
-from Bio.PDB import StructureBuilder
 
 import os
 import logging
 import numpy as np
+
+from pathlib import Path
+from subprocess import PIPE, Popen
+
+from Bio.PDB import *
+from Bio.PDB import StructureBuilder
+from Bio.SeqUtils import IUPACData
+
+from druid.utils import PoreLogger
+
+
+# Kyte Doolittle scale
+KD_SCALE = dict()
+KD_SCALE["ILE"] = 4.5
+KD_SCALE["VAL"] = 4.2
+KD_SCALE["LEU"] = 3.8
+KD_SCALE["PHE"] = 2.8
+KD_SCALE["CYS"] = 2.5
+KD_SCALE["MET"] = 1.9
+KD_SCALE["ALA"] = 1.8
+KD_SCALE["GLY"] = -0.4
+KD_SCALE["THR"] = -0.7
+KD_SCALE["SER"] = -0.8
+KD_SCALE["TRP"] = -0.9
+KD_SCALE["TYR"] = -1.3
+KD_SCALE["PRO"] = -1.6
+KD_SCALE["HIS"] = -3.2
+KD_SCALE["GLU"] = -3.5
+KD_SCALE["GLN"] = -3.5
+KD_SCALE["ASP"] = -3.5
+KD_SCALE["ASN"] = -3.5
+KD_SCALE["LYS"] = -3.9
+KD_SCALE["ARG"] = -4.5
 
 
 class ProteinModel(PoreLogger):
@@ -34,13 +61,14 @@ class ProteinModel(PoreLogger):
         self.chains = chains  # the chains to use
         self.pdb_file = self.download()  # the downloaded pdb file
 
-        self.surface_model = dict()  # the protein surface data from MSMS
+        self.surface_model = dict()  # the protein surface model from MSMS
 
         # Data preparation and triangulation pipeline
         self.proton_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.proton.pdb'}")  # the protonated pdb file
         self.chains_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.chains.pdb'}")  # the extracted chains
+        self.chains_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.chains.pdb'}")  # the extracted chains
 
-    def prepare_feature_data(self):
+    def prepare_feature_data(self, compute_hbond: bool = True, compute_hphob: bool = True):
 
         """ Data preparation and feature extraction for MaSIF """
 
@@ -61,8 +89,190 @@ class ProteinModel(PoreLogger):
         )
 
         # Compute MSMS of surface w/ hydrogens
-
         self.surface_model = tricorder.compute_surface_mesh()
+
+        if compute_hbond:
+            # Compute "charged" vertices
+            vertex_hbond = self.compute_charges(
+                self.surface_model['vertices'], self.surface_model['names']
+            )
+
+        if compute_hphob:
+            # For each surface residue, assign the hydrophobicity of its amino acid
+            vertex_hphobicity = self.compute_hydrophobicity(self.surface_model['names'])
+
+    def compute_hydrophobicity(self, names):
+
+        self.logger.info("Computing hydrophobicity for each vertex in surface mesh [Kyte Doolittle scale]")
+
+        hp = np.zeros(len(names))
+        for ix, name in enumerate(names):
+            aa = name.split("_")[3]
+            hp[ix] = KD_SCALE[aa]
+
+        return hp
+
+    def compute_charges(self, vertices, names):
+
+        # Compute vertex charges based on hydrogen bond potential.
+        # pdb_filename: The filename of the protonated protein.
+        # vertices: The surface vertices of the protonated protein
+        # The name of each vertex in the format, example: B_125_x_ASN_ND2_Green
+        # where B is chain, 125 res id, x the insertion, ASN aatype, ND2 the name of the
+        # atom, and green is not used anymore.
+
+        self.logger.info("Computing charges for each vertex in surface mesh based on hydrogen potential")
+
+        parser = PDBParser(QUIET=True)
+        struct = parser.get_structure(self.chains_pdb_file.name, self.chains_pdb_file)
+        residues = {}
+        for res in struct.get_residues():
+            chain_id = res.get_parent().get_id()
+            if chain_id == "":
+                chain_id = " "
+            residues[(chain_id, res.get_id())] = res
+
+        atoms = Selection.unfold_entities(struct, "A")
+        satisfied_CO, satisfied_HN = self._compute_satisfied_CO_HN(atoms)
+
+        charge = np.array([0.0] * len(vertices))
+        # Go over every vertex
+        for ix, name in enumerate(names):
+            fields = name.split("_")
+            chain_id = fields[0]
+            if chain_id == "":
+                chain_id = " "
+            if fields[2] == "x":
+                fields[2] = " "
+            res_id = (" ", int(fields[1]), fields[2])
+            aa = fields[3]
+            atom_name = fields[4]
+            # Ignore atom if it is BB and it is already satisfied.
+            if atom_name == "H" and res_id in satisfied_HN:
+                continue
+            if atom_name == "O" and res_id in satisfied_CO:
+                continue
+            # Compute the charge of the vertex
+            charge[ix] = self._compute_charge_helper(
+                atom_name, residues[(chain_id, res_id)], vertices[ix]
+            )
+
+        return charge
+
+    # Compute the charge of a vertex in a residue.
+    def _compute_charge_helper(self, atom_name, res, v):
+        res_type = res.get_resname()
+        # Check if it is a polar hydrogen.
+        if self._is_polar_hydrogen(atom_name, res):
+            donor_atom_name = DonorAtom[atom_name]
+            a = res[donor_atom_name].get_coord()  # N/O
+            b = res[atom_name].get_coord()  # H
+            # Donor-H is always 180.0 degrees, = pi
+            angle_deviation = self._compute_angle_deviation((a, b, v, np.pi)
+            angle_penalty = self._compute_angle_penalty(angle_deviation)
+            return 1.0 * angle_penalty
+        # Check if it is an acceptor oxygen or nitrogen
+        elif self._is_acceptor_atom(atom_name, res):
+            acceptor_atom = res[atom_name]
+            b = acceptor_atom.get_coord()
+            try:
+                a = res[AcceptorAngleAtom[atom_name]].get_coord()
+            except:
+                return 0.0
+            # 120 degrees for acceptor
+            angle_deviation = self._compute_angle_deviation(a, b, v, 2 * np.pi / 3)
+            # TODO: This should not be 120 for all atoms, i.e. for HIS it should be ~125.0
+            angle_penalty = self._compute_angle_penalty(angle_deviation)
+            plane_penalty = 1.0
+            if atom_name in acceptorPlaneAtom:
+                try:
+                    d = res[acceptorPlaneAtom[atom_name]].get_coord()
+                except:
+                    return 0.0
+                plane_deviation = self._compute_plane_deviation(d, a, b, v)
+                plane_penalty = self._compute_angle_penalty(plane_deviation)
+            return -1.0 * angle_penalty * plane_penalty
+            # Compute the
+        return 0.0
+
+    @staticmethod
+    def _is_polar_hydrogen(atom_name, res):
+
+        if atom_name in PolarHydrogens[res.get_resname()]:
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def _is_acceptor_atom(atom_name, res):
+        if atom_name.startswith("O"):
+            return True
+        else:
+            if res.get_resname() == "HIS":
+                if atom_name == "ND1" and "HD1" not in res:
+                    return True
+                if atom_name == "NE2" and "HE2" not in res:
+                    return True
+        return False
+
+    def _compute_satisfied_CO_HN(self, atoms):
+
+        """ Compute the list of backbone C=O:H-N that are satisfied. These will be ignored. """
+
+        ns = NeighborSearch(atoms)
+        satisfied_CO = set()
+        satisfied_HN = set()
+        for atom1 in atoms:
+            res1 = atom1.get_parent()
+            if atom1.get_id() == "O":
+                neigh_atoms = ns.search(atom1.get_coord(), 2.5, level="A")
+                for atom2 in neigh_atoms:
+                    if atom2.get_id() == "H":
+                        res2 = atom2.get_parent()
+                        # Ensure they belong to different residues.
+                        if res2.get_id() != res1.get_id():
+                            # Compute the angle N-H:O, ideal value is 180 (but in
+                            # helices it is typically 160) 180 +-30 = pi
+                            angle_N_H_O_dev = self._compute_angle_deviation(
+                                res2["N"].get_coord(),
+                                atom2.get_coord(),
+                                atom1.get_coord(),
+                                np.pi,
+                            )
+                            # Compute angle H:O=C, ideal value is ~160 +- 20 = 8*pi/9
+                            angle_H_O_C_dev = self._compute_angle_deviation(
+                                atom2.get_coord(),
+                                atom1.get_coord(),
+                                res1["C"].get_coord(),
+                                8 * np.pi / 9,
+                            )
+                            # Allowed deviations: 30 degrees (pi/6) and 20 degrees (pi/9)
+                            if (
+                                angle_N_H_O_dev - np.pi / 6 < 0
+                                and angle_H_O_C_dev - np.pi / 9 < 0.0
+                            ):
+                                satisfied_CO.add(res1.get_id())
+                                satisfied_HN.add(res2.get_id())
+
+        return satisfied_CO, satisfied_HN
+
+    @staticmethod
+    def _compute_angle_penalty(angle_deviation):
+        """ angle_deviation from ideal value. TODO: do a more data-based solution """
+        # Standard deviation: hbond_std_dev
+        return max(0.0, 1.0 - (angle_deviation / (hbond_std_dev)) ** 2)
+
+    @staticmethod
+    def _compute_angle_deviation(a, b, c, theta):
+        return abs(calc_angle(Vector(a), Vector(b), Vector(c)) - theta)
+
+    @staticmethod
+    def _compute_plane_deviation(a, b, c, d):
+        """ Compute the angle deviation from a plane """
+        dih = calc_dihedral(Vector(a), Vector(b), Vector(c), Vector(d))
+        dev1 = abs(dih)
+        dev2 = np.pi - abs(dih)
+        return min(dev1, dev2)
 
     def download(self):
 
