@@ -325,7 +325,7 @@ class Tricorder(PoreLogger):
             fi = i - 3
             fields = face_meshdata[i].split()
 
-            # print(i, fi, fields)
+
 
             try:
                 faces[fi][0] = int(fields[0]) - 1
@@ -345,6 +345,8 @@ class Tricorder(PoreLogger):
                 faces[fi][2] = np.nan
 
             count["faces"] -= 1
+
+        print(i, fi, fields)
 
         assert count["vertices"] == 0
         assert count["faces"] == 0
