@@ -66,8 +66,6 @@ class ProteinModel(PoreLogger):
 
     def download(self):
 
-        """ Overwrite is false so acts as a check on existing analysis in outdir """
-
         self.logger.info(f"Downloading: {self.pdb_id} from PDB")
         pdbl = PDBList(server='http://ftp.wwpdb.org')
         self.pdb_file = Path(
@@ -316,6 +314,7 @@ class Tricorder(PoreLogger):
         count["faces"] = int(header[0])
         faces = np.zeros((count["faces"], 3), dtype=int)
 
+        print(header, count, faces)
         # normalf = np.zeros((count["faces"], 3))
 
         for i in range(3, len(meshdata)):
