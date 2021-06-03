@@ -139,7 +139,7 @@ class ProteinModel(PoreLogger):
         mesh, _ = pymesh.remove_duplicated_vertices(mesh, 0.001)
 
         count = 0
-        self.logger.info("Removing degenerated triangles in ten iterations")
+        self.logger.info("Removing degenerated triangles in < 10 iterations")
         mesh, __ = pymesh.remove_degenerated_triangles(mesh, 100)
         mesh, __ = pymesh.split_long_edges(mesh, target_len)
         num_vertices = mesh.num_vertices
@@ -156,7 +156,7 @@ class ProteinModel(PoreLogger):
             if count > 10:
                 break
 
-        self.logger.info("Resolve inconsistencies in mesh structure")
+        self.logger.info("Resolving inconsistencies in mesh structure")
         mesh = pymesh.resolve_self_intersection(mesh)
         mesh, __ = pymesh.remove_duplicated_faces(mesh)
         mesh = pymesh.compute_outer_hull(mesh)
@@ -164,6 +164,8 @@ class ProteinModel(PoreLogger):
         mesh, __ = pymesh.remove_obtuse_triangles(mesh, 179.0, 5)
         mesh, __ = pymesh.remove_isolated_vertices(mesh)
         mesh, _ = pymesh.remove_duplicated_vertices(mesh, 0.001)
+
+        self.logger.info("Completed mesh regularisation")
 
         return mesh
 
