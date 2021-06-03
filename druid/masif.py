@@ -17,6 +17,7 @@ from subprocess import PIPE, Popen
 from numpy.linalg import norm
 from numpy.matlib import repmat
 
+from sklearn.neighbors import KDTree
 import pymesh
 
 from Bio.PDB import *
@@ -73,7 +74,9 @@ class ProteinModel(PoreLogger):
         self.proton_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.proton.pdb'}")  # the protonated pdb file
         self.chains_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.chains.pdb'}")  # the extracted chains
 
-    def prepare_feature_data(self, compute_hbond: bool = True, compute_hphob: bool = True, mesh_resolution: float = 1.0):
+    def prepare_feature_data(
+            self, compute_hbond: bool = True, compute_hphob: bool = True, resolution: float = 1.0
+    ):
 
         """ Data preparation and feature extraction for MaSIF """
 
@@ -101,20 +104,36 @@ class ProteinModel(PoreLogger):
             vertex_hbond = tricorder.compute_charges(
                 self.surface_model['vertices'], self.surface_model['names']
             )
+        else:
+            vertex_hbond = None
 
         if compute_hphob:
             # For each surface residue, assign the hydrophobicity of its amino acid
             vertex_hphobicity = tricorder.compute_hydrophobicity(self.surface_model['names'])
+        else:
+            vertex_hphobicity = None
 
         # Fix the mesh and regularize (see paper)
         mesh = pymesh.form_mesh(
             self.surface_model['vertices'], self.surface_model['faces']
         )
 
-        regular_mesh = self.regularize_mesh_surface(mesh=mesh, resolution=1.0, detail="normal")
+        regular_mesh = self.regularize_mesh_surface(mesh=mesh, resolution=resolution, detail="normal")
 
-        # Compute the normals
+        # Compute the vertex normals on regularized surface mesh
         vertex_normal = compute_normal(regular_mesh.vertices, regular_mesh.faces)
+
+        # Assign charges on new vertices based on charges of old vertices (nearest neighbor)
+
+        if compute_hbond:
+            vertex_hbond = tricorder.assign_charges_to_new_mesh(
+                regular_mesh.vertices, self.surface_model['vertices'], vertex_hbond
+            )
+
+        if compute_hphob:
+            vertex_hphobicity = tricorder.assign_charges_to_new_mesh(
+                regular_mesh.vertices, self.surface_model['vertices'], vertex_hphobicity
+            )
 
     def regularize_mesh_surface(self, mesh, resolution, detail="normal"):
 
@@ -165,7 +184,7 @@ class ProteinModel(PoreLogger):
         mesh, __ = pymesh.remove_isolated_vertices(mesh)
         mesh, _ = pymesh.remove_duplicated_vertices(mesh, 0.001)
 
-        self.logger.info("Completed mesh regularisation")
+        self.logger.info("Completed surface mesh regularisation")
 
         return mesh
 
@@ -285,6 +304,44 @@ class Tricorder(PoreLogger):
         pdbio = PDBIO()
         pdbio.set_structure(output_struct)
         pdbio.save(str(pdb_out), select=NotDisordered())
+
+    def assign_charges_to_new_mesh(self, new_vertices, old_vertices, old_charges, feature_interpolation: bool = True):
+
+        # Compute the charge of a new mesh, based on the charge of an old mesh.
+        # Use the top vertex in distance, for now (later this should be smoothed over 3
+        # or 4 vertices)
+        self.logger.info("Computing the charges of new mesh based on old mesh")
+        dataset = old_vertices
+        testset = new_vertices
+        new_charges = np.zeros(len(new_vertices))
+        if feature_interpolation:
+            self.logger.info("Using feature interpolation with KDTree (k = 4) and top vertex")
+            num_inter = 4  # Number of interpolation features
+            # Assign k old vertices to each new vertex.
+            kdt = KDTree(dataset)
+            dists, result = kdt.query(testset, k=num_inter)
+            # Square the distances (as in the original pyflann)
+            dists = np.square(dists)
+            # The size of result is the same as new_vertices
+            for vi_new in range(len(result)):
+                vi_old = result[vi_new]
+                dist_old = dists[vi_new]
+                # If one vertex is right on top, ignore the rest.
+                if dist_old[0] == 0.0:
+                    new_charges[vi_new] = old_charges[vi_old[0]]
+                    continue
+
+                total_dist = np.sum(1 / dist_old)
+                for i in range(num_inter):
+                    new_charges[vi_new] += (
+                            old_charges[vi_old[i]] * (1 / dist_old[i]) / total_dist
+                    )
+        else:
+            # Assign k old vertices to each new vertex.
+            kdt = KDTree(dataset)
+            dists, result = kdt.query(testset)
+            new_charges = old_charges[result]
+        return new_charges
 
     def compute_surface_mesh(self, density: float = 3.0, hdensity: float = 3.0, probe_radius: float = 1.5):
 
