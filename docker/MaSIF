@@ -52,6 +52,8 @@ RUN git submodule update --init && \
 RUN mkdir /src
 WORKDIR /src
 
+RUN apt-get update && apt-get install tar
+
 RUN wget http://kinemage.biochem.duke.edu/php/downlode-3.php?filename=/../downloads/software/reduce31/reduce.3.23.130521.linuxi386.gz -O reduce.gz
 RUN zcat reduce.gz > reduce && chmod +x reduce && mv reduce /usr/bin
 
