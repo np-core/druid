@@ -7,7 +7,7 @@ ARG NUM_CORES=2
 ENV PATH /opt/conda/bin:$PATH
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-
+WORKDIR /root/
 RUN apt-get update && apt-get install -y \
     wget \
     gcc \
@@ -28,13 +28,12 @@ RUN apt-get update && apt-get install -y \
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -O ~/miniconda.sh && \
     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
     rm ~/miniconda.sh && \
-    /opt/conda/bin/conda clean -tipsy && \
+    /opt/conda/bin/conda build purge-all && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
     echo "conda activate base" >> ~/.bashrc && \
     source ~/.bashrc
 
-WORKDIR /root/
 ENV PYMESH_PATH /root/PyMesh
 ENV NUM_CORES $NUM_CORES
 WORKDIR $PYMESH_PATH
