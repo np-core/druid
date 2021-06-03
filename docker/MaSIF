@@ -62,5 +62,11 @@ RUN tar xvf msms_i86_64Linux2_2.6.1.tar.gz && mv msms.x86_64Linux2.2.6.1 /usr/bi
 
 RUN git clone https://github.com/np-core/druid && cd druid && git checkout v0.1.0 && pip install .
 
+RUN apt-get update && apt-get install unzip
+RUN wget https://github.com/Electrostatics/apbs/releases/download/v3.0.0/APBS-3.0.0_Linux.zip
+RUN unzip APBS-3.0.0_Linux.zip && mv APBS-3.0.0_Linux/bin/apbs /usr/bin
+
+RUN pip install pdb2pqr
+
 RUN mkdir /masif_dev
 WORKDIR /masif_dev

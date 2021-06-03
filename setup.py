@@ -34,7 +34,8 @@ setup(
         "pyfastx",
         "drep",
         "tensorflow",
-        "pyvista"
+        "pyvista",
+        "pdb2pqr"
     ],
     entry_points="""
         [console_scripts]

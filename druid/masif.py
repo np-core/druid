@@ -120,20 +120,22 @@ class ProteinModel(PoreLogger):
 
         regular_mesh = self.regularize_mesh_surface(mesh=mesh, resolution=resolution, detail="normal")
 
-        # Compute the vertex normals on regularized surface mesh
+        self.logger.info("Compute the vertex normals on regularized surface mesh")
         vertex_normal = compute_normal(regular_mesh.vertices, regular_mesh.faces)
 
-        # Assign charges on new vertices based on charges of old vertices (nearest neighbor)
-
         if compute_hbond:
+            self.logger.info("Assign hydrogen bond charges of new vertices")
             vertex_hbond = tricorder.assign_charges_to_new_mesh(
                 regular_mesh.vertices, self.surface_model['vertices'], vertex_hbond
             )
 
         if compute_hphob:
+            self.logger.info("Assign hydrophobicity charges of new vertices")
             vertex_hphobicity = tricorder.assign_charges_to_new_mesh(
                 regular_mesh.vertices, self.surface_model['vertices'], vertex_hphobicity
             )
+
+        vertex_charges = tricorder.compute_apbs(regular_mesh.vertices, out_filename1 + ".pdb", out_filename1)
 
     def regularize_mesh_surface(self, mesh, resolution, detail="normal"):
 
@@ -515,6 +517,73 @@ class Tricorder(PoreLogger):
         self.logger.info(f"Created mesh data from MSMS surface predictions")
 
         return vertices, faces, normalv, res_id
+
+    def compute_apbs(self, vertices, pdb_file, tmp_file_base):
+
+        """
+        Adaptive Poisson-Boltzmann Solver
+
+        Among the various components of molecular energetics, solvation properties and electrostatic interactions are
+        of special importance due to the long range of these interactions and the substantial charges of typical
+        biopolymer components.
+
+        APBS solves the equations of continuum electrostatics for large biomolecular assemblages.
+
+        Calls APBS, pdb2pqr, and multivalue and returns electrostatic charges per vertex
+        """
+
+        fields = tmp_file_base.split("/")[0:-1]
+        directory = "/".join(fields) + "/"
+        filename_base = tmp_file_base.split("/")[-1]
+        pdbname = pdb_file.split("/")[-1]
+
+        args = [
+            pdb2pqr_bin,
+            "--ff=parse",
+            "--whitespace",
+            "--noopt",
+            "--apbs-input",
+            pdbname,
+            filename_base,
+        ]
+
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        stdout, stderr = p2.communicate()
+
+        args = [apbs_bin, filename_base + ".in"]
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        stdout, stderr = p2.communicate()
+
+        vertfile = open(directory + "/" + filename_base + ".csv", "w")
+        for vert in vertices:
+            vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
+        vertfile.close()
+
+        args = [
+            multivalue_bin,
+            filename_base + ".csv",
+            filename_base + ".dx",
+            filename_base + "_out.csv",
+        ]
+
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        stdout, stderr = p2.communicate()
+
+        # Read the charge file
+        chargefile = open(tmp_file_base + "_out.csv")
+        charges = np.array([0.0] * len(vertices))
+        for ix, line in enumerate(chargefile.readlines()):
+            charges[ix] = float(line.split(",")[3])
+
+        remove_fn = os.path.join(directory, filename_base)
+        os.remove(remove_fn)
+        os.remove(remove_fn + '.csv')
+        os.remove(remove_fn + '.dx')
+        os.remove(remove_fn + '.in')
+        os.remove(remove_fn + '-input.p')
+        os.remove(remove_fn + '_out.csv')
+
+        return charges
 
     def compute_hydrophobicity(self, names):
 
