@@ -14,7 +14,7 @@ import numpy as np
 import pyvista as pv
 from pathlib import Path
 from subprocess import PIPE, Popen
-from pymesh import
+import pymesh
 
 from Bio.PDB import *
 from Bio.PDB import StructureBuilder
