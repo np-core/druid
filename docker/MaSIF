@@ -57,5 +57,5 @@ RUN apt-get update && apt-get install tar
 RUN wget http://kinemage.biochem.duke.edu/php/downlode-3.php?filename=/../downloads/software/reduce31/reduce.3.23.130521.linuxi386.gz -O reduce.gz
 RUN zcat reduce.gz > reduce && chmod +x reduce && mv reduce /usr/bin
 
-RUN wget http://mgltools.scripps.edu/downloads/tars/releases/MSMSRELEASE/REL2.6.1/msms_i86_64Linux2_2.6.1.tar.gz -O msms.tar.gz
+RUN wget http://mgltools.scripps.edu/downloads/tars/releases/MSMSRELEASE/REL2.6.1/msms_i86_64Linux2_2.6.1.tar.gz
 RUN tar xvf msms_i86_64Linux2_2.6.1.tar.gz && mv msms_i86_64Linux2_2.6.1 /usr/bin/msms && mv pdb_to_xyzr pdb_to_xyzrn /usr/bin
