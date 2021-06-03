@@ -108,9 +108,10 @@ class ProteinModel(PoreLogger):
         mesh = pymesh.form_mesh(
             self.surface_model['vertices'], self.surface_model['faces']
         )
-        mesh = self.fix_mesh()
 
         print(mesh)
+
+        mesh = self.fix_mesh()
 
         # regular_mesh = fix_mesh(mesh, 1.0)
 
