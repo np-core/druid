@@ -14,6 +14,7 @@ import numpy as np
 import pyvista as pv
 from pathlib import Path
 from subprocess import PIPE, Popen
+
 import pymesh
 
 from Bio.PDB import *
@@ -63,10 +64,11 @@ class ProteinModel(PoreLogger):
         self.pdb_file = self.download()  # the downloaded pdb file
 
         self.surface_model = dict()  # the protein surface model from MSMS
+        self.surface_mesh = None  # the protein surface mesh [pymesh]
+        self.surface_poly = None  # the protein surface mesh polygon data [pyvista]
 
         # Data preparation and triangulation pipeline
         self.proton_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.proton.pdb'}")  # the protonated pdb file
-        self.chains_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.chains.pdb'}")  # the extracted chains
         self.chains_pdb_file = Path(f"{self.outdir / f'{self.pdb_id}.chains.pdb'}")  # the extracted chains
 
     def prepare_feature_data(self, compute_hbond: bool = True, compute_hphob: bool = True, mesh_resolution: float = 1.0):
@@ -89,12 +91,8 @@ class ProteinModel(PoreLogger):
             extract_chains=self.chains
         )
 
-        # Compute MSMS of surface w/ hydrogens and parameters from paper
+        # Compute MSMS of surface w/ hydrogens and default parameters from MaSIF code
         self.surface_model = tricorder.compute_surface_mesh(density=3.0, hdensity=3.0, probe_radius=1.5)
-
-        # self.visualize_surface_mesh(
-        #     vertices=self.surface_model['vertices'], faces=self.surface_model['faces']
-        # )
 
         if compute_hbond:
             # Compute "charged" vertices
@@ -107,9 +105,10 @@ class ProteinModel(PoreLogger):
             vertex_hphobicity = tricorder.compute_hydrophobicity(self.surface_model['names'])
 
         # Fix the mesh and regularize (see paper)
-        mesh = pymesh(
+        mesh = pymesh.form_mesh(
             self.surface_model['vertices'], self.surface_model['faces']
         )
+        mesh = self.fix_mesh()
 
         print(mesh)
 
@@ -119,7 +118,6 @@ class ProteinModel(PoreLogger):
     def visualize_surface_mesh(vertices, faces):
 
         surf = pv.PolyData(vertices, faces)
-        surf.show()
 
     def download(self):
 
