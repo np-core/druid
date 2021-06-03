@@ -58,4 +58,4 @@ RUN wget http://kinemage.biochem.duke.edu/php/downlode-3.php?filename=/../downlo
 RUN zcat reduce.gz > reduce && chmod +x reduce && mv reduce /usr/bin
 
 RUN wget http://mgltools.scripps.edu/downloads/tars/releases/MSMSRELEASE/REL2.6.1/msms_i86_64Linux2_2.6.1.tar.gz
-RUN tar xvf msms_i86_64Linux2_2.6.1.tar.gz && mv msms_i86_64Linux2_2.6.1 /usr/bin/msms && mv pdb_to_xyzr pdb_to_xyzrn /usr/bin
+RUN tar xvf msms_i86_64Linux2_2.6.1.tar.gz && mv msms.x86_64Linux2.2.6.1 /usr/bin/msms && mv pdb_to_xyzr pdb_to_xyzrn /usr/bin
