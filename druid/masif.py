@@ -539,12 +539,10 @@ class Tricorder(PoreLogger):
 
         self.logger.info("Computing electrostatic vertex charges using the Adaptive Poisson-Boltzmann Solver")
 
-        fields = tmp_file_base.split("/")[0:-1]
-        directory = "/".join(fields) + "/"
         filename_base = tmp_file_base.split("/")[-1]
-        pdbname = pdb_file.name
+        pdbname = pdb_file.stem
 
-        self.logger.info(f"PDB name: {pdbname} file name base: {filename_base}")
+        self.logger.info(f"PDB file name: {pdbname} file name base: {filename_base}")
 
         args = [
             pdb2pqr_bin,
@@ -555,13 +553,15 @@ class Tricorder(PoreLogger):
             pdbname,
             filename_base,
         ]
-
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        print(args)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
-
+        print(stdout, stderr)
         args = [apbs_bin, filename_base + ".in"]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        print(args)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
+        print(stdout, stderr)
 
         vertfile = open(directory + "/" + filename_base + ".csv", "w")
         for vert in vertices:
