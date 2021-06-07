@@ -581,12 +581,12 @@ class Tricorder(PoreLogger):
                 charges[ix] = float(line.split(",")[3])
 
         remove_fn = str(self.protein_model.outdir / tmp_file_base)
-        os.remove(remove_fn)
-        os.remove(remove_fn + '.csv')
-        os.remove(remove_fn + '.dx')
-        os.remove(remove_fn + '.in')
-        os.remove(remove_fn + '-input.p')
-        os.remove(remove_fn + '_out.csv')
+        os.remove(tmp_file_base)
+        os.remove(tmp_file_base + '.csv')
+        os.remove(tmp_file_base + '.dx')
+        os.remove(tmp_file_base + '.in')
+        os.remove(tmp_file_base + '-input.p')
+        os.remove(tmp_file_base + '_out.csv')
 
         return charges
 
