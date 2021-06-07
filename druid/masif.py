@@ -574,7 +574,8 @@ class Tricorder(PoreLogger):
         stdout, stderr = p2.communicate()
 
         # Read the charge file
-        with Path(tmp_file_base + "_out.csv").open("w") as chargefile:
+        print(tmp_file_base + "_out.csv")
+        with Path(tmp_file_base + "_out.csv").open("r") as chargefile:
             charges = np.array([0.0] * len(vertices))
             for ix, line in enumerate(chargefile):
                 charges[ix] = float(line.split(",")[3])
