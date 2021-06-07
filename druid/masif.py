@@ -548,7 +548,7 @@ class Tricorder(PoreLogger):
             "--ff=PARSE",
             "--whitespace",
             "--noopt",
-            f"--apbs-input {pdbname + '.in'}",
+            "--apbs-input",
             str(pdb_file),
             tmp_file_base,
         ]
