@@ -120,7 +120,7 @@ class ProteinModel(PoreLogger):
 
         regular_mesh = self.regularize_mesh_surface(mesh=mesh, resolution=resolution, detail="normal")
 
-        self.logger.info("Compute the vertex normals on regularized surface mesh")
+        self.logger.info("Compute vertex normals on the regularized surface mesh")
         vertex_normal = compute_normal(regular_mesh.vertices, regular_mesh.faces)
 
         if compute_hbond:
@@ -522,7 +522,7 @@ class Tricorder(PoreLogger):
 
     def compute_apbs(
         self, vertices, pdb_file: Path, tmp_file_base: str,
-        pdb2pqr_bin="pdb2pqr", apbs_bin="apbs", multivalue_bin="multivalue"
+        pdb2pqr_bin="pdb2pqr30", apbs_bin="apbs", multivalue_bin="multivalue"
     ):
 
         """
