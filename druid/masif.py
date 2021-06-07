@@ -552,11 +552,11 @@ class Tricorder(PoreLogger):
             pdbname,
             tmp_file_base,
         ]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
 
         args = [apbs_bin, tmp_file_base + ".in"]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
 
         with Path(tmp_file_base + ".csv").open("w") as vertfile:
@@ -570,7 +570,7 @@ class Tricorder(PoreLogger):
             tmp_file_base + "_out.csv",
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
 
         # Read the charge file
@@ -579,14 +579,6 @@ class Tricorder(PoreLogger):
             charges = np.array([0.0] * len(vertices))
             for ix, line in enumerate(chargefile):
                 charges[ix] = float(line.split(",")[3])
-
-        remove_fn = str(self.protein_model.outdir / tmp_file_base)
-        os.remove(tmp_file_base)
-        os.remove(tmp_file_base + '.csv')
-        os.remove(tmp_file_base + '.dx')
-        os.remove(tmp_file_base + '.in')
-        os.remove(tmp_file_base + '-input.p')
-        os.remove(tmp_file_base + '_out.csv')
 
         return charges
 
