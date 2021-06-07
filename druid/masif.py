@@ -576,7 +576,7 @@ class Tricorder(PoreLogger):
         # Read the charge file
         with Path(tmp_file_base + "_out.csv").open("w") as chargefile:
             charges = np.array([0.0] * len(vertices))
-            for ix, line in enumerate(chargefile.readlines()):
+            for ix, line in enumerate(chargefile):
                 charges[ix] = float(line.split(",")[3])
 
         remove_fn = str(self.protein_model.outdir / tmp_file_base)
