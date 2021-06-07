@@ -539,10 +539,9 @@ class Tricorder(PoreLogger):
 
         self.logger.info("Computing electrostatic vertex charges using the Adaptive Poisson-Boltzmann Solver")
 
-        filename_base = tmp_file_base.split("/")[-1]
         pdbname = pdb_file.stem
 
-        self.logger.info(f"PDB file name: {pdbname} file name base: {filename_base}")
+        self.logger.info(f"PDB file name: {pdbname} file name base: {tmp_file_base}")
 
         args = [
             pdb2pqr_bin,
@@ -551,31 +550,31 @@ class Tricorder(PoreLogger):
             "--noopt",
             "--apbs-input",
             pdbname,
-            filename_base,
+            tmp_file_base,
         ]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
-        args = [apbs_bin, filename_base + ".in"]
+        args = [apbs_bin, tmp_file_base + ".in"]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
-        with (self.protein_model.outdir / (filename_base + ".csv")).open("w") as vertfile:
+        with Path(tmp_file_base + ".csv").open("w") as vertfile:
             for vert in vertices:
                 vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
 
         args = [
             multivalue_bin,
-            filename_base + ".csv",
-            filename_base + ".dx",
-            filename_base + "_out.csv",
+            tmp_file_base + ".csv",
+            tmp_file_base + ".dx",
+            tmp_file_base + "_out.csv",
         ]
 
         p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
         # Read the charge file
-        with (self.protein_model.outdir / (tmp_file_base + "_out.csv")).open("w") as chargefile:
+        with Path(tmp_file_base + "_out.csv").open("w") as chargefile:
             charges = np.array([0.0] * len(vertices))
             for ix, line in enumerate(chargefile.readlines()):
                 charges[ix] = float(line.split(",")[3])
