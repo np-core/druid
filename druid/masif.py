@@ -548,8 +548,8 @@ class Tricorder(PoreLogger):
             "--ff=PARSE",
             "--whitespace",
             "--noopt",
-            "--apbs-input",
-            pdbname,
+            f"--apbs-input {pdbname + '.in'}",
+            str(pdb_file),
             tmp_file_base,
         ]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
