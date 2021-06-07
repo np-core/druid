@@ -546,27 +546,24 @@ class Tricorder(PoreLogger):
 
         args = [
             pdb2pqr_bin,
-            "--ff=parse",
+            "--ff=PARSE",
             "--whitespace",
             "--noopt",
             "--apbs-input",
             pdbname,
             filename_base,
         ]
-        print(args)
         p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
-        print(stdout, stderr)
-        args = [apbs_bin, filename_base + ".in"]
-        print(args)
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
-        stdout, stderr = p2.communicate()
-        print(stdout, stderr)
 
-        vertfile = open(directory + "/" + filename_base + ".csv", "w")
-        for vert in vertices:
-            vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
-        vertfile.close()
+        args = [apbs_bin, filename_base + ".in"]
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        stdout, stderr = p2.communicate()
+
+        with (self.protein_model.outdir / (filename_base + ".csv")).open("w") as vertfile:
+            for vert in vertices:
+                vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
+
 
         args = [
             multivalue_bin,
@@ -575,16 +572,16 @@ class Tricorder(PoreLogger):
             filename_base + "_out.csv",
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=directory)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
         # Read the charge file
-        chargefile = open(tmp_file_base + "_out.csv")
-        charges = np.array([0.0] * len(vertices))
-        for ix, line in enumerate(chargefile.readlines()):
-            charges[ix] = float(line.split(",")[3])
+        with (self.protein_model.outdir / (tmp_file_base + "_out.csv")).open("w") as chargefile:
+            charges = np.array([0.0] * len(vertices))
+            for ix, line in enumerate(chargefile.readlines()):
+                charges[ix] = float(line.split(",")[3])
 
-        remove_fn = os.path.join(directory, filename_base)
+        remove_fn = str(self.protein_model.outdir / tmp_file_base)
         os.remove(remove_fn)
         os.remove(remove_fn + '.csv')
         os.remove(remove_fn + '.dx')
