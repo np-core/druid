@@ -135,7 +135,9 @@ class ProteinModel(PoreLogger):
                 regular_mesh.vertices, self.surface_model['vertices'], vertex_hphobicity
             )
 
-        vertex_charges = tricorder.compute_apbs(regular_mesh.vertices, out_filename1 + ".pdb", out_filename1)
+        vertex_charges = tricorder.compute_apbs(
+            regular_mesh.vertices, self.chains_pdb_file, f"{self.outdir / 'vertex_charges'}"
+        )
 
     def regularize_mesh_surface(self, mesh, resolution, detail="normal"):
 
@@ -518,7 +520,10 @@ class Tricorder(PoreLogger):
 
         return vertices, faces, normalv, res_id
 
-    def compute_apbs(self, vertices, pdb_file, tmp_file_base):
+    def compute_apbs(
+        self, vertices, pdb_file: Path, tmp_file_base: str,
+        pdb2pqr_bin="pdb2pqr", apbs_bin="apbs", multivalue_bin="multivalue"
+    ):
 
         """
         Adaptive Poisson-Boltzmann Solver
@@ -532,10 +537,14 @@ class Tricorder(PoreLogger):
         Calls APBS, pdb2pqr, and multivalue and returns electrostatic charges per vertex
         """
 
+        self.logger.info("Computing electrostatic vertex charges using the Adaptive Poisson-Boltzmann Solver")
+
         fields = tmp_file_base.split("/")[0:-1]
         directory = "/".join(fields) + "/"
         filename_base = tmp_file_base.split("/")[-1]
-        pdbname = pdb_file.split("/")[-1]
+        pdbname = pdb_file.name
+
+        self.logger.info(f"PDB name: {pdbname} file name base: {filename_base}")
 
         args = [
             pdb2pqr_bin,
