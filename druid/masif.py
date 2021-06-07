@@ -564,7 +564,6 @@ class Tricorder(PoreLogger):
             for vert in vertices:
                 vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
 
-
         args = [
             multivalue_bin,
             filename_base + ".csv",
