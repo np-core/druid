@@ -544,18 +544,18 @@ class Tricorder(PoreLogger):
             "--whitespace",
             "--noopt",
             "--apbs-input",
-            self.protein_model.outdir / (tmp_file_base+".in"),
+            tmp_file_base+".in",
             pdb_file,
-            self.protein_model.outdir / (tmp_file_base+".prq"),
+            tmp_file_base
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
-        print(stderr)
-        args = ["apbs", self.protein_model.outdir / (tmp_file_base + ".in")]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+        print(stderr.decode('utf-8'))
+        args = ["apbs", tmp_file_base + ".in"]
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
-        print(stderr)
+        print(stderr.decode('utf-8'))
 
         with (self.protein_model.outdir / (tmp_file_base + ".csv")).open("w") as vertfile:
             for vert in vertices:
