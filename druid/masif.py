@@ -557,7 +557,7 @@ class Tricorder(PoreLogger):
         stdout, stderr = p2.communicate()
         print(stderr)
 
-        with Path(tmp_file_base + ".csv").open("w") as vertfile:
+        with (self.protein_model.outdir / (tmp_file_base + ".csv")).open("w") as vertfile:
             for vert in vertices:
                 vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
 
@@ -572,7 +572,7 @@ class Tricorder(PoreLogger):
         stdout, stderr = p2.communicate()
 
         # Read the charge file
-        with Path(tmp_file_base + "_out.csv").open("r") as chargefile:
+        with (self.protein_model.outdir / (tmp_file_base + "_out.csv")).open("r") as chargefile:
             charges = np.array([0.0] * len(vertices))
             for ix, line in enumerate(chargefile):
                 charges[ix] = float(line.split(",")[3])
