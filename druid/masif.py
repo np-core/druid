@@ -545,7 +545,7 @@ class Tricorder(PoreLogger):
             "--noopt",
             "--apbs-input",
             tmp_file_base+".in",
-            self.protein_model.outdir / pdb_file.name,
+            f"{self.protein_model.pdb_id}_{self.protein_model.chains}",
             tmp_file_base
         ]
 
