@@ -536,7 +536,7 @@ class Tricorder(PoreLogger):
 
         self.logger.info("Computing electrostatic vertex charges using the Adaptive Poisson-Boltzmann Solver")
 
-        tmp_file_base = str(self.protein_model.outdir / "apbs_vertex_charges")
+        tmp_file_base = "apbs_vertex_charges"
 
         args = [
             "pdb2pqr30",
@@ -549,7 +549,7 @@ class Tricorder(PoreLogger):
             tmp_file_base+".pqr"
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
         args = ["apbs", tmp_file_base + ".in"]
