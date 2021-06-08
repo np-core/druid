@@ -521,8 +521,7 @@ class Tricorder(PoreLogger):
         return vertices, faces, normalv, res_id
 
     def compute_apbs(
-        self, vertices, pdb_file: Path, tmp_file_base: str,
-        pdb2pqr_bin="pdb2pqr30", apbs_bin="apbs", multivalue_bin="multivalue"
+        self, vertices, pdb_file: Path, pdb2pqr_bin="pdb2pqr30", apbs_bin="", multivalue_bin="multivalue"
     ):
 
         """
@@ -539,9 +538,7 @@ class Tricorder(PoreLogger):
 
         self.logger.info("Computing electrostatic vertex charges using the Adaptive Poisson-Boltzmann Solver")
 
-        pdbname = pdb_file.stem
-
-        self.logger.info(f"PDB file name: {pdbname} file name base: {tmp_file_base}")
+        tmp_file_base = str(self.protein_model.outdir / "apbs_vertex_charges")
 
         args = [
             pdb2pqr_bin,
@@ -549,22 +546,22 @@ class Tricorder(PoreLogger):
             "--whitespace",
             "--noopt",
             "--apbs-input",
+            tmp_file_base+".in",
             str(pdb_file),
-            tmp_file_base,
+            tmp_file_base+".pqr"
         ]
+        
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
-        print(stderr)
-        args = [apbs_bin, tmp_file_base + ".in"]
+        args = ["apbs", tmp_file_base + ".in"]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
-        print(stderr)
         with Path(tmp_file_base + ".csv").open("w") as vertfile:
             for vert in vertices:
                 vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
 
         args = [
-            multivalue_bin,
+            "multivalue",
             tmp_file_base + ".csv",
             tmp_file_base + ".dx",
             tmp_file_base + "_out.csv",
@@ -574,7 +571,6 @@ class Tricorder(PoreLogger):
         stdout, stderr = p2.communicate()
 
         # Read the charge file
-        print(tmp_file_base + "_out.csv")
         with Path(tmp_file_base + "_out.csv").open("r") as chargefile:
             charges = np.array([0.0] * len(vertices))
             for ix, line in enumerate(chargefile):
