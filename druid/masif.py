@@ -544,16 +544,16 @@ class Tricorder(PoreLogger):
             "--whitespace",
             "--noopt",
             "--apbs-input",
-            tmp_file_base+".in",
-            str(pdb_file),
-            tmp_file_base+".pqr"
+            self.protein_model.outdir / (tmp_file_base+".in"),
+            pdb_file,
+            self.protein_model.outdir / (tmp_file_base+".prq"),
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
-
-        args = ["apbs", tmp_file_base + ".in"]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
+        print(stderr)
+        args = ["apbs", self.protein_model.outdir / (tmp_file_base + ".in")]
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
         print(stderr)
 
