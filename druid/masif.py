@@ -577,7 +577,7 @@ class Tricorder(PoreLogger):
             for ix, line in enumerate(chargefile):
                 charges[ix] = float(line.split(",")[3])
 
-        pritn(charges)
+        print(charges)
 
         return charges
 
