@@ -551,9 +551,11 @@ class Tricorder(PoreLogger):
 
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
+        print(stderr)
         args = ["apbs", tmp_file_base + ".in"]
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
+        print(stderr)
         with Path(tmp_file_base + ".csv").open("w") as vertfile:
             for vert in vertices:
                 vertfile.write("{},{},{}\n".format(vert[0], vert[1], vert[2]))
