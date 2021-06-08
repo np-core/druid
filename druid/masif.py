@@ -136,7 +136,7 @@ class ProteinModel(PoreLogger):
             )
 
         vertex_charges = tricorder.compute_apbs(
-            regular_mesh.vertices, self.chains_pdb_file, f"{self.outdir / 'vertex_charges'}"
+            regular_mesh.vertices, self.chains_pdb_file
         )
 
     def regularize_mesh_surface(self, mesh, resolution, detail="normal"):
@@ -520,9 +520,7 @@ class Tricorder(PoreLogger):
 
         return vertices, faces, normalv, res_id
 
-    def compute_apbs(
-        self, vertices, pdb_file: Path, pdb2pqr_bin="pdb2pqr30", apbs_bin="", multivalue_bin="multivalue"
-    ):
+    def compute_apbs(self, vertices, pdb_file: Path):
 
         """
         Adaptive Poisson-Boltzmann Solver
@@ -541,7 +539,7 @@ class Tricorder(PoreLogger):
         tmp_file_base = str(self.protein_model.outdir / "apbs_vertex_charges")
 
         args = [
-            pdb2pqr_bin,
+            "pdb2pqr30",
             "--ff=PARSE",
             "--whitespace",
             "--noopt",
@@ -550,7 +548,7 @@ class Tricorder(PoreLogger):
             str(pdb_file),
             tmp_file_base+".pqr"
         ]
-        
+
         p2 = Popen(args, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p2.communicate()
         args = ["apbs", tmp_file_base + ".in"]
