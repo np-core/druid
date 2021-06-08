@@ -553,7 +553,7 @@ class Tricorder(PoreLogger):
         stdout, stderr = p2.communicate()
 
         args = ["apbs", tmp_file_base + ".in"]
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
         print(stderr)
 
@@ -568,7 +568,7 @@ class Tricorder(PoreLogger):
             tmp_file_base + "_out.csv",
         ]
 
-        p2 = Popen(args, stdout=PIPE, stderr=PIPE)
+        p2 = Popen(args, stdout=PIPE, stderr=PIPE, cwd=str(self.protein_model.outdir))
         stdout, stderr = p2.communicate()
 
         # Read the charge file
