@@ -545,7 +545,7 @@ class Tricorder(PoreLogger):
             "--noopt",
             "--apbs-input",
             tmp_file_base+".in",
-            pdb_file,
+            pdb_file.name,
             tmp_file_base
         ]
 
